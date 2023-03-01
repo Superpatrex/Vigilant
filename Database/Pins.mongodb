@@ -1,0 +1,32 @@
+// Enter into the correct Collection
+use("LargeProject")
+
+// Insert a pin into the database
+db.Pins.insertOne({
+    _id : ObjectId(),
+    address : "4000 Central Florida Blvd",
+    zipCode : 32816,
+    state : "Florida",
+    country : "United States",
+    location : {
+        $near : {
+            $geometry: {
+                type: "Point",
+                coordinates : [28.6016, -81.2005]
+            },
+        $minDistance: 1000,
+        $maxDistance: 5000
+        }
+    },
+    description : "This is UCF or can be an empty string or null",
+    numResolved : 0,
+    status: 0,
+    userCreatedObjectId: null,
+    dateCreated: ISODate()
+})
+
+// Run a command to get all the pins in the database
+db.Pins.find()
+
+// Run a find command to find the pins within a specific state
+db.Pins.find({ state: "Florida" })

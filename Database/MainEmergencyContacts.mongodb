@@ -1,0 +1,17 @@
+// Enters into LargeProject
+use("LargeProject")
+
+// Insert a contact into the Main Emergency Contacts
+db.MainEmergencyContacts.insertOne({
+    _id: ObjectId(),
+    name: "Police",
+    phoneNumber: "911",
+    description: null,
+    countryCode: 1,
+})
+
+// Find all the Main Emergency Contacts within the collection
+db.MainEmergencyContacts.find()
+
+// Find all the Main Emergency Contacts with the name of Police
+db.MainEmergencyContacts.find({ name: "Police" })

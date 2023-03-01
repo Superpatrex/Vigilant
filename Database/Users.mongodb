@@ -1,0 +1,21 @@
+// Enter into the correct Collection
+use("LargeProject")
+
+// Creates a document in the collection for a specific user
+db.Users.insertOne({
+    _id: ObjectId(), 
+    firstName: "Abhi",
+    lastName: "Kotta", 
+    username: "SuperAbhi", 
+    password: "password", 
+    email: "email@email.com",
+    dateCreated: ISODate(),
+    countryCode: 1,
+    regionCode: 1
+})
+
+// Find all the users within the database
+db.Users.find()
+
+// Find the hot people in the database
+db.Users.find({ firstName: "Jack" })

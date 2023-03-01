@@ -1,0 +1,17 @@
+// Enters into LargeProject
+use("LargeProject")
+
+db.UserEmergencyContacts.insertOne({
+    _id: ObjectId(),
+    firstName: "Jack",
+    lastName: "Andrews",
+    phoneNumber: "123-456-7890",
+    description: null,
+    userCreatedObjectId: null
+})
+
+// Find all the contacts within the User Emergency Contacts
+db.UserEmergencyContacts.find()
+
+// Find all the contacts with the first name of Jack
+db.UserEmergencyContacts.find({ firstName: "Jack" })
