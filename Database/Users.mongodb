@@ -6,7 +6,7 @@ db.Users.insertOne({
     _id: ObjectId(), 
     firstName: "Abhi",
     lastName: "Kotta", 
-    username: "SuperAbhi", 
+    userName: "SuperAbhi", 
     password: "password", 
     email: "email@email.com",
     dateCreated: ISODate(),
