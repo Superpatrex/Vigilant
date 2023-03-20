@@ -142,3 +142,97 @@ app.post('/api/signup', async (request, response, next) =>
       regionCode: regioncode,
       error:'User created' });
 });
+
+app.post('/api/emailChange', async (request, response, next) => 
+{
+  // incoming: firstname, lastname, username, password, email, regioncode countrycode
+  // outgoing: id, firstName, lastName, error
+	
+  var error = '';
+  var results;
+
+  const { login, Password, Email } = request.body;
+
+  try
+  {
+    const db = client.db("LargeProject");
+
+    resultsBool = (await db.collection('Users').countDocuments({"email":Email}) > 0);
+    if (resultsBool)
+    {
+      response.status(200).json({ error:'Email is in use' });
+      return;
+    }
+
+    results = await db.collection('Users').updateOne(
+      {
+        userName: login,
+        password: Password
+      },
+      {
+        $set:
+        {
+          email:Email
+        }
+      }
+    );
+
+    console.log(results);
+  }
+  catch (error)
+  {
+    console.error(error);
+  }
+
+  response.status(200).json({
+      userName: login, 
+      email: Email,
+      error:'Email Updated' });
+});
+
+app.post('/api/passwordChange', async (request, response, next) => 
+{
+  // incoming: firstname, lastname, username, password, email, regioncode countrycode
+  // outgoing: id, firstName, lastName, error
+	
+  var error = '';
+  var results;
+
+  const { login, Password, Email } = request.body;
+
+  try
+  {
+    const db = client.db("LargeProject");
+
+    resultsBool = (await db.collection('Users').countDocuments({"password":Password}) > 0);
+    if (resultsBool)
+    {
+      response.status(200).json({ error:'Password in use' });
+      return;
+    }
+
+    results = await db.collection('Users').updateOne(
+      {
+        userName: login,
+        email: Email
+      },
+      {
+        $set:
+        {
+          password:Password
+        }
+      }
+    );
+
+    console.log(results);
+  }
+  catch (error)
+  {
+    console.error(error);
+  }
+
+  response.status(200).json({
+      userName: login, 
+      password: Password,
+      error:'Password Updated' });
+});
