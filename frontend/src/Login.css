@@ -26,20 +26,22 @@ a{
     margin: 15px;
 }
 
-.loginInput{
+input{
     width:80%;
     height: 30px;
     font-size:1.35em;
+    margin-bottom:15px;
+    margin-top:15px;
 }
 
 .formHolder {
     margin: auto;
-    margin-top:8%;
+    margin-top:5%;
     display: flex;
-    background-color: #494949;
+    background-color: #202020;
     width: 50%;
-    max-height:600px; 
-    min-height:400px;
+    max-height:800px; 
+    min-height:550px;
     text-align: center;
     border-radius:10px;
     filter: drop-shadow(0px 5px 6px rgba(0,0,0, 0.8));
@@ -66,10 +68,6 @@ a{
     z-index:2;
 }
 
-#loginName {
-    margin: 15px;
-}
-
 #loginPassword {
     margin: 15px;
     margin-bottom: 30px;
@@ -81,6 +79,12 @@ a{
     padding:10px;
     padding-bottom:12px;
 }
+
+#registerResult {
+    opacity:0;
+    background-color: #a25454;
+    padding:10px;
+    padding-bottom:12px;}
 
 #loginButton {
     --padding-y:7px;
@@ -103,6 +107,35 @@ a{
     display: inline-block;
 }
 
+#registerButton {
+    --padding-y:7px;
+    --padding-x:52px;
+    font-size: 1.5em;
+    border-radius: 10px;
+    border:none;
+    min-width:100px;
+    min-height:31px;
+    background-color: #494949;
+    color: white;
+    margin: 30px;
+    /*padding: 14px 40px;*/
+    padding-top:var(--padding-y);
+    padding-bottom:var(--padding-y);
+    padding-left:var(--padding-x);
+    padding-right:var(--padding-x);
+    text-align: center;
+    text-decoration: none;
+    display: inline-block; 
+}
+
+#registerFName{
+    width:37.5%;
+    margin-right: 3%;
+}
+
+#registerLName{
+    width: 37.5%;
+}
 #loginButton:hover {
     background-color: #393939;
 }
@@ -134,7 +167,7 @@ a{
 #passwordBox {
     color: white;
     font-size: 1em;
-    width: 46%;
+    width: 44%;
     padding: 3%;
     text-align:justify;
     border-radius:0px 10px 10px 0px;
@@ -146,11 +179,12 @@ a{
 }
 
 .formHolder.right-panel-active #loginBox {
-	transform: translateX(100%);
+	transform: translateX(84%);
+    opacity:0;
 }
 
 .formHolder.right-panel-active #registerBox {
-	transform: translateX(100%);
+	transform: translateX(84%);
 	opacity: 1;
 	z-index: 5;
 	animation: show 0.6s;
@@ -168,7 +202,7 @@ a{
 }
 
 #overlay {
-	background: #202020;
+	background: #494949;
 	/* background: -webkit-linear-gradient(to right, #22ffff, #FF226C);
 	background: linear-gradient(to right, #545454, #232323, #545454); */
 	background-repeat: no-repeat;
@@ -187,6 +221,10 @@ a{
     transform: translateX(50%);
 }
 
+.formHolder.right-panel-active #overlayHolder {
+	transform: translateX(-100%);
+}
+
 .overlayPanel {
 	position: absolute;
 	display: flex;
@@ -197,7 +235,8 @@ a{
 	text-align: center;
 	top: 0;
 	height: 100%;
-	width: 50%;
+	width: 44%;
+    padding:3%;
 	transform: translateX(0);
 	transition: transform 0.6s ease-in-out;
 }
@@ -212,7 +251,7 @@ a{
 
 .overlayRight {
 	right: 0;
-	transform: translateX(0);
+	transform: translateX(2%);
 }
 
 .formHolder.right-panel-active .overlayRight {
@@ -252,7 +291,7 @@ a{
   }
 
 @keyframes show {
-    0%, 49.99% {
+    0%, 49% {
         opacity: 0;
         z-index: 1;
     }
