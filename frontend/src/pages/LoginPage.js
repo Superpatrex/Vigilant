@@ -9,9 +9,9 @@ const LoginPage = () =>
     const el= document.body;
     var toggle = 1;
     el.addEventListener("mousemove",(e) =>{
-      el.style.setProperty('--x', -e.offsetX/3 + "px");
-      el.style.setProperty('--y', -e.offsetY/3 + "px");
-    });
+      el.style.setProperty('--x', -e.clientX/10 + "px");
+      el.style.setProperty('--y', -e.clientY/20 + "px");
+    }, true);
     function swapForm(){
       toggle = ~toggle;
       const loginBox = document.getElementById("loginBox");
@@ -23,6 +23,7 @@ const LoginPage = () =>
 
     return(
       <div>
+        <div id="background"></div>
         <PageTitle />
         <Login />
         <button id="toggler" onClick={swapForm}>Switch</button>
