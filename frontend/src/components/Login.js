@@ -63,7 +63,7 @@ function Login()
         <div class="formHolder" id="loginHolder">
             <div class="formBox" id="registerBox">
                 <h2>Register But it's Real</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbius is sussy among us pellentesque, tempor ante et, pulvinar tellus. Morbius lobortis interdum odio nec finibus. Suspendisse at eros in ligma hendrerit imperdiet eget at lorem. Sus lobortis gluteus maximus. Nunc in nisl in magna bibendum laoreet vel efficitur tellus. Aliquam aliquet, augue estuans interis ira vehementi, deus vult gravida orci, sit amet laoreet lorem ipsum nec metus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque cursus turpis sephiroth venenatis vulputate. Nullam tincidunt eget justo ac tincidunt. Cras aliquam molestie eleifend. Mauris blandit gravida odio, sit amet fringilla sapien luctus et. Suspendisse dictum viverra lacus vitae tincidunt.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbius is sussy among us bellend, tempor ante et, pulvinar tellus. Morbius lobortis interdum odio nec finibus. Suspendisse at eros in ligma hendrerit imperdiet eget at lorem. Sus lobortis gluteus maximus. Nunc in nisl in magna bibendum laoreet vel efficitur tellus. Aliquam aliquet, augue estuans interis ira vehementi, deus vult gravida orci, sit amet laoreet lorem ipsum nec metus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque cursus turpis sephiroth venenatis vulputate. Nullam tincidunt eget justo ac tincidunt. Cras aliquam molestie eleifend. Mauris blandit gravida odio, sit amet fringilla sapien luctus et. Suspendisse dictum viverra lacus vitae tincidunt.</p>
             </div>
             <div class="formBox" id="loginBox">
                 <form onSubmit={doLogin}>
@@ -76,20 +76,22 @@ function Login()
                 </form>
                 <span id="loginResult">{message}</span>
             </div>
-            <div class="overlay">
-                <div class="overlay-left" id="passwordBox">
-                    <form onSubmit={doLogin}>
-                    <span id="inner-title">Register</span><br/><br/>
-                    <input type="text" id="loginName" class="loginInput" placeholder="Username" ref={ (c) => loginName = c} /><br />
-                    <input type="password" id="loginPassword" class="loginInput" placeholder="Password" ref={ (c) => loginPassword = c} /><br />
-                    <a href="#">Forgot your username or password?</a>
-                    <button type="submit" id="loginButton" value="Login" onClick={doLogin}>Login</button>
-                    </form>
-                    <span id="loginResult">{message}</span>
-                </div>    
-                <div class="overlay-right" id="welcomeBox">
-                    <h2>Welcome to Vigilant</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbius is sussy among us pellentesque, tempor ante et, pulvinar tellus. Morbius lobortis interdum odio nec finibus. Suspendisse at eros in ligma hendrerit imperdiet eget at lorem. Sus lobortis gluteus maximus. Nunc in nisl in magna bibendum laoreet vel efficitur tellus. Aliquam aliquet, augue estuans interis ira vehementi, deus vult gravida orci, sit amet laoreet lorem ipsum nec metus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque cursus turpis sephiroth venenatis vulputate. Nullam tincidunt eget justo ac tincidunt. Cras aliquam molestie eleifend. Mauris blandit gravida odio, sit amet fringilla sapien luctus et. Suspendisse dictum viverra lacus vitae tincidunt.</p>
+            <div id="overlayHolder">
+                <div id="overlay">
+                    <div class="overlayPanel overlayLeft" id="passwordBox">
+                        <form onSubmit={doLogin}>
+                        <span id="inner-title">Register</span><br/><br/>
+                        <input type="text" id="loginName" class="loginInput" placeholder="Username" ref={ (c) => loginName = c} /><br />
+                        <input type="password" id="loginPassword" class="loginInput" placeholder="Password" ref={ (c) => loginPassword = c} /><br />
+                        <a href="#">Forgot your username or password?</a>
+                        <button type="submit" id="loginButton" value="Login" onClick={doLogin}>Login</button>
+                        </form>
+                        <span id="loginResult">{message}</span>
+                    </div>    
+                    <div class="overlayPanel overlayRight" id="welcomeBox">
+                        <h2>Welcome to Vigilant</h2>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbius is sussy among us pellentesque, tempor ante et, pulvinar tellus. Morbius lobortis interdum odio nec finibus. Suspendisse at eros in ligma hendrerit imperdiet eget at lorem. Sus lobortis gluteus maximus. Nunc in nisl in magna bibendum laoreet vel efficitur tellus. Aliquam aliquet, augue estuans interis ira vehementi, deus vult gravida orci, sit amet laoreet lorem ipsum nec metus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque cursus turpis sephiroth venenatis vulputate. Nullam tincidunt eget justo ac tincidunt. Cras aliquam molestie eleifend. Mauris blandit gravida odio, sit amet fringilla sapien luctus et. Suspendisse dictum viverra lacus vitae tincidunt.</p>
+                    </div>
                 </div>
             </div>
         </div>
