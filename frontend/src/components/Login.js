@@ -38,7 +38,7 @@ function Login()
 
           if( res.id <= 0 )
           {
-              setMessage('User/Password combination incorrect');
+              setMessage('Username or Password Incorrect');
           }
           else
           {
@@ -58,15 +58,37 @@ function Login()
 
 
   return(
-    <div id="loginDiv">
-      <form onSubmit={doLogin}>
-      <span id="inner-title">PLEASE LOG IN</span><br />
-      <input type="text" id="loginName" placeholder="Username" ref={ (c) => loginName = c} /><br />
-      <input type="password" id="loginPassword" placeholder="Password" ref={ (c) => loginPassword = c} /><br />
-      <input type="submit" id="loginButton" class="buttons" value = "Do It"
-        onClick={doLogin} />
-      </form>
-      <span id="loginResult">{message}</span>
+    <div id="formHolder">
+        <div id="loginBox">
+            <form onSubmit={doLogin}>
+             <span id="inner-title">Login</span><br/><br/>
+             <input type="text" id="loginName" class="loginInput" placeholder="Username" ref={ (c) => loginName = c} /><br />
+             <input type="password" id="loginPassword" class="loginInput" placeholder="Password" ref={ (c) => loginPassword = c} /><br />
+             <a href="#">Forgot your username or password?</a>
+             {/* <input type="submit" id="loginButton" class="buttons" value = "Login" onClick={doLogin} /> */}
+             <button type="submit" id="loginButton" value="Login" onClick={doLogin}>Login</button>
+            </form>
+            <span id="loginResult">{message}</span>
+        </div>
+        <div id="welcomeBox">
+            <h2>Welcome to Vigilant</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbius is sussy among us pellentesque, tempor ante et, pulvinar tellus. Morbius lobortis interdum odio nec finibus. Suspendisse at eros in ligma hendrerit imperdiet eget at lorem. Sus lobortis gluteus maximus. Nunc in nisl in magna bibendum laoreet vel efficitur tellus. Aliquam aliquet, augue estuans interis ira vehementi, deus vult gravida orci, sit amet laoreet lorem ipsum nec metus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque cursus turpis sephiroth venenatis vulputate. Nullam tincidunt eget justo ac tincidunt. Cras aliquam molestie eleifend. Mauris blandit gravida odio, sit amet fringilla sapien luctus et. Suspendisse dictum viverra lacus vitae tincidunt.</p>
+        </div>
+        {/* <div id="passwordBox">
+            <form onSubmit={doLogin}>
+             <span id="inner-title">Login</span><br/><br/>
+             <input type="text" id="loginName" class="loginInput" placeholder="Username" ref={ (c) => loginName = c} /><br />
+             <input type="password" id="loginPassword" class="loginInput" placeholder="Password" ref={ (c) => loginPassword = c} /><br />
+             <a href="#">Forgot your username or password?</a>
+             {/* <input type="submit" id="loginButton" class="buttons" value = "Login" onClick={doLogin} />
+             <button type="submit" id="loginButton" value="Login" onClick={doLogin}>Login</button>
+            </form>
+            <span id="loginResult">{message}</span>
+        </div>
+        <div id="registerBox">
+            <h2>Welcome to Vigilant</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbius is sussy among us pellentesque, tempor ante et, pulvinar tellus. Morbius lobortis interdum odio nec finibus. Suspendisse at eros in ligma hendrerit imperdiet eget at lorem. Sus lobortis gluteus maximus. Nunc in nisl in magna bibendum laoreet vel efficitur tellus. Aliquam aliquet, augue estuans interis ira vehementi, deus vult gravida orci, sit amet laoreet lorem ipsum nec metus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque cursus turpis sephiroth venenatis vulputate. Nullam tincidunt eget justo ac tincidunt. Cras aliquam molestie eleifend. Mauris blandit gravida odio, sit amet fringilla sapien luctus et. Suspendisse dictum viverra lacus vitae tincidunt.</p>
+        </div> */}
     </div>
   );
 };
