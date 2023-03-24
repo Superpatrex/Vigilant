@@ -41,8 +41,8 @@ const LoginPage = () =>
         <div id="background"></div>
         <PageTitle />
         <Login />
-        <button class="toggler" id="switch1" onClick={rightInactive}>Switch 1</button>
-        <button class="toggler" id="switch2" onClick={rightActive }>Switch 2</button>
+        <button class="toggler" id="switch1" onClick={rightInactive}>Login</button>
+        <button class="toggler" id="switch2" onClick={rightActive }>Regis.</button>
       </div>
     );
 };
