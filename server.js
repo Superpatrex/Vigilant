@@ -184,10 +184,10 @@ app.post('/api/login', async (req, res, next) =>
 	
  var error = '';
 
-  const { login, password } = req.body;
+  const { userName, password } = req.body;
 
-  const db = client.db("COP4331Cards");
-  const results = await db.collection('Users').find({Login:login,Password:password}).toArray();
+  const db = client.db("LargeProject");
+  const results = await db.collection('Users').find({userName:userName,password:password}).toArray();
 
   var id = -1;
   var fn = '';
@@ -204,6 +204,61 @@ app.post('/api/login', async (req, res, next) =>
   res.status(200).json(ret);
 });
 
+app.post('/api/signup', async (request, response, next) => 
+{
+  // incoming: firstname, lastname, username, password, email, regioncode countrycode
+  // outgoing: id, firstName, lastName, error
+	
+  var error = '';
+  var results;
+
+  const { firstname, lastname, login, pass, email, regioncode, countrycode } = request.body;
+
+  try
+  {
+    const db = client.db("LargeProject");
+
+    
+    var resultsBool = (await db.collection('Users').countDocuments({"userName":login}) > 0);
+
+    if (resultsBool)
+    {
+      response.status(200).json({ error:'Username is taken' });
+      return;
+    }
+
+    resultsBool = (await db.collection('Users').countDocuments({"email":email}) > 0);
+
+    if (resultsBool)
+    {
+      response.status(200).json({ error:'Email is in use' });
+      return;
+    }
+
+    results = await db.collection('Users').insertOne({
+      firstName: firstname,
+      lastName: lastname, 
+      userName: login, 
+      password: pass, 
+      email: email,
+      dateCreated: new Date(),
+      countryCode: countrycode,
+      regionCode: regioncode
+    });
+
+    console.log(results);
+  }
+  catch (error)
+  {
+    console.error(error);
+  }
+
+  response.status(200).json({
+      userName: login, 
+      countryCode: countrycode,
+      regionCode: regioncode,
+      error:'User created' });
+});
 
 app.post('/api/searchcards', async (req, res, next) => 
 {

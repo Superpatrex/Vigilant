@@ -1,0 +1,303 @@
+#navTitle{
+    background-color:#202020;
+    color:#fff;
+    top:0px;
+    padding:20px;
+}
+
+
+body {
+    --x: 0px;
+    --y: 0px;
+    overscroll-behavior-y: none;
+    /* background-image:url('https://i.redd.it/inspired-by-van-gogh-v0-13u5klq51y591.jpg?width=3631&format=pjpg&auto=webp&s=3cd180ff1e0e2a1136f40d17619c435828506ba2'); */
+    background-image: url("../RainbowmapInfinite.jpg");
+    background-position: var(--x) var(--y);
+    background-size:contain;
+}
+  
+h1{
+    margin-top: 0px;
+    margin-bottom:0px;
+}
+
+a{
+    color:#fff;
+    margin: 15px;
+}
+
+input{
+    width:80%;
+    height: 30px;
+    font-size:1.35em;
+    margin-bottom:15px;
+    margin-top:15px;
+}
+
+.formHolder {
+    margin: auto;
+    margin-top:5%;
+    display: flex;
+    background-color: #202020;
+    width: 50%;
+    max-height:800px; 
+    min-height:550px;
+    text-align: center;
+    border-radius:10px;
+    filter: drop-shadow(0px 5px 6px rgba(0,0,0, 0.8));
+    overflow:hidden;
+    
+}
+
+#inner-title {
+    font-size: 1.75em;
+}
+
+.formBox{
+    position:absolute;
+    top:0;
+    height:100%;
+    color: #fff;
+    width: 44%;
+    padding: 3%;
+    transition: all 0.6s ease-in-out;
+}
+
+#loginBox{
+    left:0;
+    z-index:2;
+}
+
+#loginPassword {
+    margin: 15px;
+    margin-bottom: 30px;
+}
+
+#loginResult {
+    opacity:0;
+    background-color: #a25454;
+    padding:10px;
+    padding-bottom:12px;
+}
+
+#registerResult {
+    opacity:0;
+    background-color: #a25454;
+    padding:10px;
+    padding-bottom:12px;}
+
+#loginButton {
+    --padding-y:7px;
+    --padding-x:52px;
+    font-size: 1.5em;
+    border-radius: 10px;
+    border:none;
+    min-width:100px;
+    min-height:31px;
+    background-color: #494949;
+    color: white;
+    margin: 30px;
+    /*padding: 14px 40px;*/
+    padding-top:var(--padding-y);
+    padding-bottom:var(--padding-y);
+    padding-left:var(--padding-x);
+    padding-right:var(--padding-x);
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+#registerButton {
+    --padding-y:7px;
+    --padding-x:52px;
+    font-size: 1.5em;
+    border-radius: 10px;
+    border:none;
+    min-width:100px;
+    min-height:31px;
+    background-color: #494949;
+    color: white;
+    margin: 30px;
+    /*padding: 14px 40px;*/
+    padding-top:var(--padding-y);
+    padding-bottom:var(--padding-y);
+    padding-left:var(--padding-x);
+    padding-right:var(--padding-x);
+    text-align: center;
+    text-decoration: none;
+    display: inline-block; 
+}
+
+#registerFName{
+    width:37.5%;
+    margin-right: 3%;
+}
+
+#registerLName{
+    width: 37.5%;
+}
+#loginButton:hover {
+    background-color: #393939;
+}
+
+#loginButton:active {
+    background-color: #595959;
+}
+
+#welcomeBox {
+    color: white;
+    font-size: 1em;
+    width: 46%;
+    padding: 3%;
+    text-align:justify;
+    border-radius:0px 10px 10px 0px;
+
+}
+#welcomeBox > h2 {
+    text-align:center;
+}
+
+ #registerBox{
+    left: 0;
+	width: 50%;
+	opacity: 0;
+	z-index: 1;
+}
+
+#passwordBox {
+    color: white;
+    font-size: 1em;
+    width: 44%;
+    padding: 3%;
+    text-align:justify;
+    border-radius:0px 10px 10px 0px;
+}
+
+#registerHolder{
+    z-index:2;
+    opacity:1;
+}
+
+.formHolder.right-panel-active #loginBox {
+	transform: translateX(84%);
+    opacity:0;
+}
+
+.formHolder.right-panel-active #registerBox {
+	transform: translateX(84%);
+	opacity: 1;
+	z-index: 5;
+	animation: show 0.6s;
+}
+
+#overlayHolder {
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 50%;
+	height: 100%;
+	overflow: hidden;
+	transition: transform 0.6s ease-in-out;
+	z-index: 100;
+}
+
+#overlay {
+	background: #494949;
+	/* background: -webkit-linear-gradient(to right, #22ffff, #FF226C);
+	background: linear-gradient(to right, #545454, #232323, #545454); */
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: 0 0;
+	color: #FFFFFF;
+	position: relative;
+	left: -100%;
+	height: 100%;
+	width: 200%;
+  	transform: translateX(0);
+	transition: transform 0.6s ease-in-out;
+}
+
+.formHolder.right-panel-active #overlay {
+    transform: translateX(50%);
+}
+
+.formHolder.right-panel-active #overlayHolder {
+	transform: translateX(-100%);
+}
+
+.overlayPanel {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	padding: 0 40px;
+	text-align: center;
+	top: 0;
+	height: 100%;
+	width: 44%;
+    padding:3%;
+	transform: translateX(0);
+	transition: transform 0.6s ease-in-out;
+}
+
+.overlayLeft {
+	transform: translateX(-20%);
+}
+
+.formHolder.right-panel-active .overlayLeft {
+	transform: translateX(0);
+}
+
+.overlayRight {
+	right: 0;
+	transform: translateX(2%);
+}
+
+.formHolder.right-panel-active .overlayRight {
+	transform: translateX(20%);
+}
+
+.toggler{
+    width:100px;;
+    height:100px;
+    border-radius:100%;
+    position: absolute;
+    bottom: 20px;
+    font-size: 1.5em;
+    border:none;
+}
+#switch1{
+    right:130px;
+}
+
+#switch2{
+    right:20px;
+}
+.toggler:hover {
+    background-color: #393939;
+    color:#fff;
+}
+
+.toggler:active {
+    background-color: #595959;
+}
+
+@media screen and (max-width: 1500px) {
+    .formHolder{
+        margin-top:5%;
+        width:65%
+    }
+  }
+
+@keyframes show {
+    0%, 49% {
+        opacity: 0;
+        z-index: 1;
+    }
+
+    50%, 100% {
+        opacity: 1;
+        z-index: 5;
+    }
+}
