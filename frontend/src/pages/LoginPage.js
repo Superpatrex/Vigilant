@@ -12,13 +12,13 @@ const LoginPage = () =>
       el.style.setProperty('--x', -e.clientX/10 + "px");
       el.style.setProperty('--y', -e.clientY/20 + "px");
     }, true);
-
-    const formHolder = document.getElementById('loginHolder');
     
     function rightActive(){
+      const formHolder = document.getElementById('loginHolder');
       formHolder.classList.add("right-panel-active")
     }
     function rightInactive(){
+      const formHolder = document.getElementById('loginHolder');
       formHolder.classList.remove("right-panel-active")
     }
 
