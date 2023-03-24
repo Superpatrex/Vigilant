@@ -1,4 +1,5 @@
 import React from 'react';
+import '../Card.css'
 
 import PageTitle from '../components/PageTitle';
 import LoggedInName from '../components/LoggedInName';
