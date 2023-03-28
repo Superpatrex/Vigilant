@@ -1,0 +1,20 @@
+// Enters into LargeProject
+use("LargeProject")
+
+let testObjectId = "123456789012345678901234"
+
+db.Users.deleteMany({
+    _id: ObjectId(testObjectId)
+})
+
+db.RegionEmergencyContacts.deleteMany({
+    _id: ObjectId(testObjectId)
+})
+
+db.MainEmergencyContacts.deleteMany({
+    _id: ObjectId(testObjectId)
+})
+
+db.UserEmergencyContacts.deleteMany({
+    userCreatedObjectId: ObjectId(testObjectId)
+})

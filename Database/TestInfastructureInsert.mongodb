@@ -1,0 +1,55 @@
+// Enters into LargeProject
+use("LargeProject")
+
+let testObjectId = "123456789012345678901234"
+
+db.Users.insertOne({
+    _id: ObjectId(testObjectId), 
+    firstName: "Test",
+    lastName: "User", 
+    userName: "IAmATestUser", 
+    password: "testytesy123", 
+    email: "test@me.com",
+    dateCreated: ISODate(),
+    countryCode: 1,
+    regionCode: 1
+})
+
+db.RegionEmergencyContacts.insertOne({
+    _id: ObjectId(testObjectId),
+    name: "Test Local Police",
+    phoneNumber: "123-456-7890",
+    description: null,
+    address : "123 Street Street",
+    zipCode : 12345,
+    state : "Florida",
+    country : "United States",
+    countryCode: 1,
+    regionCode: 1
+})
+
+db.MainEmergencyContacts.insertOne({
+    _id: ObjectId(testObjectId),
+    name: "United States Police",
+    phoneNumber: "911",
+    description: null,
+    countryCode: 1
+})
+
+db.UserEmergencyContacts.insertOne({
+    _id: ObjectId(),
+    firstName: "Jack",
+    lastName: "Andrews",
+    phoneNumber: "123-456-7890",
+    description: null,
+    userCreatedObjectId: ObjectId(testObjectId)
+})
+
+db.UserEmergencyContacts.insertOne({
+    _id: ObjectId(),
+    firstName: "Abhi",
+    lastName: "Kotta",
+    phoneNumber: "098-765-4321",
+    description: null,
+    userCreatedObjectId: ObjectId(testObjectId)
+})
