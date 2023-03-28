@@ -369,3 +369,100 @@ function isNotValidString(myString)
 {
   return (!myString || myString.length === 0);
 }
+app.post('/api/emailChange', async (request, response, next) => 
+{
+  // incoming: login, Password, Email
+  // outgoing: userName, email, error
+
+  const { login, Password, Email } = request.body;
+
+  try
+  {
+    const db = client.db("LargeProject");
+
+    const emailExists = await db.collection('Users').findOne({"email":Email});
+    if (emailExists)
+    {
+      response.status(200).json({ error:'Email is already in use.' });
+      return;
+    }
+
+    const result = await db.collection('Users').updateOne(
+      {
+        "userName": login,
+        "password": Password
+      },
+      {
+        $set:
+        {
+          "email":Email
+        }
+      }
+    );
+
+    if (result.modifiedCount === 0) {
+      response.status(200).json({ error:'Failed to update email.' });
+      return;
+    }
+
+    response.status(200).json({
+      userName: login, 
+      email: Email,
+      error:'Email updated successfully.' 
+    });
+  }
+  catch (error)
+  {
+    console.error(error);
+    response.status(500).json({ error:'An error occurred while updating email.' });
+  }
+});
+
+
+
+app.post('/api/passwordChange', async (request, response, next) => 
+{
+  // incoming: firstname, lastname, username, password, email, regioncode countrycode
+  // outgoing: id, firstName, lastName, error
+	
+  var error = '';
+  var results;
+
+  const { login, Password, Email } = request.body;
+
+  try
+  {
+    const db = client.db("LargeProject");
+
+    resultsBool = (await db.collection('Users').countDocuments({"password":Password}) > 0);
+    if (resultsBool)
+    {
+      response.status(200).json({ error:'Password in use' });
+      return;
+    }
+
+    results = await db.collection('Users').updateOne(
+      {
+        userName: login,
+        email: Email
+      },
+      {
+        $set:
+        {
+          password:Password
+        }
+      }
+    );
+
+    console.log(results);
+  }
+  catch (error)
+  {
+    console.error(error);
+  }
+
+  response.status(200).json({
+      userName: login, 
+      password: Password,
+      error:'Password Updated' });
+});
