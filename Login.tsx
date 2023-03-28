@@ -12,6 +12,7 @@ import {
     View,
     Button,
     Alert,
+    Pressable,
   } from 'react-native';
 
 const Stack = createNativeStackNavigator();
@@ -28,25 +29,20 @@ function Login({ navigation }) {
                 }}>Login</Text>
                 <TextInput style={styles.input} placeholder="Username" placeholderTextColor={"#6b6b6b"}/>
                 <TextInput style={styles.input} placeholder="Password" placeholderTextColor={"#6b6b6b"}/>
-                <Button
-                    title="Sign In"
-                />
+                <Pressable style={styles.buttonStyle} onPress={() => Alert.alert('It\'ll log you in eventually.')}>
+                        <Text style={styles.buttonText}>{"Login"}</Text>
+                    </Pressable>
                 <View style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                 }}>
-                    <Button
-                        title="Register"
-                        onPress={() =>
-                            navigation.navigate('Register')
-                        }
-                    />
-                    <Button
-                        title="Forgot Login?"
-                        onPress={() => 
-                            Alert.alert('Kick rocks 🤷‍♂️')
-                        }
-                    />
+                    
+                    <Pressable style={styles.buttonStyle} onPress={() => navigation.navigate("Register")}>
+                        <Text style={styles.buttonText}>{"Register"}</Text>
+                    </Pressable>
+                    <Pressable style={styles.buttonStyle} onPress={() => Alert.alert("Kick rocks 🤷‍♂️")}>
+                        <Text style={styles.buttonText}>{"Forgot Login?"}</Text>
+                    </Pressable>
                 </View>
             </View>
         </View>
@@ -82,7 +78,15 @@ const styles = StyleSheet.create({
       marginVertical: 8,
       borderBottomColor: "#FFFFFF",
       borderBottomWidth: StyleSheet.hairlineWidth,
-    }
+    },
+    buttonStyle:{
+        backgroundColor:"#494949",
+        padding:7,
+        margin:10,
+    },
+    buttonText:{
+        color:"white",
+    },
   });
 
 export default Login;
