@@ -1,16 +1,18 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useColorScheme } from 'react-native';
 
 import Login from './components/Login';
 import Register from './components/Register';
 import ForgetLoginModal from './components/ForgetLoginModal';
+import Welcome from './components/Welcome';
 
 const Stack = createNativeStackNavigator();
 
 function App(): JSX.Element {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={useColorScheme() === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack.Navigator>
         <Stack.Group>
           <Stack.Screen
@@ -20,6 +22,10 @@ function App(): JSX.Element {
           <Stack.Screen
             name="Register"
             component={Register}
+          />
+          <Stack.Screen
+            name="Welcome"
+            component={Welcome}
           />
         </Stack.Group>
         <Stack.Group screenOptions={{ presentation: 'modal' }}>
