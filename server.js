@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const nodemailer = require("nodemailer");
 
 require('dotenv').config()
 const url = process.env.MONGODB_URI;
@@ -60,7 +61,6 @@ app.post('/api/login', async (request, response, next) =>
 
   if (isNotValidString(login))
   {
-    console.log("**" + login + "**");
     ret = {error:'login/username cannot be empty or null'};
   }
   else if (isNotValidString(pass))
@@ -116,7 +116,7 @@ app.post('/api/signup', async (request, response, next) =>
 
     if (resultsBool)
     {
-      response.status(200).json({ error:'Username is taken' });
+      response.status(200).json({ success:false, error:'Username is taken' });
       return;
     }
 
@@ -124,7 +124,7 @@ app.post('/api/signup', async (request, response, next) =>
 
     if (resultsBool)
     {
-      response.status(200).json({ error:'Email is in use' });
+      response.status(200).json({ success:false, error:'Email is in use' });
       return;
     }
 
@@ -146,10 +146,8 @@ app.post('/api/signup', async (request, response, next) =>
   }
 
   response.status(200).json({
-      userName: login, 
-      countryCode: countrycode,
-      regionCode: regioncode,
-      error:'User created' });
+      success: true,
+      error:'' });
 });
 
 app.post('/api/emailInUse', async (request, response, next) => 
@@ -218,16 +216,15 @@ app.post('/api/getContacts', async (request, response, next) =>
 
 app.post('/api/deleteContact', async (request, response, next) => 
 {
-  // incoming: objectId, firstName, lastName, description, phoneNumber
+  // incoming: objectId
   // outgoing: success, error
 	
  var error = '';
 
-  const { objectId, firstname, lastname, description, phonenumber } = request.body;
+  const { objectId } = request.body;
 
   const db = client.db("LargeProject");
-  const results = await db.collection('UserEmergencyContacts').deleteOne({userCreatedObjectId:objectId, firstName:firstname,
-    lastName:lastname, description:description, phoneNumber:phonenumber}).toArray();
+  const results = await db.collection('UserEmergencyContacts').deleteOne({_id:objectId});
  
   var ret = ( results.length > 0 ) ? { success:true, error:'' } : { success:false, error:'Could not find contact' };
 
@@ -241,12 +238,12 @@ app.post('/api/addContact', async (request, response, next) =>
 	
  var error = '';
 
-  const { objectId, firstname, lastname, phonenumber, description } = request.body;
+  const { usercreatedobjectid, firstname, lastname, phonenumber, description } = request.body;
 
   const db = client.db("LargeProject");
-  var ret = await db.collection('UserEmergencyContacts').insertOne({firstName:firstname, lastName:lastname, phoneNumber:phonenumber, description:description, userCreatedObjectId:objectId});
+  var ret = await db.collection('UserEmergencyContacts').insertOne({firstName:firstname, lastName:lastname, phoneNumber:phonenumber, description:description, userCreatedObjectId:usercreatedobjectid});
 
-  (ret) ? response.status(200).json({error:''}) : response.status(200).json({error:''});
+  response.status(200).json({success:true, error:''});
 });
 
 app.post('/api/editContact', async (request, response, next) => 
@@ -256,27 +253,21 @@ app.post('/api/editContact', async (request, response, next) =>
 	
  var error = '';
 
-  const { login, pass } = request.body;
+  const { usercreatedobjectid, firstname, lastname, phonenumber, description } = request.body;
 
   const db = client.db("LargeProject");
-  // TODO FIX UPDATE
-  //const results = await db.collection('UserEmergencyContacts').updateOne
-  //({}).toArray();
+  
+  const results = await db.collection('UserEmergencyContacts').updateOne(
+    { userCreatedObjectId:usercreatedobjectid }, {$set:{firstName:firstname, lastName:lastname, phoneNumber:phonenumber, description:description}});
 
 
   if( results.length > 0 )
   {
-    id = results[0]._id;
-    firstName = results[0].firstName;
-    lastName = results[0].lastName;
-    userName = results[0].userName;
-    regionCode = results[0].regionCode;
-    countryCode = results[0].countryCode;
-    ret = { _id:id, userName:userName, firstName:firstName, lastName:lastName, regionCode:regionCode, countryCode:countryCode, error:''};
+    ret = { success:true, error:''};
   }
   else
   {
-    ret = { error:'User is not found'};
+    ret = { success:false, error:'User is not found or no contact found'};
   }
 
   response.status(200).json(ret);
@@ -308,13 +299,13 @@ app.post('/api/getMainEmergencyContacts', async (request, response, next) =>
     else
     {
       var description = result[0].description;
-      ret = {name:name, phoneNumber:phoneNumber, description:description, error:''};
+      ret = {success:true, name:name, phoneNumber:phoneNumber, description:description, error:''};
     }
 
   }
   else
   {
-    ret = {error:'No Main Emergency Contact for the Country Code'};
+    ret = {success:false, error:'No Main Emergency Contact for the Country Code'};
   }
 
   response.status(200).json(ret);
@@ -418,8 +409,6 @@ app.post('/api/emailChange', async (request, response, next) =>
   }
 });
 
-
-
 app.post('/api/passwordChange', async (request, response, next) => 
 {
   // incoming: firstname, lastname, username, password, email, regioncode countrycode
@@ -466,3 +455,6 @@ app.post('/api/passwordChange', async (request, response, next) =>
       password: Password,
       error:'Password Updated' });
 });
+
+// Region Emergency Contacts
+//////////////////////////////////////////////////////////////////////////

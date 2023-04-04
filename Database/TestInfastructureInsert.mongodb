@@ -2,10 +2,13 @@
 use("LargeProject")
 
 let testObjectId = "123456789012345678901234"
+let deleteObjectId = "123456789012345678901235"
+let editObjectId = "123456789012345678901236"
+
 
 db.Users.insertOne({
     _id: ObjectId(testObjectId), 
-    firstName: "Test",
+    firstName: "TestMe",
     lastName: "User", 
     userName: "IAmATestUser", 
     password: "testytesy123", 
@@ -24,8 +27,8 @@ db.RegionEmergencyContacts.insertOne({
     zipCode : 12345,
     state : "Florida",
     country : "United States",
-    countryCode: 1,
-    regionCode: 1
+    countryCode: 256,
+    regionCode: 256
 })
 
 db.MainEmergencyContacts.insertOne({
@@ -33,7 +36,7 @@ db.MainEmergencyContacts.insertOne({
     name: "United States Police",
     phoneNumber: "911",
     description: null,
-    countryCode: 1
+    countryCode: 1001
 })
 
 db.UserEmergencyContacts.insertOne({
@@ -51,5 +54,23 @@ db.UserEmergencyContacts.insertOne({
     lastName: "Kotta",
     phoneNumber: "098-765-4321",
     description: null,
+    userCreatedObjectId: ObjectId(testObjectId)
+})
+
+db.UserEmergencyContacts.insertOne({
+    _id: ObjectId(deleteObjectId),
+    firstName: "Delete",
+    lastName: "Me",
+    phoneNumber: "098-765-4321",
+    description: 'Poggers',
+    userCreatedObjectId: ObjectId(testObjectId)
+})
+
+db.UserEmergencyContacts.insertOne({
+    _id: ObjectId(editObjectId),
+    firstName: "Edit",
+    lastName: "Me",
+    phoneNumber: "132-314-2345",
+    description: 'Edit me baby',
     userCreatedObjectId: ObjectId(testObjectId)
 })

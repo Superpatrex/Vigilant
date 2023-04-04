@@ -18,3 +18,11 @@ db.MainEmergencyContacts.deleteMany({
 db.UserEmergencyContacts.deleteMany({
     userCreatedObjectId: ObjectId(testObjectId)
 })
+
+db.UserEmergencyContacts.deleteMany({
+    _id: ObjectId(testObjectId)
+})
+
+db.Users.deleteMany({
+    firstName:'Test'
+})

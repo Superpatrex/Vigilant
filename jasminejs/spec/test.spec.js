@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const request = require('request');
 
 const loginEndpoint = 'http://localhost:4091/api/login';
@@ -10,17 +11,22 @@ const getMainEmergencyContactsEndpoint = 'http://localhost:4091/api/getMainEmerg
 const getRegionEmergencyContactsEndpoint = 'http://localhost:4091/api/getRegionEmergencyContacts';
 
 const testObjectId = "123456789012345678901234";
+const deleteObjectId = "123456789012345678901235";
+const editObkectId = "123456789012345678901236";
+const testObjectIdDoesNotExist = "123456789012345678901230"
+
+
 
 // NOTE TO USER: these tests put must be used in conjuction with scripts to insert
 //               data into the database and npm start on the API
 describe('User Unit Tests',function()
 {
-    it('login Pass',function()
+    it('login Pass',function(done)
     {
         request.post(loginEndpoint, {json: true, body: {login:'IAmATestUser', pass:'testytesy123'}}, function (error, response) {
             expect(response.statusCode).toEqual(200);
             expect(response.body.error).toEqual('');
-            expect(response.body.firstName).toEqual('Test');
+            expect(response.body.firstName).toEqual('TestMe');
             expect(response.body.lastName).toEqual('User');
             expect(response.body.userName).toEqual('IAmATestUser');
             expect(response.body.countryCode).toEqual(1);
@@ -30,7 +36,7 @@ describe('User Unit Tests',function()
         });
     });
 
-    it('login Does Not Exist', function()
+    it('login Does Not Exist', function(done)
     {
         request.post(loginEndpoint, {json: true, body: {login:'thisLogInDoesNotExist', pass:'pass123456789'}}, function (error, response) {
             expect(response.statusCode).toEqual(200);
@@ -39,7 +45,7 @@ describe('User Unit Tests',function()
         });
     });
 
-    it('login Username is null',function()
+    it('login Username is null',function(done)
     {
         request.post(loginEndpoint, {json: true, body: {login:null, pass:'pass123456789'}}, function (error, response) {
             expect(response.statusCode).toEqual(200);
@@ -48,7 +54,7 @@ describe('User Unit Tests',function()
         });
     });
 
-    it('login Password is null',function()
+    it('login Password is null',function(done)
     {
         request.post(loginEndpoint, {json: true, body: {login:'thisLogInDoesNotExist', pass:null}}, function (error, response) {
             expect(response.statusCode).toEqual(200);
@@ -57,35 +63,35 @@ describe('User Unit Tests',function()
         });
     });
 
-    it('signup Pass',function()
+    it('signup Pass',function(done)
     {
-        request.post(singupEndpoint, {json: true, body: {firstName:'Abhi', lastName:'Kotta', userName:'CoolGuy',
-            password:'IlikeMicrofiberTowles', email:'cool@email.com', regionCode:2, countryCode:2}}, function (error, response) {
+        request.post(singupEndpoint, {json: true, body: {firstname:'Test', lastname:'User', login:'CoolGuy',
+            pass:'IlikeMicrofiberTowles', email:'cool@email.com', regioncode:2, countrycode:2}}, function (error, response) {
             expect(response.statusCode).toEqual(200);
-            expect(response.body.error).toEqual("User created");
-            expect(response.body.userName).toEqual('CoolGuy');
-            expect(response.body.regionCode).toEqual(2);
-            expect(response.body.countryCode).toEqual(2);
+            expect(response.body.success).toEqual(true);
+            expect(response.body.error).toEqual('');
             done();
         });
     });
 
-    it('signup Email already being Used',function()
+    it('signup Email already being Used',function(done)
     {
-        request.post(singupEndpoint, {json: true, body: {firstName:'Abhi', lastName:'Kotta', userName:'CoolGuy',
-            password:'IlikeMicrofiberTowles', email:'test@me.com', regionCode:2, countryCode:2}}, function (error, response) {
+        request.post(singupEndpoint, {json: true, body: {firstname:'Abhi', lastname:'Kotta', login:'evenCoolerGuy',
+            pass:'IlikeMicrofiberTowles', email:'test@me.com', regioncode:2, countrycode:2}}, function (error, response) {
             expect(response.statusCode).toEqual(200);
+            expect(response.body.success).toEqual(false);
             expect(response.body.error).toEqual("Email is in use");
             done();
         });
     });
 
-    it('signup Username already being Used',function()
+    it('signup Username already being Used',function(done)
     {
-        request.post(singupEndpoint, {json: true, body: {firstName:'Abhi', lastName:'Kotta', userName:'IAmATestUser',
-            password:'IlikeMicrofiberTowles', email:'testytesty@me.com', regionCode:2, countryCode:2}}, function (error, response) {
+        request.post(singupEndpoint, {json: true, body: {firstname:'Abhi', lastname:'Kotta', login:'IAmATestUser',
+            pass:'IlikeMicrofiberTowles', email:'testytesty@me.com', regioncode:2, countrycode:2}}, function (error, response) {
             expect(response.statusCode).toEqual(200);
-            expect(response.body.error).toEqual("Email is in use");
+            expect(response.body.success).toEqual(false);
+            expect(response.body.error).toEqual("Username is taken");
             done();
         });
 
@@ -95,66 +101,104 @@ describe('User Unit Tests',function()
 
 describe('User Emergency Contacts', function()
 {
-    it('getContacts Pass',function()
+    it('getContacts Pass',function(done)
     {
-        request.post(getContactsEndpoint, {json: true, body: {}}, function (error, response) {
+        request.post(getContactsEndpoint, {json: true, body: {objectId:new ObjectId(testObjectId)}}, function (error, response) {
             expect(response.statusCode).toEqual(200);
             done();
         });
     });
 
-    it('getContacts No User',function()
+    it('getContacts No User',function(done)
     {
-        request.post(getContactsEndpoint, {json: true, body: {}}, function (error, response) {
+        request.post(getContactsEndpoint, {json: true, body: {objectId:new ObjectId(testObjectId)}}, function (error, response) {
             expect(response.statusCode).toEqual(200);
+            expect()
             done();
         });
     });
 
-    it('getContacts No Contacts',function()
+    it('getContacts No Contacts',function(done)
     {
-        request.post(getContactsEndpoint, {json: true, body: {}}, function (error, response) {
+        request.post(getContactsEndpoint, {json: true, body: {objectId:new ObjectId(testObjectIdDoesNotExist)}}, function (error, response) {
             expect(response.statusCode).toEqual(200);
+            expect(response.body.error).toEqual('User id is not found or User has empty contacts');
             done();
         });
     });
 
-    it('deleteContact Pass',function()
+    it('deleteContact Pass',function(done)
     {
-        request.post(deleteContactEndpoint, {json: true, body: {}}, function (error, response) {
+        request.post(deleteContactEndpoint, {json: true, body: {objectId:new ObjectId(deleteObjectId)}}, function (error, response) {
             expect(response.statusCode).toEqual(200);
+            expect(response.body.success).toEqual(true);
+            expect(response.body.error).toEqual('');
             done();
         });
     });
 
-    it('deleteContact Not matching Contact',function()
+    it('deleteContact Not matching Contact',function(done)
     {
-        request.post(deleteContactEndpoint, {json: true, body: {}}, function (error, response) {
+        request.post(deleteContactEndpoint, {json: true, body: {objectId: new ObjectId()}}, function (error, response) {
             expect(response.statusCode).toEqual(200);
+            expect(response.body.success).toEqual(false);
+            expect(response.body.error).toEqual('Could not find contact');
             done();
         });
     });
 
-    it('addContact Pass',function()
+    it('addContact Pass',function(done)
     {
-        request.post(addContactEndpoint, {json: true, body: {}}, function (error, response) {
+        let objectId = new ObjectId(testObjectId);
+        let firstName = "Joe";
+        let lastName = "Shome";
+        let phoneNumber = "567-890-2345";
+        let description = "What a cool guy so cool";
+
+        request.post(addContactEndpoint, {json: true, body: {usercreatedobjectid:objectId, firstname:firstName, lastname:lastName, phonenumber:phoneNumber, description:description}}, function (error, response) {
             expect(response.statusCode).toEqual(200);
+            expect(response.body.success).toEqual(true);
             done();
         });
     });
 
-    it('editContact Pass',function()
+    it ('addContact Contact already exists', function(done)
+    {
+        let objectId = new ObjectId(testObjectId);
+        let firstName = "Jack";
+        let lastName = "Andrews";
+        let phoneNumber = "123-456-7890";
+        let description = null;
+
+        request.post(addContactEndpoint, {json: true, body: {usercreatedobjectid:objectId, firstname:firstName, lastname:lastName, phonenumber:phoneNumber, description:description}}, function (error, response) {
+            expect(response.statusCode).toEqual(200);
+            expect(response.body.success).toEqual(false);
+            done();
+        });
+    });
+    
+
+    it('editContact Pass',function(done)
+    {
+        let objectId = new ObjectId(editContactEndpoint);
+        let firstName = "Some";
+        let lastName = "Dude";
+        let phoneNumber = "435-235-2345";
+        let description = "Oooooooooo";
+
+        request.post(editContactEndpoint, {json: true, body: {usercreatedobjectid:objectId, firstname:firstName, lastname:lastName, phonenumber:phoneNumber, description:description}}, function (error, response) {
+            expect(response.statusCode).toEqual(200);
+            expect(response.body.success).toEqual(true);
+            expect(response.body.error).toEqual('');
+            done();
+        });
+    });
+
+    it('editContact No matching Contact',function(done)
     {
          request.post(editContactEndpoint, {json: true, body: {}}, function (error, response) {
             expect(response.statusCode).toEqual(200);
-            done();
-        });
-    });
-
-    it('editContact No matching Contact',function()
-    {
-         request.post(getMainEmergencyContactsEndpoint, {json: true, body: {}}, function (error, response) {
-            expect(response.statusCode).toEqual(200);
+            expect(response.body.error).toEqual('User is not found or no contact found');
             done();
         });
     });
@@ -162,18 +206,36 @@ describe('User Emergency Contacts', function()
 
 describe('Region Emergency Contacts', function()
 {
-    it('getRegionEmergencyContacts Pass',function()
+    it('getRegionEmergencyContacts Pass',function(done)
     {
-        request.post(getRegionEmergencyContactsEndpoint, {json: true, body: {}}, function (error, response) {
+        let name = "Test Local Police";
+        let phoneNumber = "123-456-7890";
+        let description = null;
+        let address = "123 Street Street";
+        let zipCode = 12345;
+        let state = "Florida";
+        let country = "United States"
+
+
+        request.post(getRegionEmergencyContactsEndpoint, {json: true, body: {regionCode:256, countryCode:256}}, function (error, response) {
             expect(response.statusCode).toEqual(200);
+            expect(response.body.error).toEqual('');
+            expect(response.body.name).toEqual(name);
+            expect(response.body.phoneNumber).toEqual(phoneNumber);
+            expect(response.body.description).toEqual(description);
+            expect(response.body.address).toEqual(address);
+            expect(response.body.zipCode).toEqual(zipCode);
+            expect(response.body.state).toEqual(state);
+            expect(response.body.country).toEqual(country);
             done();
         });
     });
 
-    it('getRegionEmergencyContacts Contact Does Not Exist',function()
+    it('getRegionEmergencyContacts Contact Does Not Exist',function(done)
     {
-        request.post(getRegionEmergencyContactsEndpoint, {json: true, body: {regionCode:1, countryCode:1}}, function (error, response) {
+        request.post(getRegionEmergencyContactsEndpoint, {json: true, body: {regionCode:255, countryCode:255}}, function (error, response) {
             expect(response.statusCode).toEqual(200);
+            expect(response.body.error).toEqual('No Region Emergency Contact found');
             done();
         });
     });
@@ -181,18 +243,21 @@ describe('Region Emergency Contacts', function()
 
 describe('Main Emergency Contacts', function()
 {
-    it('getMainEmergencyContacts Pass',function()
+    it('getMainEmergencyContacts Pass',function(done)
     {
-        request.post(getMainEmergencyContactsEndpoint, {json: true, body: {}}, function (error, response) {
+        request.post(getMainEmergencyContactsEndpoint, {json: true, body: {countrycode:1000}}, function (error, response) {
             expect(response.statusCode).toEqual(200);
+            expect(response.body.error).toEqual('');
             done();
         });
     });
 
-    it('getMainEmergencyContacts Contact Does Not Exist',function()
+    it('getMainEmergencyContacts Contact Does Not Exist',function(done)
     {
-        request.post(getMainEmergencyContactsEndpoint, {json: true, body: {}}, function (error, response) {
-            expect(response.statusCode).toEqual(404);
+        request.post(getMainEmergencyContactsEndpoint, {json: true, body: {countrycode:1001}}, function (error, response) {
+            expect(response.statusCode).toEqual(200);
+            expect(response.body.error).toEqual('No Main Emergency Contact for the Country Code');
+            expect(response.body.success).toEqual(false);
             done();
         });
     });
@@ -201,6 +266,10 @@ describe('Main Emergency Contacts', function()
 /*
 describe('Pins', function()
 {
+    it ('getPins Pass,function(done)
+    {
 
+    }
+    
 });
 */
