@@ -1,7 +1,4 @@
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LinearGradient, { LinearGradientProps } from 'react-native-linear-gradient';
 import {
     StyleSheet,
     Text,
@@ -26,7 +23,7 @@ function Login({ navigation }) {
                 }}>Login</Text>
                 <TextInput style={styles.input} autoComplete='username' textContentType='username' onChangeText={text => setUsername(text)} placeholder="Username" placeholderTextColor={"#6b6b6b"}/>
                 <TextInput style={styles.input} autoComplete='password' textContentType='password' secureTextEntry={true} onChangeText={text => setPassword(text)} placeholder="Password" placeholderTextColor={"#6b6b6b"}/>
-                <Pressable style={styles.buttonStyle} onPress={async () =>
+                <Pressable style={({pressed}) => [{ backgroundColor: pressed ? "#595959" : "#494949" }, styles.buttonStyle]} onPress={async () =>
                 {
                     // Waka waka
                     var obj = {userName: username, password: password};
@@ -46,7 +43,7 @@ function Login({ navigation }) {
                         }
                         else
                         {
-                            Alert.alert('Welcome ' + res.firstName);
+                            navigation.navigate("Welcome");
                         }
 
                     }
@@ -62,10 +59,10 @@ function Login({ navigation }) {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                 }}>
-                    <Pressable style={styles.smallerButtonStyle} onPress={() => navigation.navigate("Register")}>
+                    <Pressable style={({pressed}) => [{ backgroundColor: pressed ? "#595959" : "#494949" }, styles.smallerButtonStyle]} onPress={() => navigation.navigate("Register")}>
                         <Text style={styles.buttonText}>{"Register"}</Text>
                     </Pressable>
-                    <Pressable style={styles.smallerButtonStyle} onPress={() => navigation.navigate('ForgetLoginModal')}>
+                    <Pressable style={({pressed}) => [{ backgroundColor: pressed ? "#595959" : "#494949" }, styles.smallerButtonStyle]} onPress={() => navigation.navigate('ForgetLoginModal')}>
                         <Text style={styles.buttonText}>{"Forgot Login?"}</Text>
                     </Pressable>
                 </View>
@@ -105,9 +102,9 @@ const styles = StyleSheet.create({
       borderBottomWidth: StyleSheet.hairlineWidth,
     },
     buttonStyle:{
-        backgroundColor:"#494949",
+        // backgroundColor:"#494949",
         padding:7,
-        margin:10,
+        margin:15,
         height: 38,
         width: 171,
         borderRadius: 7.5,
@@ -115,7 +112,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     smallerButtonStyle: {
-        backgroundColor:"#494949",
+        // backgroundColor:"#494949",
         padding:7,
         margin:10,
         height: 32,

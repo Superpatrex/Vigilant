@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
     StyleSheet,
     Text,
@@ -45,6 +43,7 @@ const Register = ({ navigation }) => {
   const [email, setEmail] = React.useState('err');
   const [username, setUsername] = React.useState('err');
   const [password, setPassword] = React.useState('err');
+  const [confirmPassword, setConfirmPassword] = React.useState('rre');
 
   return (
     <View style={styles.centered}>
@@ -65,8 +64,14 @@ const Register = ({ navigation }) => {
             <TextInput style={styles.input} onChangeText={text => setEmail(text)} placeholder="Email" placeholderTextColor={"#6b6b6b"}/>
             <TextInput style={styles.input} onChangeText={text => setUsername(text)} placeholder="Username" placeholderTextColor={"#6b6b6b"} />
             <TextInput style={styles.input} textContentType='newPassword' secureTextEntry={true} onChangeText={text => setPassword(text)} placeholder="Password" placeholderTextColor={"#6b6b6b"}/>
-            <Pressable style={styles.buttonStyle} onPress={async () =>
+            <TextInput style={styles.input} secureTextEntry={true} placeholder="Confirm Password" placeholderTextColor={"#6b6b6b"} onChangeText={text => setConfirmPassword(text)}/>
+            <Pressable style={({pressed}) => [{ backgroundColor: pressed ? "#595959" : "#494949" }, styles.buttonStyle]} onPress={async () =>
             {
+                if (password != confirmPassword)
+                {
+                    Alert.alert("Passwords do not match");
+                    return;
+                }
                 var obj = {firstname: fName, lastname: lName, login: username, pass: password, email: email, regioncode: 5, countrycode: 5};
                 var js = JSON.stringify(obj);
               
@@ -108,7 +113,7 @@ const styles = StyleSheet.create({
   },
   registerBox: {
     backgroundColor: "#202020",
-    height: 485,
+    height: 515,
     width: 347,
     borderRadius: 15,
     // flex: 1,
@@ -137,7 +142,7 @@ const styles = StyleSheet.create({
       color: "black"
   },
     buttonStyle:{
-      backgroundColor:"#494949",
+    //   backgroundColor:"#494949",
       padding:7,
       margin:10,
       height: 38,
