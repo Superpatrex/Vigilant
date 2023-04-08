@@ -10,6 +10,7 @@ const client = new MongoClient(url);
 client.connect(console.log('mongodb connected'));
 
 const path = require('path');
+const { ObjectId } = require('mongodb');
 const PORT = process.env.PORT || 4091;
 
 const app = express();
@@ -458,3 +459,132 @@ app.post('/api/passwordChange', async (request, response, next) =>
 
 // Region Emergency Contacts
 //////////////////////////////////////////////////////////////////////////
+
+app.post('/api/addPin', async (request, response, next) => 
+{
+  // incoming: firstName, lastName, phoneNumber, description, userCreatedObjectId
+  // outgoing: error
+	
+ var error = '';
+
+  const { usercreatedobjectid, Address, zip, State, Country, Description, Resolved, latitude, longitude} = request.body;
+
+  const db = client.db("LargeProject");
+  var ret = await db.collection('Pins').insertOne({
+    address:Address, 
+    zipCode:zip, 
+    state:State, 
+    country:Country,
+    location: {
+      type: "Point",
+      coordinates : [longitude, latitude],
+      },
+    description:Description,
+    numResolved:Resolved, 
+    userCreatedObjectId:usercreatedobjectid,
+    dateCreated:new Date()
+  });
+
+  response.status(200).json({success:true, error:'no error'});
+});
+
+app.post('/api/editPin', async (request, response, next) => 
+{
+  // incoming: login, password
+  // outgoing: id, firstName, lastName, username, regionCode error
+	
+ var error = '';
+
+  const { ID, usercreatedobjectid, Address, zip, State, Country, Description, Resolved, latitude, longitude } = request.body;
+
+  const db = client.db("LargeProject");
+  
+  const results = await db.collection('Pins').updateOne(
+    { _id: new ObjectId(ID)}, 
+    {$set:
+      { 
+        userCreatedObjectId: new ObjectId(usercreatedobjectid),
+        address:Address, 
+        zipCode:zip, 
+        state:State, 
+        country:Country,
+        location: {
+          type: "Point",
+          coordinates : [longitude, latitude],
+        },
+        description:Description,
+        numResolved:Resolved,
+        dateCreated:new Date()
+      }
+    });
+
+    //console.log(results);
+
+    // db.findById(ObjectId("642cc18f83c0db8ed571b2e0"))
+    // .then(doc => {
+    //   console.log(doc);
+    // })
+    // .catch(err => {
+    //   console.log(err);
+    // });
+
+
+  if( results.modifiedCount > 0 )
+  {
+    response.status(200).json({success:true, error:'no error'});;
+  }
+  else
+  {
+    response.status(500).json({success: false, error: 'Failed to edit pin'})
+  }
+
+});
+
+app.post('/api/searchPins', async (request, response, next) => 
+{
+  const {latitude, longitude, minimumDist, maximumDist} = request.body;
+  try {
+    const collection = client.db("LargeProject").collection("Pins");
+    collection.createIndex({location:'2dsphere'});
+    const results = await collection.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: 'Point', 
+            coordinates: [longitude, latitude]
+          },
+          $maxDistance: maximumDist
+        }
+      }
+    }).toArray();
+    console.log(results);
+
+    response.status(200).json({success: true, pins: results, error: ''});
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({success: false, pins: [], error: 'Failed to search pins'});
+  }
+});
+
+app.post('/api/deletePin', async (request, response, next) => 
+{
+  // incoming: firstName, lastName, phoneNumber, description, userCreatedObjectId
+  // outgoing: error
+	
+ var error = '';
+
+  const {objectid} = request.body;
+
+  const db = client.db("LargeProject");
+  var ret = await db.collection('Pins').deleteOne({_id: new ObjectId(objectid)});
+
+  if (ret.deletedCount > 0)
+  {
+    response.status(200).json({success:true, error:'no error'});
+  }
+  else
+  {
+    response.status(500).json({success:false, error:'Failed to delete pin'});
+  }
+  
+});
