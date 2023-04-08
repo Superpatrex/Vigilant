@@ -9,10 +9,13 @@ const addContactEndpoint = 'http://localhost:4091/api/addContact';
 const editContactEndpoint = 'http://localhost:4091/api/editContact';
 const getMainEmergencyContactsEndpoint = 'http://localhost:4091/api/getMainEmergencyContacts';
 const getRegionEmergencyContactsEndpoint = 'http://localhost:4091/api/getRegionEmergencyContacts';
+const addPinEndPoint = 'http://localhost:4091/api/addPin';
+const deletePinEndPoint = 'http://localhost:4091/api/deletePin';
+const editPinEndPoint = 'http://localhost:4091/api/editPin';
 
 const testObjectId = "123456789012345678901234";
 const deleteObjectId = "123456789012345678901235";
-const editObkectId = "123456789012345678901236";
+const editObjectId = "123456789012345678901236";
 const testObjectIdDoesNotExist = "123456789012345678901230"
 
 
@@ -263,13 +266,134 @@ describe('Main Emergency Contacts', function()
     });
 });
 
-/*
+
 describe('Pins', function()
 {
-    it ('getPins Pass,function(done)
+    it ('addPin adds a Pin to DB', function(done)
     {
+        let objectId = new ObjectId(testObjectId);
+        let address = "0648 Big Boi pk Tr.";
+        let zipCode = "69174";
+        let State = "Ohio";
+        let country = "USA";
+        let description = "Fist fight here";
+        let numResolved = 0;
+        let latitude = 15;
+        let longitude = 15;
 
-    }
+        request.post(addPinEndPoint, {json: true, body: {
+            usercreatedobjectid:objectId, 
+            Address:address, 
+            zip:zipCode, 
+            State:State, 
+            Country:country,
+            Description:description,
+            Resolved:numResolved,
+            latitude:latitude,
+            longitude:longitude
+        }}, 
+
+        function (error, response) {
+            expect(response.statusCode).toEqual(200);
+            expect(response.body.success).toEqual(true);
+            done();
+        });
+    });
+    it ('edit an existing Pin', function(done)
+    {
+        let objectId = new ObjectId(testObjectId);
+        let address = "0648 Big Boi pk Tr.";
+        let zipCode = "69174";
+        let State = "Ohio";
+        let country = "USA";
+        let description = "Fist fight here";
+        let numResolved = 0;
+        let latitude = 15;
+        let longitude = 15;
+
+        request.post(editPinEndPoint, {json: true, body: {
+            usercreatedobjectid:objectId, 
+            Address:address, 
+            zip:zipCode, 
+            State:State, 
+            Country:country,
+            Description:description,
+            Resolved:numResolved,
+            latitude:latitude,
+            longitude:longitude
+        }}, 
+
+        function (error, response) {
+            expect(response.statusCode).toEqual(200);
+            expect(response.body.success).toEqual(true);
+            done();
+        });
+    });
+
+    it ('edit a non-existing Pin', function(done)
+    { 
+        let objectId = new ObjectId('123456789012345678901236');
+        let usercreatedobjectid = null;
+        let address = "0648 Big Boi pk Tr.";
+        let zipCode = "69174";
+        let State = "Ohio";
+        let country = "USA";
+        let description = "Fist fight here";
+        let numResolved = 0;
+        let latitude = 15;
+        let longitude = 15;
+
+        request.post(editPinEndPoint, {json: true, body: {
+            ID:objectId,
+            usercreatedobjectid:usercreatedobjectid, 
+            Address:address, 
+            zip:zipCode, 
+            State:State, 
+            Country:country,
+            Description:description,
+            Resolved:numResolved,
+            latitude:latitude,
+            longitude:longitude
+        }}, 
+
+        function (error, response) {
+            expect(response.statusCode).toEqual(500);
+            expect(response.body.success).toEqual(false);
+            done();
+        });
+    });
+
+    it ('delete existing pin', function(done)
+    {
+        let objectId = new ObjectId(testObjectId);
+
+        request.post(deletePinEndPoint, {json: true, body: {
+            objectId:objectId, 
+        }}, 
+
+        function (error, response) {
+            expect(response.statusCode).toEqual(200);
+            expect(response.body.success).toEqual(true);
+            done();
+        });
+    });
+
+    it ('delete non-existing pin', function(done)
+    {
+        let objectId = new ObjectId("123456789012345678901236");
+
+        request.post(deletePinEndPoint, {json: true, body: {
+            objectId:objectId, 
+        }}, 
+
+        function (error, response) {
+            expect(response.statusCode).toEqual(500);
+            expect(response.body.success).toEqual(false);
+            done();
+        });
+    });
+
+    
     
 });
-*/
+
