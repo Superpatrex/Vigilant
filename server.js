@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const nodemailer = require("nodemailer");
+const PIN_LOCATION_TYPE = 'Point';
+
 
 require('dotenv').config()
 const url = process.env.MONGODB_URI;
@@ -10,6 +12,7 @@ const client = new MongoClient(url);
 client.connect(console.log('mongodb connected'));
 
 const path = require('path');
+const { ObjectId } = require('mongodb');
 const PORT = process.env.PORT || 4091;
 
 const app = express();
@@ -184,13 +187,24 @@ app.post('/api/getContacts', async (request, response, next) =>
   // outgoing: id, firstName, lastName, phoneNumber, description, error
 	
   var error = '';
+  var retval;
 
   const { objectId } = request.body;
 
   const db = client.db("LargeProject");
-  const results = await db.collection('UserEmergencyContacts').find({userCreatedObjectId:objectId}).toArray();
+  const exists = await db.collection('Users').findOne({_id:new ObjectId(objectId)});
 
-  var ret;
+  if (!exists)
+  {
+    console.log("huh");
+    retval = {success:false, results:null, error:'User does not exist'};
+    response.status(304).json(retval);
+    return;
+  }
+
+  const results = await db.collection('UserEmergencyContacts').find({userCreatedObjectId:new ObjectId(objectId)}).toArray();
+
+  var ret = [];
   var id = -1;
   var firstName = '';
   var lastName = '';
@@ -199,19 +213,27 @@ app.post('/api/getContacts', async (request, response, next) =>
 
   if( results.length > 0 )
   {
-    id = results[0]._id;
-    firstName = results[0].firstName;
-    lastName = results[0].lastName;
-    phoneNumber = results[0].phoneNumber;
-    description = results[0].description;
-    ret = { _id:id, firstName:firstName, lastName:lastName, phoneNumber:phoneNumber, description:description, error:''};
+    for (i = 0; i < results.length; i++)
+    {
+      id = results[i]._id;
+      firstName = results[i].firstName;
+      lastName = results[i].lastName;
+      phoneNumber = results[i].phoneNumber;
+      description = results[i].description;
+
+      ret.push({id:id, firstName:firstName, lastName:lastName, phoneNumber:phoneNumber, description:description});
+    }
+
+    retval = {success:true, results:ret, error:''};
   }
   else
   {
-    ret = { error:'User id is not found or User has empty contacts'};
+    retval = {success:false, results:null, error:'User has empty contact'};
+    response.status(304).json(retval);
+    return;
   }
 
-  response.status(200).json(ret);
+  response.status(200).json(retval);
 });
 
 app.post('/api/deleteContact', async (request, response, next) => 
@@ -224,9 +246,9 @@ app.post('/api/deleteContact', async (request, response, next) =>
   const { objectId } = request.body;
 
   const db = client.db("LargeProject");
-  const results = await db.collection('UserEmergencyContacts').deleteOne({_id:objectId});
+  const results = await db.collection('UserEmergencyContacts').deleteOne({_id:new ObjectId(objectId)});
  
-  var ret = ( results.length > 0 ) ? { success:true, error:'' } : { success:false, error:'Could not find contact' };
+  var ret = ( results.deletedCount === 1 ) ? { success:true, error:'' } : { success:false, error:'Could not find contact' };
 
   response.status(200).json(ret);
 });
@@ -241,7 +263,7 @@ app.post('/api/addContact', async (request, response, next) =>
   const { usercreatedobjectid, firstname, lastname, phonenumber, description } = request.body;
 
   const db = client.db("LargeProject");
-  var ret = await db.collection('UserEmergencyContacts').insertOne({firstName:firstname, lastName:lastname, phoneNumber:phonenumber, description:description, userCreatedObjectId:usercreatedobjectid});
+  var ret = await db.collection('UserEmergencyContacts').insertOne({firstName:firstname, lastName:lastname, phoneNumber:phonenumber, description:description, userCreatedObjectId:new ObjectId(usercreatedobjectid)});
 
   response.status(200).json({success:true, error:''});
 });
@@ -253,15 +275,14 @@ app.post('/api/editContact', async (request, response, next) =>
 	
  var error = '';
 
-  const { usercreatedobjectid, firstname, lastname, phonenumber, description } = request.body;
+  const { id, firstname, lastname, phonenumber, description } = request.body;
 
   const db = client.db("LargeProject");
   
   const results = await db.collection('UserEmergencyContacts').updateOne(
-    { userCreatedObjectId:usercreatedobjectid }, {$set:{firstName:firstname, lastName:lastname, phoneNumber:phonenumber, description:description}});
+    { _id:new ObjectId(id) }, {$set:{firstName:firstname, lastName:lastname, phoneNumber:phonenumber, description:description}});
 
-
-  if( results.length > 0 )
+  if( results.modifiedCount > 0 )
   {
     ret = { success:true, error:''};
   }
@@ -278,7 +299,7 @@ app.post('/api/editContact', async (request, response, next) =>
 
 app.post('/api/getMainEmergencyContacts', async (request, response, next) => 
 {
-  // incoming: firstName, lastName, phoneNumber, description, userCreatedObjectId
+  // incoming: countrycode
   // outgoing: error
 	
  var error = '';
@@ -286,26 +307,28 @@ app.post('/api/getMainEmergencyContacts', async (request, response, next) =>
   const { countrycode } = request.body;
 
   const db = client.db("LargeProject");
-  var result = await db.collection('UserEmergencyContacts').find({ countryCode:countrycode }).toArray();
-
+  var result = await db.collection('MainEmergencyContacts').find({ countryCode:countrycode }).toArray();
+  var ret;
+  var _ret = [];
+  
   if (result.length > 0)
   {
-    var name = result[0].name;
-    var phoneNumber = result[0].phoneNumber;
-    if (result[0].description === null)
-    {
-      ret = {name:name, phoneNumber:phoneNumber, error:''};
-    }
-    else
-    {
-      var description = result[0].description;
-      ret = {success:true, name:name, phoneNumber:phoneNumber, description:description, error:''};
-    }
+      for (i = 0; i < result.length; i++)
+      {
+        var name = result[i].name;
+        var phoneNumber = result[i].phoneNumber;
+        var description = result[i].description;
+    
+        _ret.push({name:name, phoneNumber:phoneNumber, description:description, error:''});
+      }
 
+      ret = {success:true, results:_ret, error:''};
   }
   else
   {
-    ret = {success:false, error:'No Main Emergency Contact for the Country Code'};
+    ret = {success:false, results:_ret, error:'No Main Emergency Contacts for the Country Code'};
+    response.status(304).json(ret);
+    return;
   }
 
   response.status(200).json(ret);
@@ -326,34 +349,30 @@ app.post('/api/getRegionEmergencyContacts', async (request, response, next) =>
   const db = client.db("LargeProject");
   var result = await db.collection('RegionEmergencyContacts').find({ regionCode:regioncode, countryCode:countrycode }).toArray();
 
-  var ret;
+  var ret = [];
 
   if (result.length > 0)
   {
-    var name = result[0].name;
-    var phoneNumber = result[0].phoneNumber;
-    var address = result[0].address;
-    var zipCode = result[0].zipCode;
-    var state = result[0].state;
-    var country = result[0].country;
-    var description = result[0].description;
-    
-    if (description === null)
+    for (i = 0; i < result.length; i++)
     {
-      ret = {name:name, phoneNumber:phoneNumber, address:address, zipCode:zipCode, state:state, country:country, error:''};  
+      var name = result[i].name;
+      var phoneNumber = result[i].phoneNumber;
+      var address = result[i].address;
+      var zipCode = result[i].zipCode;
+      var state = result[i].state;
+      var country = result[i].country;
+      var description = result[i].description;
+
+      ret.push({name:name, phoneNumber:phoneNumber, description:description, address:address, zipCode:zipCode, state:state, country:country, error:''});
     }
-    else
-    {
-      ret = {name:name, phoneNumber:phoneNumber, description:description, address:address, zipCode:zipCode, state:state, country:country, error:''};
-    }
-    
   }
   else
   {
-    ret = {error:'No Region Emergency Contact found'};
+    response.status(304).json({success:false, results:ret, error:'No Region Emergency Contacts found'});
+    return;
   }
   
-  response.status(200).json(ret);
+  response.status(200).json({success:true, results:ret, error:''});
 });
 
 function isNotValidString(myString)
@@ -365,13 +384,14 @@ app.post('/api/emailChange', async (request, response, next) =>
   // incoming: login, Password, Email
   // outgoing: userName, email, error
 
-  const { login, Password, Email } = request.body;
+  const { login, pass, email } = request.body;
 
   try
   {
     const db = client.db("LargeProject");
 
-    const emailExists = await db.collection('Users').findOne({"email":Email});
+    const emailExists = await db.collection('Users').findOne({"email":email});
+
     if (emailExists)
     {
       response.status(200).json({ error:'Email is already in use.' });
@@ -380,13 +400,13 @@ app.post('/api/emailChange', async (request, response, next) =>
 
     const result = await db.collection('Users').updateOne(
       {
-        "userName": login,
-        "password": Password
+        userName: login,
+        password: pass
       },
       {
         $set:
         {
-          "email":Email
+          email:email
         }
       }
     );
@@ -398,7 +418,7 @@ app.post('/api/emailChange', async (request, response, next) =>
 
     response.status(200).json({
       userName: login, 
-      email: Email,
+      email: email,
       error:'Email updated successfully.' 
     });
   }
@@ -417,33 +437,24 @@ app.post('/api/passwordChange', async (request, response, next) =>
   var error = '';
   var results;
 
-  const { login, Password, Email } = request.body;
+  const { login, pass, email } = request.body;
 
   try
   {
     const db = client.db("LargeProject");
 
-    resultsBool = (await db.collection('Users').countDocuments({"password":Password}) > 0);
-    if (resultsBool)
-    {
-      response.status(200).json({ error:'Password in use' });
-      return;
-    }
-
     results = await db.collection('Users').updateOne(
       {
-        userName: login,
-        email: Email
+        userName:login,
+        email:email
       },
       {
         $set:
         {
-          password:Password
+          password:pass
         }
       }
     );
-
-    console.log(results);
   }
   catch (error)
   {
@@ -451,10 +462,149 @@ app.post('/api/passwordChange', async (request, response, next) =>
   }
 
   response.status(200).json({
-      userName: login, 
-      password: Password,
+      userName:login, 
+      password:pass,
       error:'Password Updated' });
 });
 
-// Region Emergency Contacts
+// Pins
 //////////////////////////////////////////////////////////////////////////
+
+app.post('/api/addPin', async (request, response, next) => 
+{
+  // incoming: usercreatedobjectid, Address, zip, State, Country, Resolved, lastitude, longitude
+  // outgoing: error, success
+	
+  var error = '';
+
+  const { usercreatedobjectid, Address, zip, State, Country, Description, Resolved, latitude, longitude} = request.body;
+
+  try
+  {
+    const db = client.db("LargeProject");
+    var result = await db.collection('Pins').insertOne({
+      address:Address, 
+      zipCode:zip, 
+      state:State, 
+      country:Country,
+      location: {
+        type: PIN_LOCATION_TYPE,
+        coordinates : [longitude, latitude],
+        },
+      description:Description,
+      numResolved:Resolved, 
+      userCreatedObjectId:new ObjectId(usercreatedobjectid),
+      dateCreated:new Date()
+    });
+  }
+  catch (error)
+  {
+    console.log(error);
+    response.status(500).json({success:false, error:''});
+  }
+
+  response.status(200).json({success:true, error:''});
+});
+
+app.post('/api/editPin', async (request, response, next) => 
+{
+  // incoming: ID, usercreatedobjectid, Address, zip, State, Country, Description, Resolved, latitude, longitude
+  // outgoing: error, success
+	
+  var error = '';
+  var retval;
+
+  const { ID, usercreatedobjectid, Address, zip, State, Country, Description, Resolved, latitude, longitude } = request.body;
+
+  const db = client.db("LargeProject");
+  
+  const results = await db.collection('Pins').updateOne(
+    { _id: new ObjectId(ID)}, 
+    {$set:
+      { 
+        userCreatedObjectId: new ObjectId(usercreatedobjectid),
+        address:Address, 
+        zipCode:zip, 
+        state:State, 
+        country:Country,
+        location: {
+          type: PIN_LOCATION_TYPE,
+          coordinates : [longitude, latitude],
+        },
+        description:Description,
+        numResolved:Resolved,
+        dateCreated:new Date()
+      }
+    });
+
+  if( results.modifiedCount > 0 )
+  {
+    retval = {success:true, error:''};
+    response.status(200).json(retval);
+  }
+  else
+  {
+    retval = {success:false, error:'Failed to edit pin'};
+    response.status(304).json(retval);
+  }
+
+});
+
+app.post('/api/searchPins', async (request, response, next) => 
+{
+  // incoming: latitude, longitude, maximumDist
+  // outgoing: error, success
+
+  var searchLocationType = '2dsphere';
+  var locationGeometryType = 'Point';
+
+  const {latitude, longitude, maximumDist} = request.body;
+
+  try
+  {
+    const collection = client.db("LargeProject").collection("Pins");
+    collection.createIndex({location:searchLocationType});
+    const results = await collection.find({
+      location: {
+        $near: {
+          $geometry: {
+            type:  locationGeometryType, 
+            coordinates: [longitude, latitude]
+          },
+          $maxDistance: maximumDist
+        }
+      }
+    }).toArray();
+
+    response.status(200).json({success:true, pins:results, error:''});
+  } 
+  catch (error)
+  {
+    response.status(500).json({success:false, pins:null, error:'Failed to search pins'});
+  }
+});
+
+app.post('/api/deletePin', async (request, response, next) => 
+{
+  // incoming: objectId
+  // outgoing: error, success
+	
+ var error = '';
+
+  const {objectid} = request.body;
+  var retval;
+
+  const db = client.db("LargeProject");
+  var ret = await db.collection('Pins').deleteOne({_id: new ObjectId(objectid)});
+
+  if (ret.deletedCount > 0)
+  {
+    retval = {success:true, error:''};
+    response.status(200).json(retval);
+  }
+  else
+  {
+    retval = {success:false, error:'Failed to delete pin'};
+    response.status(304).json(retval);
+  }
+});
