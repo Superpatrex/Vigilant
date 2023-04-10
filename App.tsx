@@ -3,10 +3,12 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useColorScheme } from 'react-native';
 
-import Login from './components/Login';
-import Register from './components/Register';
+import LoginScreen from './pages/LoginScreen';
+import RegisterScreen from './pages/RegisterScreen';
 import ForgetLoginModal from './components/ForgetLoginModal';
-import Welcome from './components/Welcome';
+import AddContactModal from './components/AddContactModal';
+
+import Home from './components/Home';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,15 +19,18 @@ function App(): JSX.Element {
         <Stack.Group>
           <Stack.Screen
             name="Login"
-            component={Login}
+            component={LoginScreen}
           />
           <Stack.Screen
             name="Register"
-            component={Register}
+            component={RegisterScreen}
           />
           <Stack.Screen
-            name="Welcome"
-            component={Welcome}
+            name="Home"
+            component={Home}
+            options={{
+                headerShown: false,
+            }}
           />
         </Stack.Group>
         <Stack.Group screenOptions={{ presentation: 'modal' }}>
@@ -36,10 +41,16 @@ function App(): JSX.Element {
                     title: 'Forget Login?',
                 }}
             />
+            <Stack.Screen
+              name="AddContactModal"
+              component={AddContactModal}
+              options={{
+                title: 'Add Contact'
+              }}
+            />
         </Stack.Group>
       </Stack.Navigator>
     </NavigationContainer>
-
   );
 }
 
