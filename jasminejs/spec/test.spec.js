@@ -170,8 +170,7 @@ describe('User Emergency Contacts', function()
         let errorMessage = 'User does not exist';
 
         request.post(GET_CONTACTS_ENDPOINT, {json: true, body: {objectId:objectId}}, function (error, response) {
-            console.log(response);
-            expect(response.statusCode).toEqual(NOT_MODIFIED_STATUS_CODE);
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
             expect(response.body.success).toEqual(success);
             expect(response.body.results).toEqual(results);
             expect(response.body.error).toEqual(errorMessage);
@@ -187,8 +186,7 @@ describe('User Emergency Contacts', function()
         let results = null;
 
         request.post(GET_CONTACTS_ENDPOINT, {json: true, body: {objectId:objectId}}, function (error, response) {
-            console.log(response);
-            expect(response.statusCode).toEqual(NOT_MODIFIED_STATUS_CODE);
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
             expect(response.body.error).toEqual(errorMessage);
             expect(response.body.success).toEqual(success);
             expect(response.body.results).toEqual(results);
@@ -331,7 +329,7 @@ describe('Region Emergency Contacts', function()
         let errorMessage = 'No Region Emergency Contacts found';
 
         request.post(GET_REGION_EMERGENCY_CONTACTS_ENDPOINT, {json: true, body: {regioncode:regionCode, countrycode:countryCode}}, function (error, response) {
-            expect(response.statusCode).toEqual(NOT_MODIFIED_STATUS_CODE);
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
             expect(response.body.error).toEqual(errorMessage);
             done();
         });
@@ -381,7 +379,7 @@ describe('Main Emergency Contacts', function()
         let success = false;
 
         request.post(GET_MAIN_EMERGENCY_CONTACTS_ENDPOINT, {json: true, body: {countrycode:countryCode}}, function (error, response) {
-            expect(response.statusCode).toEqual(NOT_MODIFIED_STATUS_CODE);
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
             expect(response.body.error).toEqual(errorMessage);
             expect(response.body.success).toEqual(success);
             done();
@@ -481,7 +479,7 @@ describe('Pins', function()
         }}, 
 
         function (error, response) {
-            expect(response.statusCode).toEqual(NOT_MODIFIED_STATUS_CODE);
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
             expect(response.body.success).toEqual(success);
             done();
         });
@@ -512,7 +510,7 @@ describe('Pins', function()
         }}, 
 
         function (error, response) {
-            expect(response.statusCode).toEqual(NOT_MODIFIED_STATUS_CODE);
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
             expect(response.body.success).toEqual(success);
             expect(response.body.error).toEqual(errorMessage);
             done();

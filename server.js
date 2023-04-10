@@ -192,13 +192,13 @@ app.post('/api/getContacts', async (request, response, next) =>
   const { objectId } = request.body;
 
   const db = client.db("LargeProject");
-  const exists = await db.collection('Users').findOne({_id:new ObjectId(objectId)});
 
-  if (!exists)
+  const exists = !(await db.collection('Users').countDocuments({_id:new ObjectId(objectId)}) > 0);
+
+  if (exists)
   {
-    console.log("huh");
     retval = {success:false, results:null, error:'User does not exist'};
-    response.status(304).json(retval);
+    response.status(500).json(retval);
     return;
   }
 
@@ -229,7 +229,7 @@ app.post('/api/getContacts', async (request, response, next) =>
   else
   {
     retval = {success:false, results:null, error:'User has empty contact'};
-    response.status(304).json(retval);
+    response.status(500).json(retval);
     return;
   }
 
@@ -313,25 +313,24 @@ app.post('/api/getMainEmergencyContacts', async (request, response, next) =>
   
   if (result.length > 0)
   {
-      for (i = 0; i < result.length; i++)
-      {
+    for (i = 0; i < result.length; i++)
+    {
         var name = result[i].name;
         var phoneNumber = result[i].phoneNumber;
         var description = result[i].description;
-    
+        
         _ret.push({name:name, phoneNumber:phoneNumber, description:description, error:''});
-      }
-
+    }
+      
       ret = {success:true, results:_ret, error:''};
+      response.status(200).json(ret);
   }
   else
   {
     ret = {success:false, results:_ret, error:'No Main Emergency Contacts for the Country Code'};
-    response.status(304).json(ret);
-    return;
+    response.status(500).json(ret);
   }
 
-  response.status(200).json(ret);
 });
 
 // Region Emergency Contacts
@@ -368,7 +367,7 @@ app.post('/api/getRegionEmergencyContacts', async (request, response, next) =>
   }
   else
   {
-    response.status(304).json({success:false, results:ret, error:'No Region Emergency Contacts found'});
+    response.status(500).json({success:false, results:ret, error:'No Region Emergency Contacts found'});
     return;
   }
   
@@ -545,7 +544,7 @@ app.post('/api/editPin', async (request, response, next) =>
   else
   {
     retval = {success:false, error:'Failed to edit pin'};
-    response.status(304).json(retval);
+    response.status(500).json(retval);
   }
 
 });
@@ -604,6 +603,6 @@ app.post('/api/deletePin', async (request, response, next) =>
   else
   {
     retval = {success:false, error:'Failed to delete pin'};
-    response.status(304).json(retval);
+    response.status(500).json(retval);
   }
 });
