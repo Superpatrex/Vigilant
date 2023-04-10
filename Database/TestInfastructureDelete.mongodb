@@ -4,6 +4,8 @@ use("LargeProject")
 
 let testObjectId = "123456789012345678901234"
 let secondaryTestObjectId = "123456789012345678901237"
+let deleteObjectId = "123456789012345678901235"
+let editObjectId = "123456789012345678901236"
 
 db.Users.deleteMany({
     _id: ObjectId(testObjectId)
@@ -39,6 +41,22 @@ db.UserEmergencyContacts.deleteMany({
 
 db.Pins.deleteMany({
     userCreatedObjectId: ObjectId(testObjectId)
+})
+
+db.Pins.deleteMany({
+    userCreatedObjectId: ObjectId(secondaryTestObjectId)
+})
+
+db.Pins.deleteMany({
+    _id: ObjectId(testObjectId)
+})
+
+db.Pins.deleteMany({
+    _id: ObjectId(secondaryTestObjectId)
+})
+
+db.Pins.deleteMany({
+    _id: ObjectId(editObjectId)
 })
 
 db.Users.deleteMany({

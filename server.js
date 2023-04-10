@@ -578,6 +578,7 @@ app.post('/api/searchPins', async (request, response, next) =>
   } 
   catch (error)
   {
+    console.log(error);
     response.status(500).json({success:false, pins:null, error:'Failed to search pins'});
   }
 });
@@ -587,13 +588,13 @@ app.post('/api/deletePin', async (request, response, next) =>
   // incoming: objectId
   // outgoing: error, success
 	
- var error = '';
+  var error = '';
 
-  const {objectid} = request.body;
+  const {objectId} = request.body;
   var retval;
 
   const db = client.db("LargeProject");
-  var ret = await db.collection('Pins').deleteOne({_id: new ObjectId(objectid)});
+  var ret = await db.collection('Pins').deleteOne({_id: new ObjectId(objectId)});
 
   if (ret.deletedCount > 0)
   {

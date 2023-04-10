@@ -422,6 +422,7 @@ describe('Pins', function()
     it ('edit an existing Pin', function(done)
     {
         let objectId = new ObjectId(editObjectId);
+        let userCreatedObjectId = new ObjectId(doesNotExistObjectId);
         let address = "0648 Big Boi pk Tr.";
         let zipCode = "69174";
         let State = "Ohio";
@@ -431,9 +432,11 @@ describe('Pins', function()
         let latitude = 15;
         let longitude = 15;
         let success = true;
+        let errorMessage = '';
 
         request.post(EDIT_PIN_ENDPOINT, {json: true, body: {
-            usercreatedobjectid:objectId, 
+            ID:objectId,
+            usercreatedobjectid:userCreatedObjectId, 
             Address:address, 
             zip:zipCode, 
             State:State, 
@@ -447,6 +450,7 @@ describe('Pins', function()
         function (error, response) {
             expect(response.statusCode).toEqual(SUCCESS_STATUS_CODE);
             expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
             done();
         });
     });
@@ -454,7 +458,7 @@ describe('Pins', function()
     it ('edit a non-existing Pin', function(done)
     { 
         let objectId = new ObjectId(doesNotExistObjectId);
-        let usercreatedobjectid = null;
+        let userCreatedObjectId = new ObjectId(doesNotExistObjectId);
         let address = "0648 Big Boi pk Tr.";
         let zipCode = "69174";
         let State = "Ohio";
@@ -463,11 +467,12 @@ describe('Pins', function()
         let numResolved = 0;
         let latitude = 15;
         let longitude = 15;
-        let success = true;
+        let success = false;
+        let errorMessage = 'Failed to edit pin'; 
 
         request.post(EDIT_PIN_ENDPOINT, {json: true, body: {
             ID:objectId,
-            usercreatedobjectid:usercreatedobjectid, 
+            usercreatedobjectid:userCreatedObjectId, 
             Address:address, 
             zip:zipCode, 
             State:State, 
@@ -481,6 +486,7 @@ describe('Pins', function()
         function (error, response) {
             expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
             expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
             done();
         });
     });
