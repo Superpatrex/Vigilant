@@ -72,3 +72,20 @@ MongoDB uses the terms of Collections->Documents->fields instead of Tables->rows
 |description|`string`|
 |description|`string`|
 |userCreatedObjectId|`ObjectId`|
+
+### Pins
+|Field|Datatype|
+|----|----|   
+|_id|`ObjectId`|         
+|address|`string`|
+|zipCode|`string`|
+|state|`string`|
+|country|`string`|
+|location|`Object`|
+|latitude|`float`|
+|longitude|`float`|
+|description|`string`|
+|numResolved|`int`|
+|usercreatedobjectid|`ObjectId`|
+|dateCreated|`Date`|
+

@@ -556,7 +556,6 @@ app.post('/api/searchPins', async (request, response, next) =>
   // outgoing: error, success
 
   var searchLocationType = '2dsphere';
-  var locationGeometryType = 'Point';
 
   const {latitude, longitude, maximumDist} = request.body;
 
@@ -568,7 +567,7 @@ app.post('/api/searchPins', async (request, response, next) =>
       location: {
         $near: {
           $geometry: {
-            type:  locationGeometryType, 
+            type:  PIN_LOCATION_TYPE, 
             coordinates: [longitude, latitude]
           },
           $maxDistance: maximumDist
