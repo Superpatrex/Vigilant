@@ -1,8 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const nodemailer = require("nodemailer");
+const PIN_LOCATION_TYPE = 'Point';
 
-// const url = 'mongodb+srv://root:No123Password@largeproject.jxb2axz.mongodb.net/test';
+
 require('dotenv').config()
 const url = process.env.MONGODB_URI;
 const MongoClient = require("mongodb").MongoClient;
@@ -10,6 +12,7 @@ const client = new MongoClient(url);
 client.connect(console.log('mongodb connected'));
 
 const path = require('path');
+const { ObjectId } = require('mongodb');
 const PORT = process.env.PORT || 4091;
 
 const app = express();
@@ -47,166 +50,60 @@ if (process.env.NODE_ENV == 'production')
   })
 }
 
-var cardList = 
-[
-  'Roy Campanella',
-  'Paul Molitor',
-  'Tony Gwynn',
-  'Dennis Eckersley',
-  'Reggie Jackson',
-  'Gaylord Perry',
-  'Buck Leonard',
-  'Rollie Fingers',
-  'Charlie Gehringer',
-  'Wade Boggs',
-  'Carl Hubbell',
-  'Dave Winfield',
-  'Jackie Robinson',
-  'Ken Griffey, Jr.',
-  'Al Simmons',
-  'Chuck Klein',
-  'Mel Ott',
-  'Mark McGwire',
-  'Nolan Ryan',
-  'Ralph Kiner',
-  'Yogi Berra',
-  'Goose Goslin',
-  'Greg Maddux',
-  'Frankie Frisch',
-  'Ernie Banks',
-  'Ozzie Smith',
-  'Hank Greenberg',
-  'Kirby Puckett',
-  'Bob Feller',
-  'Dizzy Dean',
-  'Joe Jackson',
-  'Sam Crawford',
-  'Barry Bonds',
-  'Duke Snider',
-  'George Sisler',
-  'Ed Walsh',
-  'Tom Seaver',
-  'Willie Stargell',
-  'Bob Gibson',
-  'Brooks Robinson',
-  'Steve Carlton',
-  'Joe Medwick',
-  'Nap Lajoie',
-  'Cal Ripken, Jr.',
-  'Mike Schmidt',
-  'Eddie Murray',
-  'Tris Speaker',
-  'Al Kaline',
-  'Sandy Koufax',
-  'Willie Keeler',
-  'Pete Rose',
-  'Robin Roberts',
-  'Eddie Collins',
-  'Lefty Gomez',
-  'Lefty Grove',
-  'Carl Yastrzemski',
-  'Frank Robinson',
-  'Juan Marichal',
-  'Warren Spahn',
-  'Pie Traynor',
-  'Roberto Clemente',
-  'Harmon Killebrew',
-  'Satchel Paige',
-  'Eddie Plank',
-  'Josh Gibson',
-  'Oscar Charleston',
-  'Mickey Mantle',
-  'Cool Papa Bell',
-  'Johnny Bench',
-  'Mickey Cochrane',
-  'Jimmie Foxx',
-  'Jim Palmer',
-  'Cy Young',
-  'Eddie Mathews',
-  'Honus Wagner',
-  'Paul Waner',
-  'Grover Alexander',
-  'Rod Carew',
-  'Joe DiMaggio',
-  'Joe Morgan',
-  'Stan Musial',
-  'Bill Terry',
-  'Rogers Hornsby',
-  'Lou Brock',
-  'Ted Williams',
-  'Bill Dickey',
-  'Christy Mathewson',
-  'Willie McCovey',
-  'Lou Gehrig',
-  'George Brett',
-  'Hank Aaron',
-  'Harry Heilmann',
-  'Walter Johnson',
-  'Roger Clemens',
-  'Ty Cobb',
-  'Whitey Ford',
-  'Willie Mays',
-  'Rickey Henderson',
-  'Babe Ruth'
-];
-
-app.post('/api/addcard', async (req, res, next) =>
-{
-  // incoming: userId, color
-  // outgoing: error
-	
-  const { userId, card } = req.body;
-
-  const newCard = {Card:card,UserId:userId};
-  var error = '';
-
-  try
-  {
-    const db = client.db('COP4331Cards');
-    const result = db.collection('Cards').insertOne(newCard);
-  }
-  catch(e)
-  {
-    error = e.toString();
-  }
-
-  cardList.push( card );
-
-  var ret = { error: error };
-  res.status(200).json(ret);
-});
-
-
-app.post('/api/login', async (req, res, next) => 
+// Users
+//////////////////////////////////////////////////////////////////////
+app.post('/api/login', async (request, response, next) => 
 {
   // incoming: login, password
-  // outgoing: id, firstName, lastName, error
+  // outgoing: id, firstName, lastName, username, regionCode, countryCode, error
 	
- var error = '';
+  var error = '';
+  var ret;
 
-  const { userName, password } = req.body;
+  const { login, pass } = request.body;
 
-  const db = client.db("LargeProject");
-  const results = await db.collection('Users').find({userName:userName,password:password}).toArray();
-
-  var id = -1;
-  var fn = '';
-  var ln = '';
-
-  if( results.length > 0 )
+  if (isNotValidString(login))
   {
-    id = results[0].UserID;
-    fn = results[0].FirstName;
-    ln = results[0].LastName;
+    ret = {error:'login/username cannot be empty or null'};
+  }
+  else if (isNotValidString(pass))
+  {
+    ret = {error:'password cannot be empty or null'};
+  }
+  else
+  {
+    const db = client.db("LargeProject");
+    const results = await db.collection('Users').find({userName:login,password:pass}).toArray();
+  
+    var id = -1;
+    var firstName = '';
+    var lastName = '';
+    var userName = '';
+    var regionCode = -1;
+    var countryCode = -1;
+  
+    if( results.length > 0 )
+    {
+      id = results[0]._id;
+      firstName = results[0].firstName;
+      lastName = results[0].lastName;
+      userName = results[0].userName;
+      regionCode = results[0].regionCode;
+      countryCode = results[0].countryCode;
+      ret = { _id:id, userName:userName, firstName:firstName, lastName:lastName, regionCode:regionCode, countryCode:countryCode, error:''};
+    }
+    else
+    {
+      ret = { error:'User is not found'};
+    }
   }
 
-  var ret = { id:id, firstName:fn, lastName:ln, error:''};
-  res.status(200).json(ret);
+  response.status(200).json(ret);
 });
 
 app.post('/api/signup', async (request, response, next) => 
 {
-  // incoming: firstname, lastname, username, password, email, regioncode countrycode
+  // incoming: firstname, lastname, username, password, email, regioncode, countrycode
   // outgoing: id, firstName, lastName, error
 	
   var error = '';
@@ -218,12 +115,11 @@ app.post('/api/signup', async (request, response, next) =>
   {
     const db = client.db("LargeProject");
 
-    
     var resultsBool = (await db.collection('Users').countDocuments({"userName":login}) > 0);
 
     if (resultsBool)
     {
-      response.status(200).json({ error:'Username is taken' });
+      response.status(200).json({ success:false, error:'Username is taken' });
       return;
     }
 
@@ -231,7 +127,7 @@ app.post('/api/signup', async (request, response, next) =>
 
     if (resultsBool)
     {
-      response.status(200).json({ error:'Email is in use' });
+      response.status(200).json({ success:false, error:'Email is in use' });
       return;
     }
 
@@ -246,7 +142,6 @@ app.post('/api/signup', async (request, response, next) =>
       regionCode: regioncode
     });
 
-    console.log(results);
   }
   catch (error)
   {
@@ -254,33 +149,460 @@ app.post('/api/signup', async (request, response, next) =>
   }
 
   response.status(200).json({
-      userName: login, 
-      countryCode: countrycode,
-      regionCode: regioncode,
-      error:'User created' });
+      success: true,
+      error:'' });
 });
 
-app.post('/api/searchcards', async (req, res, next) => 
+app.post('/api/emailInUse', async (request, response, next) => 
 {
-  // incoming: userId, search
-  // outgoing: results[], error
-
+  // incoming: email
+  // outgoing: true/false (if an email is in use)
   var error = '';
 
-  const { userId, search } = req.body;
+  const { email } = request.body;
 
-  var _search = search.trim();
-  
-  const db = client.db('COP4331Cards');
-  const results = await db.collection('Cards').find({"Card":{$regex:_search+'.*', $options:'r'}}).toArray();
-  
-  var _ret = [];
-  for( var i=0; i<results.length; i++ )
+  const db = client.db("LargeProject");
+  const results = await db.collection('Users').find({email:email}).toArray();
+
+  var ret;
+
+  if( results.length > 0 )
   {
-    _ret.push( results[i].Card );
+    ret = { emailInUse:true, error:'Email is in use'};
   }
-  
-  var ret = {results:_ret, error:error};
-  res.status(200).json(ret);
+  else
+  {
+    ret = { emailInUse:false, error:''};
+  }
+
+  response.status(200).json(ret);
 });
 
+// User Emergency Contacts
+//////////////////////////////////////////////////////////////////////////
+
+app.post('/api/getContacts', async (request, response, next) => 
+{
+  // incoming: objectId
+  // outgoing: id, firstName, lastName, phoneNumber, description, error
+	
+  var error = '';
+  var retval;
+
+  const { objectId } = request.body;
+
+  const db = client.db("LargeProject");
+
+  const exists = !(await db.collection('Users').countDocuments({_id:new ObjectId(objectId)}) > 0);
+
+  if (exists)
+  {
+    retval = {success:false, results:null, error:'User does not exist'};
+    response.status(500).json(retval);
+    return;
+  }
+
+  const results = await db.collection('UserEmergencyContacts').find({userCreatedObjectId:new ObjectId(objectId)}).toArray();
+
+  var ret = [];
+  var id = -1;
+  var firstName = '';
+  var lastName = '';
+  var phoneNumber = '';
+  var description = '';
+
+  if( results.length > 0 )
+  {
+    for (i = 0; i < results.length; i++)
+    {
+      id = results[i]._id;
+      firstName = results[i].firstName;
+      lastName = results[i].lastName;
+      phoneNumber = results[i].phoneNumber;
+      description = results[i].description;
+
+      ret.push({id:id, firstName:firstName, lastName:lastName, phoneNumber:phoneNumber, description:description});
+    }
+
+    retval = {success:true, results:ret, error:''};
+  }
+  else
+  {
+    retval = {success:false, results:null, error:'User has empty contact'};
+    response.status(500).json(retval);
+    return;
+  }
+
+  response.status(200).json(retval);
+});
+
+app.post('/api/deleteContact', async (request, response, next) => 
+{
+  // incoming: objectId
+  // outgoing: success, error
+	
+ var error = '';
+
+  const { objectId } = request.body;
+
+  const db = client.db("LargeProject");
+  const results = await db.collection('UserEmergencyContacts').deleteOne({_id:new ObjectId(objectId)});
+ 
+  var ret = ( results.deletedCount === 1 ) ? { success:true, error:'' } : { success:false, error:'Could not find contact' };
+
+  response.status(200).json(ret);
+});
+
+app.post('/api/addContact', async (request, response, next) => 
+{
+  // incoming: firstName, lastName, phoneNumber, description, userCreatedObjectId
+  // outgoing: error
+	
+ var error = '';
+
+  const { usercreatedobjectid, firstname, lastname, phonenumber, description } = request.body;
+
+  const db = client.db("LargeProject");
+  var ret = await db.collection('UserEmergencyContacts').insertOne({firstName:firstname, lastName:lastname, phoneNumber:phonenumber, description:description, userCreatedObjectId:new ObjectId(usercreatedobjectid)});
+
+  response.status(200).json({success:true, error:''});
+});
+
+app.post('/api/editContact', async (request, response, next) => 
+{
+  // incoming: login, password
+  // outgoing: id, firstName, lastName, username, regionCode error
+	
+ var error = '';
+
+  const { id, firstname, lastname, phonenumber, description } = request.body;
+
+  const db = client.db("LargeProject");
+  
+  const results = await db.collection('UserEmergencyContacts').updateOne(
+    { _id:new ObjectId(id) }, {$set:{firstName:firstname, lastName:lastname, phoneNumber:phonenumber, description:description}});
+
+  if( results.modifiedCount > 0 )
+  {
+    ret = { success:true, error:''};
+  }
+  else
+  {
+    ret = { success:false, error:'User is not found or no contact found'};
+  }
+
+  response.status(200).json(ret);
+});
+
+// Main Emergency Contacts
+//////////////////////////////////////////////////////////////////////////
+
+app.post('/api/getMainEmergencyContacts', async (request, response, next) => 
+{
+  // incoming: countrycode
+  // outgoing: error
+	
+ var error = '';
+
+  const { countrycode } = request.body;
+
+  const db = client.db("LargeProject");
+  var result = await db.collection('MainEmergencyContacts').find({ countryCode:countrycode }).toArray();
+  var ret;
+  var _ret = [];
+  
+  if (result.length > 0)
+  {
+    for (i = 0; i < result.length; i++)
+    {
+        var name = result[i].name;
+        var phoneNumber = result[i].phoneNumber;
+        var description = result[i].description;
+        
+        _ret.push({name:name, phoneNumber:phoneNumber, description:description, error:''});
+    }
+      
+      ret = {success:true, results:_ret, error:''};
+      response.status(200).json(ret);
+  }
+  else
+  {
+    ret = {success:false, results:_ret, error:'No Main Emergency Contacts for the Country Code'};
+    response.status(500).json(ret);
+  }
+
+});
+
+// Region Emergency Contacts
+//////////////////////////////////////////////////////////////////////////
+
+app.post('/api/getRegionEmergencyContacts', async (request, response, next) => 
+{
+  // incoming: regioncode, countrycode
+  // outgoing: error
+	
+ var error = '';
+ 
+  const { regioncode, countrycode } = request.body;
+
+  const db = client.db("LargeProject");
+  var result = await db.collection('RegionEmergencyContacts').find({ regionCode:regioncode, countryCode:countrycode }).toArray();
+
+  var ret = [];
+
+  if (result.length > 0)
+  {
+    for (i = 0; i < result.length; i++)
+    {
+      var name = result[i].name;
+      var phoneNumber = result[i].phoneNumber;
+      var address = result[i].address;
+      var zipCode = result[i].zipCode;
+      var state = result[i].state;
+      var country = result[i].country;
+      var description = result[i].description;
+
+      ret.push({name:name, phoneNumber:phoneNumber, description:description, address:address, zipCode:zipCode, state:state, country:country, error:''});
+    }
+  }
+  else
+  {
+    response.status(500).json({success:false, results:ret, error:'No Region Emergency Contacts found'});
+    return;
+  }
+  
+  response.status(200).json({success:true, results:ret, error:''});
+});
+
+function isNotValidString(myString)
+{
+  return (!myString || myString.length === 0);
+}
+app.post('/api/emailChange', async (request, response, next) => 
+{
+  // incoming: login, Password, Email
+  // outgoing: userName, email, error
+
+  const { login, pass, email } = request.body;
+
+  try
+  {
+    const db = client.db("LargeProject");
+
+    const emailExists = await db.collection('Users').findOne({"email":email});
+
+    if (emailExists)
+    {
+      response.status(200).json({ error:'Email is already in use.' });
+      return;
+    }
+
+    const result = await db.collection('Users').updateOne(
+      {
+        userName: login,
+        password: pass
+      },
+      {
+        $set:
+        {
+          email:email
+        }
+      }
+    );
+
+    if (result.modifiedCount === 0) {
+      response.status(200).json({ error:'Failed to update email.' });
+      return;
+    }
+
+    response.status(200).json({
+      userName: login, 
+      email: email,
+      error:'Email updated successfully.' 
+    });
+  }
+  catch (error)
+  {
+    console.error(error);
+    response.status(500).json({ error:'An error occurred while updating email.' });
+  }
+});
+
+app.post('/api/passwordChange', async (request, response, next) => 
+{
+  // incoming: firstname, lastname, username, password, email, regioncode countrycode
+  // outgoing: id, firstName, lastName, error
+	
+  var error = '';
+  var results;
+
+  const { login, pass, email } = request.body;
+
+  try
+  {
+    const db = client.db("LargeProject");
+
+    results = await db.collection('Users').updateOne(
+      {
+        userName:login,
+        email:email
+      },
+      {
+        $set:
+        {
+          password:pass
+        }
+      }
+    );
+  }
+  catch (error)
+  {
+    console.error(error);
+  }
+
+  response.status(200).json({
+      userName:login, 
+      password:pass,
+      error:'Password Updated' });
+});
+
+// Pins
+//////////////////////////////////////////////////////////////////////////
+
+app.post('/api/addPin', async (request, response, next) => 
+{
+  // incoming: usercreatedobjectid, Address, zip, State, Country, Resolved, lastitude, longitude
+  // outgoing: error, success
+	
+  var error = '';
+
+  const { usercreatedobjectid, Address, zip, State, Country, Description, Resolved, latitude, longitude} = request.body;
+
+  try
+  {
+    const db = client.db("LargeProject");
+    var result = await db.collection('Pins').insertOne({
+      address:Address, 
+      zipCode:zip, 
+      state:State, 
+      country:Country,
+      location: {
+        type: PIN_LOCATION_TYPE,
+        coordinates : [longitude, latitude],
+        },
+      description:Description,
+      numResolved:Resolved, 
+      userCreatedObjectId:new ObjectId(usercreatedobjectid),
+      dateCreated:new Date()
+    });
+  }
+  catch (error)
+  {
+    console.log(error);
+    response.status(500).json({success:false, error:''});
+  }
+
+  response.status(200).json({success:true, error:''});
+});
+
+app.post('/api/editPin', async (request, response, next) => 
+{
+  // incoming: ID, usercreatedobjectid, Address, zip, State, Country, Description, Resolved, latitude, longitude
+  // outgoing: error, success
+	
+  var error = '';
+  var retval;
+
+  const { ID, usercreatedobjectid, Address, zip, State, Country, Description, Resolved, latitude, longitude } = request.body;
+
+  const db = client.db("LargeProject");
+  
+  const results = await db.collection('Pins').updateOne(
+    { _id: new ObjectId(ID)}, 
+    {$set:
+      { 
+        userCreatedObjectId: new ObjectId(usercreatedobjectid),
+        address:Address, 
+        zipCode:zip, 
+        state:State, 
+        country:Country,
+        location: {
+          type: PIN_LOCATION_TYPE,
+          coordinates : [longitude, latitude],
+        },
+        description:Description,
+        numResolved:Resolved,
+        dateCreated:new Date()
+      }
+    });
+
+  if( results.modifiedCount > 0 )
+  {
+    retval = {success:true, error:''};
+    response.status(200).json(retval);
+  }
+  else
+  {
+    retval = {success:false, error:'Failed to edit pin'};
+    response.status(500).json(retval);
+  }
+
+});
+
+app.post('/api/searchPins', async (request, response, next) => 
+{
+  // incoming: latitude, longitude, maximumDist
+  // outgoing: error, success
+
+  var searchLocationType = '2dsphere';
+
+  const {latitude, longitude, maximumDist} = request.body;
+
+  try
+  {
+    const collection = client.db("LargeProject").collection("Pins");
+    collection.createIndex({location:searchLocationType});
+    const results = await collection.find({
+      location: {
+        $near: {
+          $geometry: {
+            type:  PIN_LOCATION_TYPE, 
+            coordinates: [longitude, latitude]
+          },
+          $maxDistance: maximumDist
+        }
+      }
+    }).toArray();
+
+    response.status(200).json({success:true, pins:results, error:''});
+  } 
+  catch (error)
+  {
+    response.status(500).json({success:false, pins:null, error:'Failed to search pins'});
+  }
+});
+
+app.post('/api/deletePin', async (request, response, next) => 
+{
+  // incoming: objectId
+  // outgoing: error, success
+	
+ var error = '';
+
+  const {objectid} = request.body;
+  var retval;
+
+  const db = client.db("LargeProject");
+  var ret = await db.collection('Pins').deleteOne({_id: new ObjectId(objectid)});
+
+  if (ret.deletedCount > 0)
+  {
+    retval = {success:true, error:''};
+    response.status(200).json(retval);
+  }
+  else
+  {
+    retval = {success:false, error:'Failed to delete pin'};
+    response.status(500).json(retval);
+  }
+});
