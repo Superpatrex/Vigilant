@@ -12,6 +12,8 @@ const GET_REGION_EMERGENCY_CONTACTS_ENDPOINT = 'http://localhost:4091/api/getReg
 const ADD_PIN_ENDPOINT = 'http://localhost:4091/api/addPin';
 const DELETE_PIN_ENDPOINT = 'http://localhost:4091/api/deletePin';
 const EDIT_PIN_ENDPOINT = 'http://localhost:4091/api/editPin';
+const SEARCH_PIN_ENDPOINT = 'http://localhost:4091/api/searchPins';
+
 
 const testObjectId = "123456789012345678901234";
 const deleteObjectId = "123456789012345678901235";
@@ -37,8 +39,8 @@ describe('User Unit Tests',function()
         let errorMessage = '';
         let firstName = 'TestMe';
         let lastName = 'User';
-        let userName = 'IAmATestUser';
-        let password = 'testytesty123';
+        let userName = 'asdf';
+        let password = 'asdf';
         let countryCode = 1;
         let regionCode = 1;
 
@@ -132,8 +134,8 @@ describe('User Unit Tests',function()
     {
         let firstName = 'Abhi';
         let lastName = 'Kotta';
-        let userName = 'IAmATestUser';
-        let password = 'IlikeMicrofiberTowels';
+        let userName = 'asdf';
+        let password = 'asdf';
         let email = 'tesytesty@me.com';
         let regionCode = 2;
         let countryCode = 2;
@@ -299,23 +301,23 @@ describe('Region Emergency Contacts', function()
 
             for (i = 0; i < response.body.results.length; i++)
             {
-                if (response.body.results[0].name == name)
+                if (response.body.results[i].name == name)
                 {
-                    expect(response.body.results[0].phoneNumber).toEqual(phoneNumber);
-                    expect(response.body.results[0].description).toEqual(description);
-                    expect(response.body.results[0].address).toEqual(address);
-                    expect(response.body.results[0].zipCode).toEqual(zipCode);
-                    expect(response.body.results[0].state).toEqual(state);
-                    expect(response.body.results[0].country).toEqual(country);
+                    expect(response.body.results[i].phoneNumber).toEqual(phoneNumber);
+                    expect(response.body.results[i].description).toEqual(description);
+                    expect(response.body.results[i].address).toEqual(address);
+                    expect(response.body.results[i].zipCode).toEqual(zipCode);
+                    expect(response.body.results[i].state).toEqual(state);
+                    expect(response.body.results[i].country).toEqual(country);
                 }
-                else if (response.body.results[1].name == secondaryName)
+                else if (response.body.results[i].name == secondaryName)
                 {
-                    expect(response.body.results[1].phoneNumber).toEqual(secondaryPhoneNumber);
-                    expect(response.body.results[1].description).toEqual(secondaryDescription);
-                    expect(response.body.results[1].address).toEqual(secondaryAddress);
-                    expect(response.body.results[1].zipCode).toEqual(secondaryZipCode);
-                    expect(response.body.results[1].state).toEqual(secondaryState);
-                    expect(response.body.results[1].country).toEqual(country);
+                    expect(response.body.results[i].phoneNumber).toEqual(secondaryPhoneNumber);
+                    expect(response.body.results[i].description).toEqual(secondaryDescription);
+                    expect(response.body.results[i].address).toEqual(secondaryAddress);
+                    expect(response.body.results[i].zipCode).toEqual(secondaryZipCode);
+                    expect(response.body.results[i].state).toEqual(secondaryState);
+                    expect(response.body.results[i].country).toEqual(country);
                 }
             }
             done();
@@ -522,5 +524,80 @@ describe('Pins', function()
             done();
         });
     });
+
+    it ('search pins Pass', function(done)
+    {
+        let latitude = 17;
+        let longitude = 17;
+        let maximumDist = 1000;
+        let success = true;
+        let errorMessage = '';
+        let address = 'Street Street';
+        let zipCode = 45678;
+        let state = 'State State';
+        let country = 'Country Country';
+        let description = 'None';
+        let numResolved = 0;
+
+        let secondaryAddress = 'Street Street 2';
+        let secondaryZipCode = 12345;
+        let secondaryState = 'State State 2';
+        let secondaryCountry = 'Country Country 2';
+        let secondaryDescription = null;
+        let secondaryNumResolved = 3;
+
+        request.post(SEARCH_PIN_ENDPOINT, {json: true, body: {
+            latitude:latitude, 
+            longitude:longitude,
+            maximumDist:maximumDist
+        }}, function(error, response) {
+            expect(response.statusCode).toEqual(SUCCESS_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+
+            for (i = 0; i < response.body.results.length; i++)
+            {
+                if (response.body.results[i].address == address)
+                {
+                    expect(response.body.results[i].zipCode).toEqual(zipCode);
+                    expect(response.body.results[i].state).toEqual(state);
+                    expect(response.body.results[i].country).toEqual(country);
+                    expect(response.body.results[i].description).toEqual(description);
+                    expect(response.body.results[i].numResolved).toEqual(numResolved);
+                }
+                else if (response.body.results[i].address == secondaryAddress)
+                {
+                    expect(response.body.results[i].zipCode).toEqual(secondaryZipCode);
+                    expect(response.body.results[i].state).toEqual(secondaryState);
+                    expect(response.body.results[i].country).toEqual(secondaryCountry);
+                    expect(response.body.results[i].description).toEqual(secondaryDescription);
+                    expect(response.body.results[i].numResolved).toEqual(secondaryNumResolved);
+                }
+            }
+            done();
+        });
+    });
+
+    it ('search pins No Pins', function(done)
+    {
+        let latitude = 25;
+        let longitude = 25;
+        let maximumDist = 0;
+        let success = false;
+        let errorMessage = 'No Pins';
+
+        request.post(SEARCH_PIN_ENDPOINT, {json: true, body: {
+            latitude:latitude, 
+            longitude:longitude,
+            maximumDist:maximumDist
+        }}, function(error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+            expect(response.body.results).toEqual(null);
+            done();
+        });
+    });
+    
 
 });
