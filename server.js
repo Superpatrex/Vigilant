@@ -555,14 +555,15 @@ app.post('/api/searchPins', async (request, response, next) =>
   // outgoing: error, success
 
   var searchLocationType = '2dsphere';
+  var ret = [];
 
   const {latitude, longitude, maximumDist} = request.body;
 
   try
   {
-    const collection = client.db("LargeProject").collection("Pins");
-    collection.createIndex({location:searchLocationType});
-    const results = await collection.find({
+    const db = client.db("LargeProject");
+
+    const results = await db.collection("Pins").find({
       location: {
         $near: {
           $geometry: {
@@ -574,12 +575,19 @@ app.post('/api/searchPins', async (request, response, next) =>
       }
     }).toArray();
 
-    response.status(200).json({success:true, pins:results, error:''});
+    if (results.length > 0)
+    {
+      response.status(200).json({success:true, results:results, error:''});
+    }
+    else
+    {
+      response.status(500).json({success:false, results:null, error:'No Pins'});
+    }
   } 
   catch (error)
   {
     console.log(error);
-    response.status(500).json({success:false, pins:null, error:'Failed to search pins'});
+    response.status(500).json({success:false, results:null, error:'Internal failure'});
   }
 });
 
