@@ -500,6 +500,7 @@ app.post('/api/addPin', async (request, response, next) =>
   {
     console.log(error);
     response.status(500).json({success:false, error:''});
+    return;
   }
 
   response.status(200).json({success:true, error:''});
