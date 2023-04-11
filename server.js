@@ -110,10 +110,114 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// call this API first, then change Password API
+// generated token and stoers in the Users collection
+app.post('/api/resetPassword', async (request, response, next) => {
+  // incoming: email
+  // outgoing: error
+
+  const {email} = request.body;
+  const db = client.db("LargeProject");
+  const tokenInfo = {
+    token: Math.random().toString(36).slice(2),
+    expirationTime: new Date(Date.now() + (60 * 60 * 1000)) // Token expires in 1 hour
+  };
+
+  const timestamp = new Date();
+  const updated = await db.collection('Users').updateOne({email:email},
+    {
+      $set: {
+        resetToken: {
+          tokenInfo,
+          timestamp
+        }
+      }
+    })
+
+    if (updated.modifiedCount === 0)
+    {
+      response.status(200).json({success:false, error:'Email not found'});
+      return;
+    }
+
+    // change the resetUrl to the right one
+    const resetUrl = `https://vigilantsometihng.com/reset-password?token=${tokenInfo}`; // fronted currently creating it
+    const mailOptions = {
+      from: 'Vigilant12023@gmail.com',
+      to: email,
+      subject: 'Password Reset Request',
+      text: `You have requested to reset your password. Click on this link to reset your password: ${resetUrl}`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+        response.status(500).json({ error: 'Failed to send password reset email' });
+      } else {
+        console.log('Password reset email sent: ' + info.response);
+        response.status(200).json({ message: 'Password reset email sent' });
+      }
+    });
+});
+
+// chekcs if the token is in the database and changes the pasword
+app.post('/api/changePassword', async (request, response, next) => 
+{
+  // incoming: login, newPassword
+  // outgoing: error
+	
+  var error = '';
+  var ret;
+
+  const { login, email, newPassword, token} = request.body;
+
+  if (isNotValidString(login))
+  {
+    ret = {error:'login/username cannot be empty or null'};
+  }
+
+  const db = client.db("LargeProject");
+  const user = await db.collection('Users').findOne({userName: login, email: email});
+  if (user.modifiedCount === 0)
+  {
+    response.status(400).json({ error: 'Invalid login or email' });
+    return;
+  }
+  if (user.resetToken.tokenInfo.token !== token)
+  {
+    console.log(user.resetToken.token);
+    response.status(400).json({ error: 'Invalid or expired token' });
+    return;
+  }
+
+  const results = await db.collection('Users').updateOne({
+      userName:login,
+      email:email
+    },
+    {
+      $set: {
+        password: newPassword,
+        resetToken: null
+      }
+    })
+  
+  
+  if( results.modifiedCount > 0 )
+  {
+    ret = { error: 'Password Changed successfully'};
+  }
+  else
+  {
+    ret = { error: 'Invalid login or email'};
+  }
+
+  response.status(200).json(ret);
+});
+
 app.post('/api/signup', async (request, response, next) => 
 {
   // incoming: firstname, lastname, username, password, email, regioncode, countrycode
-  // outgoing: id, firstName, lastName, error
+  // outgoing: error
 	
   var error = '';
   var results;
