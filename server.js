@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors');
-const nodemailer = require("nodemailer");
+const cors = require('cors');;
+const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
 const PIN_LOCATION_TYPE = 'Point';
 
 
@@ -101,6 +102,14 @@ app.post('/api/login', async (request, response, next) =>
   response.status(200).json(ret);
 });
 
+const transporter = nodemailer.createTransport({
+  service: "Gmail",
+  auth: {
+    user: 'Vigilant12023@gmail.com',
+    pass: 'mnsqssobuemcjfzr'
+  }
+});
+
 app.post('/api/signup', async (request, response, next) => 
 {
   // incoming: firstname, lastname, username, password, email, regioncode, countrycode
@@ -110,6 +119,7 @@ app.post('/api/signup', async (request, response, next) =>
   var results;
 
   const { firstname, lastname, login, pass, email, regioncode, countrycode } = request.body;
+  const verificationToken = Math.random().toString(36).substr(2, 8); 
 
   try
   {
@@ -139,19 +149,58 @@ app.post('/api/signup', async (request, response, next) =>
       email: email,
       dateCreated: new Date(),
       countryCode: countrycode,
-      regionCode: regioncode
+      regionCode: regioncode,
+      verified:false,
+      verificationToken: verificationToken
     });
 
-  }
-  catch (error)
-  {
-    console.error(error);
-  }
+    const mailOptions = {
+      from: 'vigilant12023@gmail.com',
+      to: email,
+      subject: 'Verify your email',
+      html: `<p>Thank you for signing up! Please <a href="http://localhost:4091/verify?email=${email}&token=${verificationToken}">click here</a> to verify your email.</p>`
+    };
 
-  response.status(200).json({
-      success: true,
-      error:'' });
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+  });
+
+  return response.status(200).json({ success: true, error: '' });
+
+  } catch (error) {
+    console.error(error);
+    return response.status(500).json({ success: false, error: 'Server error' });
+  }
 });
+
+app.get('/verify', async (request, response) => {
+  const { email, token } = request.query;
+
+  try {
+    const db = client.db("LargeProject");
+
+    const user = await db.collection('Users').findOneAndUpdate(
+      { email: email, verificationToken: token },
+      { $set: { verified: true }, $unset: { verificationToken: 1 } },
+      { returnOriginal: false }
+    );
+
+    if (!user.value) {
+      return response.status(400).json({ error: 'Invalid verification token' });
+    }
+
+    return response.status(200).json({ message: 'Email verified successfully' });
+
+  } catch (error) {
+    console.error(error);
+    return response.status(500).json({ error: 'Server error' });
+  }
+});
+
 
 app.post('/api/emailInUse', async (request, response, next) => 
 {
