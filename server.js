@@ -507,6 +507,8 @@ app.post('/api/passwordChange', async (request, response, next) =>
   catch (error)
   {
     console.error(error);
+    response.status(500).json({error:error});
+    return;
   }
 
   response.status(200).json({
@@ -549,6 +551,7 @@ app.post('/api/addPin', async (request, response, next) =>
   {
     console.log(error);
     response.status(500).json({success:false, error:''});
+    return;
   }
 
   response.status(200).json({success:true, error:''});
