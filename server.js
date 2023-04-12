@@ -4,6 +4,9 @@ const cors = require('cors');;
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const PIN_LOCATION_TYPE = 'Point';
+const DEFAULT_PIN_SEARCH_RADIUS = 1000;
+const DEFAULT_LIGHT_DARK_MODE = true;
+const DEFAULT_THEME = 1;
 
 
 require('dotenv').config()
@@ -53,6 +56,159 @@ if (process.env.NODE_ENV == 'production')
 
 // Users
 //////////////////////////////////////////////////////////////////////
+
+app.post('/api/getAllUserInformation', async(request, response, next) =>
+{
+  // incoming: objectId
+  // outgoing: ALL USER DATA
+
+  var error = '';
+  var ret;
+  var retVal;
+
+  const { objectId } = request.body;
+  
+  if (objectId === null)
+  {
+    ret = {success:false, results:null, error:'objectId cannot be null'};
+    response.status(500).json(ret);
+    return;
+  }
+  else
+  {
+    const db = client.db("LargeProject");
+    const results = await db.collection('Users').find({_id:new ObjectId(objectId)}).toArray();
+
+    if (results.length > 0)
+    {
+      var theme = results[0].theme;
+      var lightDarkMode = results[0].lightDarkMode;
+      var searchRadius = results[0].searchRadius;
+      var firstName = results[0].firstName;
+      var lastName = results[0].lastName;
+      var userName = results[0].userName;
+      var email = results[0].email;
+      var countryCode = results[0].countryCode;
+      var regionCode = results[0].regionCode;
+
+      retVal = {firstName:firstName, theme:theme, lightDarkMode:lightDarkMode, searchRadius:searchRadius,
+        firstName:firstName, lastName:lastName, userName:userName, email:email, countryCode:countryCode, regionCode:regionCode};
+
+      ret = {success:true, results:retVal, error:''}
+      response.status(200).json(ret);
+      return;
+    }
+    else
+    {
+      ret = {success:false, results:null, error:'User does not exist'};
+      response.status(500).json(ret);
+      return;
+    }
+
+  }
+});
+
+app.post('/api/getSettings', async(request, response, next) =>
+{
+  // incoming: objectId
+  // outcoming: theme, lightDarkMode, searchRadius
+
+  var error = '';
+  var ret;
+
+  const { objectId } = request.body;
+
+  if (objectId === null)
+  {
+    ret = {success:false, error:'objectId cannot be null'};
+    response.status(500).json(ret);
+    return;
+  }
+  else 
+  {
+    const db = client.db("LargeProject");
+    const results = await db.collection('Users').find({_id:new ObjectId(objectId)}).toArray();
+
+    var theme = '';
+    var lightDarkMode = null;
+    var searchRadius = 0;
+
+    if (results.length > 0)
+    {
+      theme = results[0].theme;
+      lightDarkMode = results[0].lightDarkMode;
+      searchRadius = results[0].searchRadius;
+
+      ret = {success:true, theme:theme, lightDarkMode:lightDarkMode, searchRadius:searchRadius, error:''};
+      response.status(200).json(ret);
+      return;
+    }
+    else
+    {
+      ret = {success:false, error:'User Settings does not exist'};
+      response.status(500).json(ret);
+      return;
+    }
+  }
+
+});
+
+app.post('/api/setSettings', async(request, response, next) =>
+{
+  // incoming: objectId, theme, lightDarkMode, searchRadius
+  // outcoming: success, error
+
+  var error = '';
+  var ret;
+
+  const { objectId, theme, lightDarkMode, searchRadius } = request.body;
+
+  if (objectId === null)
+  {
+    ret = {success:false, error:'objectId cannot be null'};
+    response.status(500).json(ret);
+    return;
+  }
+  else if (theme === null || theme < 0)
+  {
+    ret = {success:false, error:'theme cannot be null'};
+    response.status(500).json(ret);
+    return;
+  }
+  else if (lightDarkMode === null)
+  {
+    ret = {success:false, error:'lightDarkMode cannot be null'};
+    response.status(500).json(ret);
+    return;
+  }
+  else if (searchRadius === null || searchRadius < 0)
+  {
+    ret = {success:false, error:'searchRadius cannot be null'};
+    response.status(500).json(ret);
+    return;
+  }
+  else 
+  {
+    const db = client.db("LargeProject");
+    const results = await db.collection('Users').updateOne(
+      {_id:new ObjectId(objectId)}, {$set:{theme:theme, lightDarkMode:lightDarkMode, searchRadius:searchRadius}});
+
+    if (results.modifiedCount > 0)
+    {
+      ret = {success:true, error:''};
+      response.status(200).json(ret);
+      return;
+    }
+    else
+    {
+      ret = {success:false, error:'User Settings cannot be edited or user does not exist'};
+      response.status(500).json(ret);
+      return;
+    }
+  }
+
+});
+
 app.post('/api/login', async (request, response, next) => 
 {
   // incoming: login, password
@@ -65,11 +221,16 @@ app.post('/api/login', async (request, response, next) =>
 
   if (isNotValidString(login))
   {
-    ret = {error:'login/username cannot be empty or null'};
+    ret = {success:false, error:'login/username cannot be empty or null'};
+    response.status(500).json(ret);
+    return;
+
   }
   else if (isNotValidString(pass))
   {
-    ret = {error:'password cannot be empty or null'};
+    ret = {success:false, error:'password cannot be empty or null'};
+    response.status(500).json(ret);
+    return;
   }
   else
   {
@@ -91,15 +252,19 @@ app.post('/api/login', async (request, response, next) =>
       userName = results[0].userName;
       regionCode = results[0].regionCode;
       countryCode = results[0].countryCode;
-      ret = { _id:id, userName:userName, firstName:firstName, lastName:lastName, regionCode:regionCode, countryCode:countryCode, error:''};
+      ret = {success:true, _id:id, userName:userName, firstName:firstName, lastName:lastName, regionCode:regionCode, countryCode:countryCode, error:''};
+
+      response.status(200).json(ret);
+      return;
     }
     else
     {
-      ret = { error:'User is not found'};
+      ret = {success:false, error:'User is not found'};
+      response.status(500).json(ret);
+      return;
     }
   }
 
-  response.status(200).json(ret);
 });
 
 const transporter = nodemailer.createTransport({
@@ -121,60 +286,103 @@ app.post('/api/signup', async (request, response, next) =>
   const { firstname, lastname, login, pass, email, regioncode, countrycode } = request.body;
   const verificationToken = Math.random().toString(36).substr(2, 8); 
 
-  try
+  if (isNotValidString(firstname))
   {
-    const db = client.db("LargeProject");
-
-    var resultsBool = (await db.collection('Users').countDocuments({"userName":login}) > 0);
-
-    if (resultsBool)
+    response.status(500).json({ success:false, error:'First name is not valid (empty or null)' });
+    return;
+  }
+  else if (isNotValidString(lastname))
+  {
+    response.status(500).json({ success:false, error:'Last name is not valid (empty or null)' });
+    return;
+  }
+  else if (isNotValidString(login))
+  {
+    response.status(500).json({ success:false, error:'Login is not valid (empty or null)' });
+    return;
+  }
+  else if (isNotValidString(pass))
+  {
+    response.status(500).json({ success:false, error:'Password is not valid (empty or null)' });
+    return;
+  }
+  else if (isNotValidString(email))
+  {
+    response.status(500).json({ success:false, error:'Email is not valid (empty or null)' });
+    return;
+  }
+  else if (regioncode === null || regioncode < 0)
+  {
+    response.status(500).json({ success:false, error:'Region code is not valid (negative number or null)' });
+    return;
+  }
+  else if (countrycode === null || countrycode < 0)
+  {
+    response.status(500).json({ success:false, error:'Country code is not valid (negative number or null)' });
+    return;
+  }
+  else
+  {
+    try
     {
-      response.status(200).json({ success:false, error:'Username is taken' });
-      return;
-    }
-
-    resultsBool = (await db.collection('Users').countDocuments({"email":email}) > 0);
-
-    if (resultsBool)
-    {
-      response.status(200).json({ success:false, error:'Email is in use' });
-      return;
-    }
-
-    results = await db.collection('Users').insertOne({
-      firstName: firstname,
-      lastName: lastname, 
-      userName: login, 
-      password: pass, 
-      email: email,
-      dateCreated: new Date(),
-      countryCode: countrycode,
-      regionCode: regioncode,
-      verified:false,
-      verificationToken: verificationToken
-    });
-
-    const mailOptions = {
-      from: 'vigilant12023@gmail.com',
-      to: email,
-      subject: 'Verify your email',
-      html: `<p>Thank you for signing up! Please <a href="http://localhost:4091/verify?email=${email}&token=${verificationToken}">click here</a> to verify your email.</p>`
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log(error);
-      } else {
-        console.log('Email sent: ' + info.response);
+      const db = client.db("LargeProject");
+  
+      var resultsBool = (await db.collection('Users').countDocuments({"userName":login}) > 0);
+  
+      if (resultsBool)
+      {
+        response.status(200).json({ success:false, error:'Username is taken' });
+        return;
       }
-  });
-
-  return response.status(200).json({ success: true, error: '' });
-
+  
+      resultsBool = (await db.collection('Users').countDocuments({"email":email}) > 0);
+  
+      if (resultsBool)
+      {
+        response.status(200).json({ success:false, error:'Email is in use' });
+        return;
+      }
+  
+      results = await db.collection('Users').insertOne({
+        firstName: firstname,
+        lastName: lastname, 
+        userName: login, 
+        password: pass, 
+        email: email,
+        dateCreated: new Date(),
+        countryCode: countrycode,
+        regionCode: regioncode,
+        verified:false,
+        verificationToken: verificationToken,
+        theme:DEFAULT_THEME,
+        lightDarkMode:DEFAULT_LIGHT_DARK_MODE,
+        searchRadius:DEFAULT_PIN_SEARCH_RADIUS
+      });
+  
+      const mailOptions = {
+        from: 'vigilant12023@gmail.com',
+        to: email,
+        subject: 'Verify your email',
+        html: `<p>Thank you for signing up! Please <a href="http://localhost:4091/verify?email=${email}&token=${verificationToken}">click here</a> to verify your email.</p>`
+      };
+  
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+    });
+  
+    
   } catch (error) {
     console.error(error);
     return response.status(500).json({ success: false, error: 'Server error' });
   }
+
+  return response.status(200).json({ success: true, error: '' });
+}
+
 });
 
 app.get('/verify', async (request, response) => {
@@ -522,17 +730,18 @@ app.post('/api/passwordChange', async (request, response, next) =>
 
 app.post('/api/addPin', async (request, response, next) => 
 {
-  // incoming: usercreatedobjectid, Address, zip, State, Country, Resolved, lastitude, longitude
+  // incoming: usercreatedobjectid, title, Address, zip, State, Country, Resolved, lastitude, longitude
   // outgoing: error, success
 	
   var error = '';
 
-  const { usercreatedobjectid, Address, zip, State, Country, Description, Resolved, latitude, longitude} = request.body;
+  const { usercreatedobjectid, title, Address, zip, State, Country, Description, Resolved, latitude, longitude} = request.body;
 
   try
   {
     const db = client.db("LargeProject");
     var result = await db.collection('Pins').insertOne({
+      title:title,
       address:Address, 
       zipCode:zip, 
       state:State, 
@@ -559,13 +768,13 @@ app.post('/api/addPin', async (request, response, next) =>
 
 app.post('/api/editPin', async (request, response, next) => 
 {
-  // incoming: ID, usercreatedobjectid, Address, zip, State, Country, Description, Resolved, latitude, longitude
+  // incoming: ID, usercreatedobjectid, title, Address, zip, State, Country, Description, Resolved, latitude, longitude
   // outgoing: error, success
 	
   var error = '';
   var retval;
 
-  const { ID, usercreatedobjectid, Address, zip, State, Country, Description, Resolved, latitude, longitude } = request.body;
+  const { ID, usercreatedobjectid, title, Address, zip, State, Country, Description, Resolved, latitude, longitude } = request.body;
 
   const db = client.db("LargeProject");
   
@@ -574,6 +783,7 @@ app.post('/api/editPin', async (request, response, next) =>
     {$set:
       { 
         userCreatedObjectId: new ObjectId(usercreatedobjectid),
+        title:title,
         address:Address, 
         zipCode:zip, 
         state:State, 

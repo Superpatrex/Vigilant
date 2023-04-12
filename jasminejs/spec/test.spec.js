@@ -13,6 +13,10 @@ const ADD_PIN_ENDPOINT = 'http://localhost:4091/api/addPin';
 const DELETE_PIN_ENDPOINT = 'http://localhost:4091/api/deletePin';
 const EDIT_PIN_ENDPOINT = 'http://localhost:4091/api/editPin';
 const SEARCH_PIN_ENDPOINT = 'http://localhost:4091/api/searchPins';
+const GET_ALL_USER_INFORMATION_PIN_ENDPOINT = 'http://localhost:4091/api/getAllUserInformation';
+const GET_SETTINGS_PIN_ENDPOINT = 'http://localhost:4091/api/getSettings';
+const SET_SETTINGS_PIN_ENDPOINT = 'http://localhost:4091/api/setSettings';
+ 
 
 
 const testObjectId = "123456789012345678901234";
@@ -57,6 +61,32 @@ describe('User Unit Tests',function()
         });
     });
 
+    it('login Empty userName', function(done)
+    {
+        let userName = '';
+        let password = 'pass123456789';
+        let errorMessage = 'login/username cannot be empty or null';
+
+        request.post(LOGIN_ENDPOINT, {json: true, body: {login:userName, pass:password}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.error).toEqual(errorMessage);
+            done();
+        });
+    });
+
+    it('login Empty password', function(done)
+    {
+        let userName = 'thisLogInDoesNotExist';
+        let password = '';
+        let errorMessage = 'password cannot be empty or null';
+
+        request.post(LOGIN_ENDPOINT, {json: true, body: {login:userName, pass:password}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.error).toEqual(errorMessage);
+            done();
+        });
+    });
+
     it('login Does Not Exist', function(done)
     {
         let userName = 'thisLogInDoesNotExist';
@@ -64,7 +94,7 @@ describe('User Unit Tests',function()
         let errorMessage = 'User is not found';
 
         request.post(LOGIN_ENDPOINT, {json: true, body: {login:userName, pass:password}}, function (error, response) {
-            expect(response.statusCode).toEqual(SUCCESS_STATUS_CODE);
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
             expect(response.body.error).toEqual(errorMessage);
             done();
         });
@@ -73,7 +103,7 @@ describe('User Unit Tests',function()
     it('login Username is null',function(done)
     {
         request.post(LOGIN_ENDPOINT, {json: true, body: {login:null, pass:'pass123456789'}}, function (error, response) {
-            expect(response.statusCode).toEqual(SUCCESS_STATUS_CODE);
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
             expect(response.body.error).toEqual("login/username cannot be empty or null");
             done();
         });
@@ -82,7 +112,7 @@ describe('User Unit Tests',function()
     it('login Password is null',function(done)
     {
         request.post(LOGIN_ENDPOINT, {json: true, body: {login:'thisLogInDoesNotExist', pass:null}}, function (error, response) {
-            expect(response.statusCode).toEqual(SUCCESS_STATUS_CODE);
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
             expect(response.body.error).toEqual("password cannot be empty or null");
             done();
         });
@@ -152,6 +182,411 @@ describe('User Unit Tests',function()
 
         //TODO Add null checks for signup
     });
+
+    it('signup Empty/Null firstName',function(done)
+    {
+        let firstName = '';
+        let lastName = 'User';
+        let userName = 'CoolGuy';
+        let password = 'ILikeMicrofiberTowels';
+        let email = 'cool@email.com';
+        let regionCode = 2;
+        let countryCode = 2;
+        let success = false;
+        let errorMessage = 'First name is not valid (empty or null)';
+
+        request.post(SIGNUP_ENDPOINT, {json: true, body: {firstname:firstName, lastname:lastName, login:userName,
+            pass:password, email:email, regioncode:regionCode, countrycode:countryCode}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+        });
+
+        firstName = null;
+
+        request.post(SIGNUP_ENDPOINT, {json: true, body: {firstname:firstName, lastname:lastName, login:userName,
+            pass:password, email:email, regioncode:regionCode, countrycode:countryCode}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+            done();
+        });
+    });
+
+    it('signup Empty/Null lastName',function(done)
+    {
+        let firstName = 'Abhi';
+        let lastName = '';
+        let userName = 'CoolGuy';
+        let password = 'ILikeMicrofiberTowels';
+        let email = 'cool@email.com';
+        let regionCode = 2;
+        let countryCode = 2;
+        let success = false;
+        let errorMessage = 'Last name is not valid (empty or null)';
+
+        request.post(SIGNUP_ENDPOINT, {json: true, body: {firstname:firstName, lastname:lastName, login:userName,
+            pass:password, email:email, regioncode:regionCode, countrycode:countryCode}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+        });
+
+        lastName = null;
+
+        request.post(SIGNUP_ENDPOINT, {json: true, body: {firstname:firstName, lastname:lastName, login:userName,
+            pass:password, email:email, regioncode:regionCode, countrycode:countryCode}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+            done();
+        });
+    });
+
+    it('signup Empty/Null login',function(done)
+    {
+        let firstName = 'Abhi';
+        let lastName = 'Kotta';
+        let userName = '';
+        let password = 'ILikeMicrofiberTowels';
+        let email = 'cool@email.com';
+        let regionCode = 2;
+        let countryCode = 2;
+        let success = false;
+        let errorMessage = 'Login is not valid (empty or null)';
+
+        request.post(SIGNUP_ENDPOINT, {json: true, body: {firstname:firstName, lastname:lastName, login:userName,
+            pass:password, email:email, regioncode:regionCode, countrycode:countryCode}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+        });
+
+        userName = null;
+
+        request.post(SIGNUP_ENDPOINT, {json: true, body: {firstname:firstName, lastname:lastName, login:userName,
+            pass:password, email:email, regioncode:regionCode, countrycode:countryCode}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+            done();
+        });
+    });
+
+    it('signup Empty/Null password',function(done)
+    {
+        let firstName = 'Abhi';
+        let lastName = 'Kotta';
+        let userName = 'CoolGuy';
+        let password = '';
+        let email = 'cool@email.com';
+        let regionCode = 2;
+        let countryCode = 2;
+        let success = false;
+        let errorMessage = 'Password is not valid (empty or null)';
+
+        request.post(SIGNUP_ENDPOINT, {json: true, body: {firstname:firstName, lastname:lastName, login:userName,
+            pass:password, email:email, regioncode:regionCode, countrycode:countryCode}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+        });
+
+        password = null;
+
+        request.post(SIGNUP_ENDPOINT, {json: true, body: {firstname:firstName, lastname:lastName, login:userName,
+            pass:password, email:email, regioncode:regionCode, countrycode:countryCode}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+            done();
+        });
+    });
+
+    it('signup Empty/Null email',function(done)
+    {
+        let firstName = 'Abhi';
+        let lastName = 'Kotta';
+        let userName = 'CoolGuy';
+        let password = 'ILikeMicrofiberTowels';
+        let email = '';
+        let regionCode = 2;
+        let countryCode = 2;
+        let success = false;
+        let errorMessage = 'Email is not valid (empty or null)';
+
+        request.post(SIGNUP_ENDPOINT, {json: true, body: {firstname:firstName, lastname:lastName, login:userName,
+            pass:password, email:email, regioncode:regionCode, countrycode:countryCode}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+        });
+
+        email = null;
+
+        request.post(SIGNUP_ENDPOINT, {json: true, body: {firstname:firstName, lastname:lastName, login:userName,
+            pass:password, email:email, regioncode:regionCode, countrycode:countryCode}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+            done();
+        });
+    });
+
+    it('signup Empty/Null regioncode',function(done)
+    {
+        let firstName = 'Abhi';
+        let lastName = 'Kotta';
+        let userName = 'CoolGuy';
+        let password = 'ILikeMicrofiberTowels';
+        let email = 'cool@email.com';
+        let regionCode = -1;
+        let countryCode = 2;
+        let success = false;
+        let errorMessage = 'Region code is not valid (negative number or null)';
+
+        request.post(SIGNUP_ENDPOINT, {json: true, body: {firstname:firstName, lastname:lastName, login:userName,
+            pass:password, email:email, regioncode:regionCode, countrycode:countryCode}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+        });
+
+        regionCode = null;
+
+        request.post(SIGNUP_ENDPOINT, {json: true, body: {firstname:firstName, lastname:lastName, login:userName,
+            pass:password, email:email, regioncode:regionCode, countrycode:countryCode}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+            done();
+        });
+    });
+
+    it('signup Empty/Null countrycode',function(done)
+    {
+        let firstName = 'Abhi';
+        let lastName = 'Kotta';
+        let userName = 'CoolGuy';
+        let password = 'ILikeMicrofiberTowels';
+        let email = 'cool@email.com';
+        let regionCode = 2;
+        let countryCode = -1;
+        let success = false;
+        let errorMessage = 'Country code is not valid (negative number or null)';
+
+        request.post(SIGNUP_ENDPOINT, {json: true, body: {firstname:firstName, lastname:lastName, login:userName,
+            pass:password, email:email, regioncode:regionCode, countrycode:countryCode}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+        });
+
+        countryCode = null;
+
+        request.post(SIGNUP_ENDPOINT, {json: true, body: {firstname:firstName, lastname:lastName, login:userName,
+            pass:password, email:email, regioncode:regionCode, countrycode:countryCode}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+            done();
+        });
+    });
+
+    it('getAllUserInformation Pass',function(done)
+    {
+        let objectId = new ObjectId(testObjectId);
+        let success = true;
+        let errorMessage = '';
+        let theme = 1;
+        let lightDarkMode = true;
+        let searchRadius = 1000;
+        let firstName = 'TestMe';
+        let lastName = 'User';
+        let userName = 'asdf';
+        let email = 'test@me.com';
+        let countryCode = 1;
+        let regionCode = 1;
+
+        request.post(GET_ALL_USER_INFORMATION_PIN_ENDPOINT, {json: true, body: {objectId:objectId}}, function (error, response) {
+            expect(response.statusCode).toEqual(SUCCESS_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+            expect(response.body.results.theme).toEqual(theme);
+            expect(response.body.results.lightDarkMode).toEqual(lightDarkMode);
+            expect(response.body.results.searchRadius).toEqual(searchRadius);
+            expect(response.body.results.firstName).toEqual(firstName);
+            expect(response.body.results.lastName).toEqual(lastName);
+            expect(response.body.results.userName).toEqual(userName);
+            expect(response.body.results.email).toEqual(email);
+            expect(response.body.results.regionCode).toEqual(regionCode);
+            expect(response.body.results.countryCode).toEqual(countryCode);
+            done();
+        });
+    });
+
+    it('getAllUserInformation Null objectId',function(done)
+    { 
+        let objectId = null;
+        let success = false;
+        let errorMessage = 'objectId cannot be null';
+    
+        request.post(GET_ALL_USER_INFORMATION_PIN_ENDPOINT, {json: true, body: {objectId:objectId}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+            expect(response.body.results).toEqual(null);
+            done();
+        });
+
+    });
+
+    it('getSettings Pass',function(done)
+    { 
+        let objectId = new ObjectId(testObjectId);
+        let theme = 1;
+        let lightDarkMode = true;
+        let searchRadius = 1000;
+        let success = true;
+        let errorMessage = '';
+    
+        request.post(GET_SETTINGS_PIN_ENDPOINT, {json: true, body: {objectId:objectId}}, function (error, response) {
+            expect(response.statusCode).toEqual(SUCCESS_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+            expect(response.body.theme).toEqual(theme);
+            expect(response.body.lightDarkMode).toEqual(lightDarkMode);
+            expect(response.body.searchRadius).toEqual(searchRadius);
+            done();
+        });
+    });
+
+    it('getSettings Null objectId',function(done)
+    { 
+        let objectId = null;
+        let success = false;
+        let errorMessage = 'objectId cannot be null';
+    
+        request.post(GET_SETTINGS_PIN_ENDPOINT, {json: true, body: {objectId:objectId}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+            done();
+        });
+    });
+
+    it('setSettings Pass',function(done)
+    { 
+        let objectId = new ObjectId(secondaryTestObjectId);
+        let success = true;
+        let errorMessage = '';
+        let theme = 3;
+        let lightDarkMode = false;
+        let searchRadius = 300;
+    
+        request.post(SET_SETTINGS_PIN_ENDPOINT, {json: true, body: {objectId:objectId, theme:theme, lightDarkMode:lightDarkMode, searchRadius:searchRadius}}, function (error, response) {
+            expect(response.statusCode).toEqual(SUCCESS_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+        });
+
+        request.post(GET_SETTINGS_PIN_ENDPOINT, {json: true, body: {objectId:objectId}}, function (error, response) {
+            expect(response.statusCode).toEqual(SUCCESS_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+            expect(response.body.theme).toEqual(theme);
+            expect(response.body.lightDarkMode).toEqual(lightDarkMode);
+            expect(response.body.searchRadius).toEqual(searchRadius);
+            done();
+        });
+
+    });
+
+    it('setSettings Null objectId',function(done)
+    { 
+        let objectId = null;
+        let success = false;
+        let errorMessage = 'objectId cannot be null';
+        let theme = 3;
+        let lightDarkMode = false;
+        let searchRadius = 300;
+    
+        request.post(SET_SETTINGS_PIN_ENDPOINT, {json: true, body: {objectId:objectId, theme:theme, lightDarkMode:lightDarkMode, searchRadius:searchRadius}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+            done();
+        });
+    });
+
+    it('setSettings NULL/Invalid theme',function(done)
+    { 
+        let objectId = new ObjectId(secondaryTestObjectId);
+        let success = false;
+        let errorMessage = 'theme cannot be null';
+        let theme = -1;
+        let lightDarkMode = false;
+        let searchRadius = 300;
+    
+        request.post(SET_SETTINGS_PIN_ENDPOINT, {json: true, body: {objectId:objectId, theme:theme, lightDarkMode:lightDarkMode, searchRadius:searchRadius}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+        });
+
+        theme = null;
+
+        request.post(SET_SETTINGS_PIN_ENDPOINT, {json: true, body: {objectId:objectId, theme:theme, lightDarkMode:lightDarkMode, searchRadius:searchRadius}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+            done();
+        });
+    });
+
+    it('setSettings Null lightDarkMode',function(done)
+    { 
+        let objectId = new ObjectId(secondaryTestObjectId);
+        let success = false;
+        let errorMessage = 'lightDarkMode cannot be null';
+        let theme = 3;
+        let lightDarkMode = null;
+        let searchRadius = 300;
+    
+        request.post(SET_SETTINGS_PIN_ENDPOINT, {json: true, body: {objectId:objectId, theme:theme, lightDarkMode:lightDarkMode, searchRadius:searchRadius}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+            done();
+        });
+    });
+
+    it('setSettings Null/Invalid searchRadius',function(done)
+    { 
+        let objectId = null;
+        let success = false;
+        let errorMessage = 'objectId cannot be null';
+        let theme = 3;
+        let lightDarkMode = false;
+        let searchRadius = -300;
+    
+        request.post(SET_SETTINGS_PIN_ENDPOINT, {json: true, body: {objectId:objectId, theme:theme, lightDarkMode:lightDarkMode, searchRadius:searchRadius}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+        });
+
+        searchRadius = null;
+
+        request.post(SET_SETTINGS_PIN_ENDPOINT, {json: true, body: {objectId:objectId, theme:theme, lightDarkMode:lightDarkMode, searchRadius:searchRadius}}, function (error, response) {
+            expect(response.statusCode).toEqual(INTERNAL_SERVER_ERROR_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+            done();
+        });
+
+    });
+
 });
 
 describe('User Emergency Contacts', function()
@@ -162,6 +597,8 @@ describe('User Emergency Contacts', function()
             expect(response.statusCode).toEqual(SUCCESS_STATUS_CODE);
             done();
         });
+
+        // TODO FIX
     });
 
     it('getContacts No User',function(done)
@@ -255,6 +692,8 @@ describe('User Emergency Contacts', function()
             expect(response.body.error).toEqual(errorMessage);
             done();
         });
+
+        // TODO Add getContacts to verify
     });
 
     it('editContact No matching Contact',function(done)
@@ -404,9 +843,11 @@ describe('Pins', function()
         let latitude = 15;
         let longitude = 15;
         let success = true;
+        let title = 'Another Gas Leak';
 
         request.post(ADD_PIN_ENDPOINT, {json: true, body: {
             usercreatedobjectid:objectId, 
+            title:title,
             Address:address, 
             zip:zipCode, 
             State:State, 
@@ -434,6 +875,7 @@ describe('Pins', function()
         let latitude = 15;
         let longitude = 15;
         let success = true;
+        let title = 'Another Fight';
         let errorMessage = '';
 
         request.post(EDIT_PIN_ENDPOINT, {json: true, body: {
@@ -471,10 +913,12 @@ describe('Pins', function()
         let longitude = 15;
         let success = false;
         let errorMessage = 'Failed to edit pin'; 
+        let title = 'Different fight';
 
         request.post(EDIT_PIN_ENDPOINT, {json: true, body: {
             ID:objectId,
             usercreatedobjectid:userCreatedObjectId, 
+            title:title,
             Address:address, 
             zip:zipCode, 
             State:State, 
@@ -538,7 +982,9 @@ describe('Pins', function()
         let country = 'Country Country';
         let description = 'None';
         let numResolved = 0;
+        let title = 'Assault';
 
+        let secondaryTitle = 'Gang Activity';
         let secondaryAddress = 'Street Street 2';
         let secondaryZipCode = 12345;
         let secondaryState = 'State State 2';
@@ -564,6 +1010,7 @@ describe('Pins', function()
                     expect(response.body.results[i].country).toEqual(country);
                     expect(response.body.results[i].description).toEqual(description);
                     expect(response.body.results[i].numResolved).toEqual(numResolved);
+                    expect(response.body.results[i].title).toEqual(title);
                 }
                 else if (response.body.results[i].address == secondaryAddress)
                 {
@@ -572,6 +1019,7 @@ describe('Pins', function()
                     expect(response.body.results[i].country).toEqual(secondaryCountry);
                     expect(response.body.results[i].description).toEqual(secondaryDescription);
                     expect(response.body.results[i].numResolved).toEqual(secondaryNumResolved);
+                    expect(response.body.results[i].title).toEqual(secondaryTitle);
                 }
             }
             done();

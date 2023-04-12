@@ -8,6 +8,9 @@ let editObjectId = "123456789012345678901236"
 
 db.Users.insertOne({
     _id: ObjectId(testObjectId), 
+    theme: 1,
+    lightDarkMode: true,
+    searchRadius:1000,
     firstName: "TestMe",
     lastName: "User", 
     userName: "asdf", 
@@ -20,6 +23,9 @@ db.Users.insertOne({
 
 db.Users.insertOne({
     _id: ObjectId(secondaryTestObjectId), 
+    theme: 2,
+    lightDarkMode: false,
+    searchRadius:1000,
     firstName: "TestMe2",
     lastName: "User2", 
     userName: "IAmATestUser2", 
@@ -110,6 +116,7 @@ db.UserEmergencyContacts.insertOne({
 
 db.Pins.insertOne({
     _id:ObjectId(deleteObjectId),
+    title:'Gas Leak',
     address:'Delete Street', 
     zipCode:12345, 
     state:'Delete State', 
@@ -126,6 +133,7 @@ db.Pins.insertOne({
 
 db.Pins.insertOne({
     _id:ObjectId(editObjectId),
+    title:'Fist Fight',
     address:'Edit Street', 
     zipCode:67890, 
     state:'Edit State', 
@@ -142,6 +150,7 @@ db.Pins.insertOne({
 
 db.Pins.insertOne({
     _id:ObjectId(),
+    title:'Assault',
     address:'Street Street', 
     zipCode:45678, 
     state:'State State', 
@@ -158,6 +167,7 @@ db.Pins.insertOne({
 
 db.Pins.insertOne({
     _id:ObjectId(),
+    title:'Gang Activity',
     address:'Street Street 2', 
     zipCode:12345, 
     state:'State State 2', 
