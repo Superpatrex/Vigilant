@@ -15,7 +15,7 @@ function LoginScreen({ navigation }) {
     const { colors } = useTheme();
     const [username, setUsername] = React.useState('err');
     const [password, setPassword] = React.useState('err');
-
+    
     const doLogin = async () => {
         // Waka waka
         var obj = {login: username, pass: password};
@@ -30,9 +30,8 @@ function LoginScreen({ navigation }) {
 
             if (res.error === '')
             {
-                navigation.navigate("Home", {
-                    screen: 'Contacts',
-                    params: { userId: res._id },
+                navigation.navigate('Home', {
+                    userId: res._id,
                 });
             }
             else
@@ -106,11 +105,6 @@ const styles = StyleSheet.create({
         margin: 15,
         backgroundColor: "white",
         color: "black",
-    },
-    separator: {
-        marginVertical: 8,
-        borderBottomColor: "#FFFFFF",
-        borderBottomWidth: StyleSheet.hairlineWidth,
     },
     buttonStyle:{
         // backgroundColor:"#494949",
