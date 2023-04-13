@@ -9,20 +9,13 @@ db.Pins.insertOne({
     state : "Florida",
     country : "United States",
     location : {
-        $near : {
-            $geometry: {
-                type: "Point",
-                coordinates : [28.6016, -81.2005]
-            },
-        $minDistance: 1000,
-        $maxDistance: 5000
-        }
+        type: "Point",
+        coordinates : [28.6016, -81.2005]
     },
     Title: 'Some crime',
     description : "This is UCF or can be an empty string or null",
     numResolved : 0,
-    status: 0,
-    userCreatedObjectId: null,
+    userCreatedObjectId: ObjectId('643486e11801be6f2e45527c'),
     dateCreated: ISODate()
 })
 
