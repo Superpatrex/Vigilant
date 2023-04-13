@@ -125,7 +125,7 @@ db.Pins.insertOne({
       type: "Point",
       coordinates : [12, 12],
       },
-    Title: 'Crime1',
+
     description:'None',
     numResolved:0, 
     userCreatedObjectId:ObjectId(secondaryTestObjectId),
@@ -143,7 +143,7 @@ db.Pins.insertOne({
       type: "Point",
       coordinates : [13, 13],
       },
-    Title: 'Crime2',
+
     description:'None',
     numResolved:0, 
     userCreatedObjectId:ObjectId(secondaryTestObjectId),
@@ -161,7 +161,6 @@ db.Pins.insertOne({
       type: "Point",
       coordinates : [17, 17],
       },
-    Title: 'Crime3',
     description:'None',
     numResolved:0, 
     userCreatedObjectId:ObjectId(testObjectId),
@@ -179,7 +178,6 @@ db.Pins.insertOne({
       type: "Point",
       coordinates : [17, 17],
       },
-    Title: 'Crime3',
     description:null,
     numResolved:3, 
     userCreatedObjectId:ObjectId(testObjectId),
