@@ -1,19 +1,20 @@
 import React from 'react';
-import '../Card.css'
+import GoogleMapReact from 'google-map-react';
+import '../Map.css'
 
 import PageTitle from '../components/PageTitle';
 import LoggedInName from '../components/LoggedInName';
-import CardUI from '../components/CardUI';
+import MapView from '../components/MapView';
 
-const CardPage = () =>
+const MapPage = () =>
 {
     return(
         <div>
             <PageTitle />
             <LoggedInName />
-            <CardUI />
+            <MapView />
         </div>
     );
 }
 
-export default CardPage;
+export default MapPage;

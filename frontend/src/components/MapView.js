@@ -14,7 +14,7 @@ function buildPath(route)
 }
 
 
-function CardUI()
+function MapView()
 {
     var card = '';
     var search = '';
@@ -113,4 +113,4 @@ function CardUI()
     );
 }
 
-export default CardUI;
+export default MapView;
