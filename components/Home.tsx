@@ -30,11 +30,11 @@ const Home = ({ route, navigation }) => {
             },
             tabBarInactiveTintColor: "gray",
         })} >
-            <Tab.Screen name="Settings" component={SettingsScreen} />
-            <Tab.Screen name="Map" component={MapScreen} options={{ headerShown: false }} />
-            <Tab.Screen name="Contacts" component={ContactsScreen} options={{
+            <Tab.Screen name="Settings" component={SettingsScreen} initialParams={{ userId: route.params.userId }} />
+            <Tab.Screen name="Map" component={MapScreen} initialParams={{ userId: route.params.userId }} options={{ headerShown: false }} />
+            <Tab.Screen name="Contacts" component={ContactsScreen}  initialParams={{ userId: route.params.userId }} options={{
                 headerRight: () => (
-                    <Pressable onPress={() => navigation.navigate('AddContactModal', { params: { userId: route.params.userId } })}>
+                    <Pressable onPress={() => navigation.navigate('AddContactModal', { userId: route.params.userId })}>
                         <Ionicons name='add-outline' size={35} color={colors.primary}></Ionicons>
                     </Pressable>
                 )
