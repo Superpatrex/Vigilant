@@ -18,6 +18,7 @@ db.Pins.insertOne({
         $maxDistance: 5000
         }
     },
+    Title: 'Some crime',
     description : "This is UCF or can be an empty string or null",
     numResolved : 0,
     status: 0,

@@ -631,7 +631,7 @@ app.post('/api/addPin', async (request, response, next) =>
 	
   var error = '';
 
-  const { usercreatedobjectid, Address, zip, State, Country, Description, Resolved, latitude, longitude} = request.body;
+  const { usercreatedobjectid, Address, zip, State, Country, Description, Resolved, latitude, longitude, title} = request.body;
 
   try
   {
@@ -645,6 +645,7 @@ app.post('/api/addPin', async (request, response, next) =>
         type: PIN_LOCATION_TYPE,
         coordinates : [longitude, latitude],
         },
+      Title:title,
       description:Description,
       numResolved:Resolved, 
       userCreatedObjectId:new ObjectId(usercreatedobjectid),
@@ -669,7 +670,7 @@ app.post('/api/editPin', async (request, response, next) =>
   var error = '';
   var retval;
 
-  const { ID, usercreatedobjectid, Address, zip, State, Country, Description, Resolved, latitude, longitude } = request.body;
+  const { ID, usercreatedobjectid, Address, zip, State, Country, title, Description, Resolved, latitude, longitude } = request.body;
 
   const db = client.db("LargeProject");
   
@@ -686,6 +687,7 @@ app.post('/api/editPin', async (request, response, next) =>
           type: PIN_LOCATION_TYPE,
           coordinates : [longitude, latitude],
         },
+        Title:title,
         description:Description,
         numResolved:Resolved,
         dateCreated:new Date()

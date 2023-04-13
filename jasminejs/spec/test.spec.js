@@ -403,6 +403,7 @@ describe('Pins', function()
         let numResolved = 0;
         let latitude = 15;
         let longitude = 15;
+        let title = "Crime";
         let success = true;
 
         request.post(ADD_PIN_ENDPOINT, {json: true, body: {
@@ -411,6 +412,7 @@ describe('Pins', function()
             zip:zipCode, 
             State:State, 
             Country:country,
+            Title:title,
             Description:description,
             Resolved:numResolved,
             latitude:latitude,
@@ -429,6 +431,7 @@ describe('Pins', function()
         let zipCode = "69174";
         let State = "Ohio";
         let country = "USA";
+        let title = "Crime";
         let description = "Fist fight here";
         let numResolved = 0;
         let latitude = 15;
@@ -443,6 +446,7 @@ describe('Pins', function()
             zip:zipCode, 
             State:State, 
             Country:country,
+            Title:title,
             Description:description,
             Resolved:numResolved,
             latitude:latitude,
@@ -601,3 +605,4 @@ describe('Pins', function()
     
 
 });
+
