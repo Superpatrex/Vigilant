@@ -20,26 +20,26 @@ const RegisterScreen = ({ navigation }) => {
     const [password, setPassword] = React.useState('err');
     const [confirmPassword, setConfirmPassword] = React.useState('rre');
 
-    const isEmailInUse = async (email: String) => {
-        // Wakka wakka
-        var obj = { email: email };
-        var js = JSON.stringify(obj);
+    // const isEmailInUse = async (email: String) => {
+    //     // Wakka wakka
+    //     var obj = { email: email };
+    //     var js = JSON.stringify(obj);
 
-        try
-        {
-            const response = await fetch(buildPath('api/emailInUse'),
-            {method: 'POST', body: js, headers: {'Content-Type': 'application/json'}});
+    //     try
+    //     {
+    //         const response = await fetch(buildPath('api/emailInUse'),
+    //         {method: 'POST', body: js, headers: {'Content-Type': 'application/json'}});
 
-            var res = JSON.parse(await response.text());
+    //         var res = JSON.parse(await response.text());
 
-            return res.emailInUse;
-        }
-        catch (e: any)
-        {
-            Alert.alert(e.toString());
-            throw e;
-        }
-    }
+    //         return res.emailInUse;
+    //     }
+    //     catch (e: any)
+    //     {
+    //         Alert.alert(e.toString());
+    //         throw e;
+    //     }
+    // }
 
     const doRegister = async (fName: string, lName: string, email: string, username: string, password: string) => {
 
@@ -49,12 +49,12 @@ const RegisterScreen = ({ navigation }) => {
             return;
         }
 
-        const emailInUse = await isEmailInUse(email);
-        if (emailInUse)
-        {
-            Alert.alert("Email is already in use");
-            return;
-        }
+        // const emailInUse = await isEmailInUse(email);
+        // if (emailInUse)
+        // {
+        //     Alert.alert("Email is already in use");
+        //     return;
+        // }
 
         // Wakka wakka
         var obj = {firstname: fName, lastname: lName, login: username, pass: password, email: email, regioncode: 5, countrycode: 5};
