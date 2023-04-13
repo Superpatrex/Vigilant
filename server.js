@@ -276,7 +276,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // call this API first, then change Password API
-// generated token and stoers in the Users collection
+// generated token and stores in the Users collection
 app.post('/api/resetPassword', async (request, response, next) => {
   // incoming: email
   // outgoing: error
@@ -306,12 +306,12 @@ app.post('/api/resetPassword', async (request, response, next) => {
     }
 
     // change the resetUrl to the right one
-    const resetUrl = `https://vigilantsometihng.com/reset-password?token=${tokenInfo}`; // fronted currently creating it
+    const resetUrl = `https://vigilantsometihng.com/reset-password?token=${tokenInfo.token}`; // fronted currently creating it
     const mailOptions = {
       from: 'Vigilant12023@gmail.com',
       to: email,
       subject: 'Password Reset Request',
-      text: `You have requested to reset your password. Click on this link to reset your password: ${resetUrl}`
+      html: `<p>Your have requested to reset your password Please <a href="${resetUrl}">click here</a> to change your password.</p>`
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -854,6 +854,7 @@ app.post('/api/addPin', async (request, response, next) =>
         type: PIN_LOCATION_TYPE,
         coordinates : [longitude, latitude],
         },
+      Title:title,
       description:Description,
       numResolved:Resolved, 
       userCreatedObjectId:new ObjectId(usercreatedobjectid),
@@ -896,6 +897,7 @@ app.post('/api/editPin', async (request, response, next) =>
           type: PIN_LOCATION_TYPE,
           coordinates : [longitude, latitude],
         },
+        Title:title,
         description:Description,
         numResolved:Resolved,
         dateCreated:new Date()
