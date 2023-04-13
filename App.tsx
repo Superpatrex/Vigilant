@@ -1,18 +1,23 @@
 import React from 'react';
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme, useTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, Pressable, Text } from 'react-native';
 
 import LoginScreen from './pages/LoginScreen';
 import RegisterScreen from './pages/RegisterScreen';
 import ForgetLoginModal from './components/ForgetLoginModal';
 import AddContactModal from './components/AddContactModal';
+import AddPinModal from './components/AddPinModal';
+import ContactView from './components/ContactView';
+import EditContactScreen from './pages/EditContactScreen';
 
 import Home from './components/Home';
 
 const Stack = createNativeStackNavigator();
 
-function App(): JSX.Element {
+function App({ navigation }): JSX.Element {
+  const { colors } = useTheme();
+
   return (
     <NavigationContainer theme={useColorScheme() === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack.Navigator>
@@ -29,7 +34,26 @@ function App(): JSX.Element {
             name="Home"
             component={Home}
             options={{
-                headerShown: false,
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="ContactView"
+            component={ContactView}
+            options={{
+              title: "",
+              headerRight: () => (
+                <Pressable onPress={() => navigation.navigate('EditContact')}>
+                  <Text style={{ color: colors.primary, fontSize: 18 }}>Edit</Text>
+                </Pressable>
+              )
+            }}
+          />
+          <Stack.Screen
+            name="EditContact"
+            component={EditContactScreen}
+            options={{
+              title: "Edit Contact"
             }}
           />
         </Stack.Group>
@@ -46,6 +70,13 @@ function App(): JSX.Element {
               component={AddContactModal}
               options={{
                 title: 'Add Contact'
+              }}
+            />
+            <Stack.Screen
+              name="AddPinModal"
+              component={AddPinModal}
+              options={{
+                title: 'Add Pin'
               }}
             />
         </Stack.Group>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, SectionList, StyleSheet, ScrollView, Alert, FlatList } from 'react-native';
+import { Text, View, SectionList, StyleSheet, ScrollView, Alert, FlatList, Pressable } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import buildPath from '../buildPath';
 
@@ -28,7 +28,12 @@ const ContactsScreen = ({ route, navigation }) => {
 
             if (res.error === '')
             {
-                setData(res.contacts);
+                setData(res.results);
+            }
+            else if (res.error === 'User has empty contact')
+            {
+                // Do nothing
+                console.log('User has no contacts');
             }
             else
             {
@@ -53,14 +58,13 @@ const ContactsScreen = ({ route, navigation }) => {
     const { colors } = useTheme();
     return (
         <View style={{ flex: 1, paddingTop: 22 }}>
-            {/* <View style={{ flex: 1, alignItems: "center" }}>
-                <Text>This is some filler text</Text>
-                <Text>More text</Text>
-            </View> */}
             <FlatList
                 data={data}
-                renderItem={({item}) => <Text style={[styles.item, { color: colors.text }]}>{item.firstName} {item.lastName}</Text>}
-                // renderSectionHeader={({section}) => (<Text style={[styles.sectionHeader, { backgroundColor: colors.border, color: colors.text }]}>{section.title}</Text>)}
+                renderItem={({item}) => (
+                    <Pressable onPress={() => navigation.navigate('ContactView', { details: item })}>
+                        <Text style={[styles.item, { color: colors.text }]}>{item.firstName} {item.lastName}</Text>
+                    </Pressable>
+                )}
                 keyExtractor={({id}) => id}
             />
         </View>
