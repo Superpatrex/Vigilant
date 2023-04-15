@@ -18,12 +18,8 @@ const AddPinModal = ({ route, navigation }) => {
     const [pinTitle, setPinTitle] = React.useState('');
     const [pinDescription, setPinDescription] = React.useState('');
 
-    const getRandomNumber = (min: number, max: number) => {
-        return Math.random() * (max - min) + min;
-    }
-
     const addPin = async () => {
-        var obj = { usercreatedobjectid: route.params.userId, Address: route.params.userLocation.street, zip: route.params.userLocation.zipCode, State: route.params.userLocation.state, Country: route.params.userLocation.country, Description: pinDescription, Resolved: 0, latitude: (route.params.userLocation.latitude || 0) + getRandomNumber(0, 0.005), longitude: (route.params.userLocation.longitude || 0) - getRandomNumber(0, 0.005), title: pinTitle };
+        var obj = { usercreatedobjectid: route.params.userId, Address: route.params.userLocation.street, zip: route.params.userLocation.zipCode, State: route.params.userLocation.state, Country: route.params.userLocation.country, Description: pinDescription, Resolved: 0, latitude: (route.params.userLocation.latitude || 0), longitude: (route.params.userLocation.longitude || 0), title: pinTitle };
         var js = JSON.stringify(obj);
 
         try
