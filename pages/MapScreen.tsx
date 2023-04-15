@@ -8,6 +8,7 @@ import {
     Pressable,
     Button,
     SafeAreaView,
+    PermissionsAndroid,
   } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import buildPath from '../buildPath';
@@ -57,6 +58,36 @@ const MapScreen = ({ route, navigation }) => {
         }
 
         return markers;
+    }
+
+    const requestLocationPermission = async () => {
+        try
+        {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                {
+                    title: 'Vigilant Location Permission',
+                    message: 'Vigilant needs access to your location',
+                    buttonNeutral: 'Ask Me Later',
+                    buttonNegative: 'Cancel',
+                    buttonPositive: 'Ok',
+                },
+            );
+
+            if (granted === PermissionsAndroid.RESULTS.GRANTED)
+            {
+                console.log('You can use location data');
+            }
+            else
+            {
+                console.log('Location permission denied');
+            }
+        }
+        catch (e: any)
+        {
+            console.log(e);
+        }
+
     }
 
     const searchPins = async (latitude: number, longitude: number) => {
@@ -150,6 +181,7 @@ const MapScreen = ({ route, navigation }) => {
                 ref={mapRef}
                 style={styles.map}
                 onMapReady={() => {
+                    requestLocationPermission();
                     Geolocation.getCurrentPosition((info) => {setLocation(info)}, (error: GeolocationError) => { console.log(error) }, { enableHighAccuracy: true });
                     setInitialRegion({ latitude: (location?.coords.latitude || 28.6024), longitude: (location?.coords.longitude || -81.2001), latitudeDelta: 0.0922, longitudeDelta: 0.0421});
                     mapRef.current?.addressForCoordinate({ latitude: (location?.coords.latitude || 28.6024), longitude: (location?.coords.longitude || -81.2001) })
