@@ -12,7 +12,7 @@ import { SelectList } from 'react-native-dropdown-select-list';
 
 import buildPath from '../buildPath';
 
-const AddPinModal = ({ route }) => {
+const AddPinModal = ({ route, navigation }) => {
     const { colors } = useTheme();
 
     const [pinTitle, setPinTitle] = React.useState('');
@@ -70,7 +70,7 @@ const AddPinModal = ({ route }) => {
                 search={false}
             />
             <TextInput style={styles.input} autoCorrect={false} autoCapitalize='none' onChangeText={text => setPinDescription(text)} placeholder='Description' placeholderTextColor={"#6b6b6b"}></TextInput>
-            <Button onPress={() => addPin()} title="Done"></Button>
+            <Button onPress={() => { addPin(); navigation.goBack() }} title="Done"></Button>
         </View>
     );
 }
