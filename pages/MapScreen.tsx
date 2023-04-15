@@ -141,6 +141,7 @@ const MapScreen = ({ route, navigation }) => {
 
     React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
+            requestLocationPermission();
             Geolocation.getCurrentPosition((info) => {setLocation(info)}, (error: GeolocationError) => { console.log(error) }, { enableHighAccuracy: true });
             searchPins((location?.coords.latitude || 0), (location?.coords.longitude || 0));
         });
@@ -181,7 +182,6 @@ const MapScreen = ({ route, navigation }) => {
                 ref={mapRef}
                 style={styles.map}
                 onMapReady={() => {
-                    requestLocationPermission();
                     Geolocation.getCurrentPosition((info) => {setLocation(info)}, (error: GeolocationError) => { console.log(error) }, { enableHighAccuracy: true });
                     setInitialRegion({ latitude: (location?.coords.latitude || 28.6024), longitude: (location?.coords.longitude || -81.2001), latitudeDelta: 0.0922, longitudeDelta: 0.0421});
                     mapRef.current?.addressForCoordinate({ latitude: (location?.coords.latitude || 28.6024), longitude: (location?.coords.longitude || -81.2001) })
