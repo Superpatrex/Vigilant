@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable, Alert } from 'react-native';
+import { Pressable } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '@react-navigation/native';
@@ -9,6 +9,7 @@ import SettingsScreen from '../pages/SettingsScreen';
 import ContactsScreen from '../pages/ContactsScreen';
 
 const Tab = createBottomTabNavigator();
+
 
 const Home = ({ route, navigation }) => {
     const { colors } = useTheme();

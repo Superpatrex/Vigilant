@@ -61,7 +61,7 @@ const ContactsScreen = ({ route, navigation }) => {
             <FlatList
                 data={data}
                 renderItem={({item}) => (
-                    <Pressable onPress={() => navigation.navigate('ContactView', { details: item })}>
+                    <Pressable onPress={() => navigation.navigate('ContactStack', { screen: 'ContactView', params: { details: item } })}>
                         <Text style={[styles.item, { color: colors.text }]}>{item.firstName} {item.lastName}</Text>
                     </Pressable>
                 )}
