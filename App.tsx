@@ -8,16 +8,13 @@ import RegisterScreen from './pages/RegisterScreen';
 import ForgetLoginModal from './components/ForgetLoginModal';
 import AddContactModal from './components/AddContactModal';
 import AddPinModal from './components/AddPinModal';
-import ContactView from './components/ContactView';
-import EditContactScreen from './pages/EditContactScreen';
+import ContactStack from './components/ContactStack';
 
 import Home from './components/Home';
 
 const Stack = createNativeStackNavigator();
 
-function App({ navigation }): JSX.Element {
-  const { colors } = useTheme();
-
+function App(): JSX.Element {
   return (
     <NavigationContainer theme={useColorScheme() === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack.Navigator>
@@ -38,22 +35,10 @@ function App({ navigation }): JSX.Element {
             }}
           />
           <Stack.Screen
-            name="ContactView"
-            component={ContactView}
+            name="ContactStack"
+            component={ContactStack}
             options={{
               title: "",
-              headerRight: () => (
-                <Pressable onPress={() => navigation.navigate('EditContact')}>
-                  <Text style={{ color: colors.primary, fontSize: 18 }}>Edit</Text>
-                </Pressable>
-              )
-            }}
-          />
-          <Stack.Screen
-            name="EditContact"
-            component={EditContactScreen}
-            options={{
-              title: "Edit Contact"
             }}
           />
         </Stack.Group>
