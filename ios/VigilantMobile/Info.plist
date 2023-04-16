@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>VigilantMobile</string>
+	<string>Vigilant</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -36,7 +36,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Uses this to determine user's location to load appropriately on map during start up</string>
+	<string>Uses this to determine user&apos;s location to load appropriately on map during start up</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Uses this to find pins users have placed on the map</string>
 	<key>UIAppFonts</key>
