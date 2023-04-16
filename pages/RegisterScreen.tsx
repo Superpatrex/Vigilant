@@ -9,6 +9,7 @@ import {
   } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import buildPath from '../buildPath';
+import ErrorMessage from '../components/ErrorMessage';
 
 const RegisterScreen = ({ navigation }) => {
     const { colors } = useTheme();
@@ -19,42 +20,20 @@ const RegisterScreen = ({ navigation }) => {
     const [username, setUsername] = React.useState('err');
     const [password, setPassword] = React.useState('err');
     const [confirmPassword, setConfirmPassword] = React.useState('rre');
+    const [errorVisible, setErrorVisible] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState('');
 
-    // const isEmailInUse = async (email: String) => {
-    //     // Wakka wakka
-    //     var obj = { email: email };
-    //     var js = JSON.stringify(obj);
-
-    //     try
-    //     {
-    //         const response = await fetch(buildPath('api/emailInUse'),
-    //         {method: 'POST', body: js, headers: {'Content-Type': 'application/json'}});
-
-    //         var res = JSON.parse(await response.text());
-
-    //         return res.emailInUse;
-    //     }
-    //     catch (e: any)
-    //     {
-    //         Alert.alert(e.toString());
-    //         throw e;
-    //     }
-    // }
 
     const doRegister = async (fName: string, lName: string, email: string, username: string, password: string) => {
 
         if (password != confirmPassword)
         {
-            Alert.alert("Passwords do not match");
+            // Alert.alert("Passwords do not match");
+            setErrorMessage('Passwords do not match');
+            setErrorVisible(true);
             return;
         }
-
-        // const emailInUse = await isEmailInUse(email);
-        // if (emailInUse)
-        // {
-        //     Alert.alert("Email is already in use");
-        //     return;
-        // }
+        setErrorVisible(false);
 
         // Wakka wakka
         var obj = {firstname: fName, lastname: lName, login: username, pass: password, email: email, regioncode: 5, countrycode: 5};
@@ -70,11 +49,15 @@ const RegisterScreen = ({ navigation }) => {
             console.log(res);
             if (res.success)
             {
-                Alert.alert('User created');
+                // Alert.alert('User created');
+                setErrorMessage('User created');
+                setErrorVisible(true);
             }
             else
             {
                 Alert.alert(res.error);
+                setErrorMessage(res.error);
+                setErrorVisible(true);
             }
         }
         catch (e: any)
@@ -87,7 +70,10 @@ const RegisterScreen = ({ navigation }) => {
     return (
         <View style={styles.centered}>
             <View style={{ height: '30%', justifyContent: "center", alignItems: "center" }}>
-                <Text style={{ color: colors.text, fontSize: 25 }}>Hello There</Text>
+                <Text style={{ color: colors.text, fontSize: 25, marginBottom: 10, }}>Hello There</Text>
+                { errorVisible ?
+                    <ErrorMessage errorMessage={errorMessage}></ErrorMessage>
+                : null }
             </View>
             <View style={[styles.registerBox, { backgroundColor: colors.card }]}>
                 <Text style={{

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Button } from 'react-native';
 
 import { useTheme } from '@react-navigation/native';
 
-const ContactView = ({ route }) => {
+const ContactView = ({ route, navigation }) => {
     const { colors } = useTheme();
 
     return (
@@ -17,6 +17,7 @@ const ContactView = ({ route }) => {
                 <Text style={[styles.cardText, { color: colors.text, fontSize: 15, }]}>Description</Text>
                 <Text style={[styles.cardText, { color: colors.text }]}>{route.params.details.description}</Text>
             </View>
+            <Button title='Edit' onPress={() => navigation.navigate('EditContact', { details: route.params.details })}></Button>
         </View>
     )
 }

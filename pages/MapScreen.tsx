@@ -9,6 +9,7 @@ import {
     Button,
     SafeAreaView,
     PermissionsAndroid,
+    Platform,
   } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import buildPath from '../buildPath';
@@ -61,33 +62,35 @@ const MapScreen = ({ route, navigation }) => {
     }
 
     const requestLocationPermission = async () => {
-        try
+        if (Platform.OS === "android")
         {
-            const granted = await PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            try
+            {
+                const granted = await PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                    {
+                        title: 'Vigilant Location Permission',
+                        message: 'Vigilant needs access to your location',
+                        buttonNeutral: 'Ask Me Later',
+                        buttonNegative: 'Cancel',
+                        buttonPositive: 'Ok',
+                    },
+                );
+    
+                if (granted === PermissionsAndroid.RESULTS.GRANTED)
                 {
-                    title: 'Vigilant Location Permission',
-                    message: 'Vigilant needs access to your location',
-                    buttonNeutral: 'Ask Me Later',
-                    buttonNegative: 'Cancel',
-                    buttonPositive: 'Ok',
-                },
-            );
-
-            if (granted === PermissionsAndroid.RESULTS.GRANTED)
-            {
-                console.log('You can use location data');
+                    console.log('You can use location data');
+                }
+                else
+                {
+                    console.log('Location permission denied');
+                }
             }
-            else
+            catch (e: any)
             {
-                console.log('Location permission denied');
+                console.log(e);
             }
         }
-        catch (e: any)
-        {
-            console.log(e);
-        }
-
     }
 
     const searchPins = async (latitude: number, longitude: number) => {
@@ -150,7 +153,7 @@ const MapScreen = ({ route, navigation }) => {
     }, [navigation]);
 
     return (
-        <SafeAreaView style={ styles.container }>
+        <View style={ styles.container }>
             {/* When pin is clicked, popUpVisible is set to true and the popup is displayed
             When the done button inside the popup is clicked, popUpVisible is set to false 
             and the popup hides */}
@@ -161,8 +164,8 @@ const MapScreen = ({ route, navigation }) => {
                     <Text style={[styles.pinPopupText, { color: colors.text, marginBottom: 3, }]}>{markerDetails?.description}</Text>
                     <View style={{ justifyContent: "space-evenly", height: 200, alignItems: "center" }}>
                         <Button title='Done' onPress={() => { showPopup(false); setCanDelete(false); }}></Button>
-                        <Button title='Edit' disabled={!(markerDetails?.userId == route.params.userId)}></Button>
-                        <Button title='Delete' color={colors.notification} disabled={!(markerDetails?.userId == route.params.userId)} onPress={() => {
+                        <Button title='Edit' disabled={!(markerDetails?.userId == route.params.userId)} onPress={() => { navigation.navigate('EditPinModal', { marker: markerDetails, location: locationData }) }}></Button>
+                        <Button title='Resolve' color={colors.notification} disabled={!(markerDetails?.userId == route.params.userId)} onPress={() => {
                             if (canDelete)
                             {
                                 deletePin(markerDetails?._id || 'null');
@@ -171,7 +174,7 @@ const MapScreen = ({ route, navigation }) => {
                             }
                             else
                             {
-                                Alert.alert('Are you sure? Press Delete again to delete');
+                                Alert.alert('Are you sure? Press Resolve again to remove');
                                 setCanDelete(true);
                             }
                         }}></Button>
@@ -204,10 +207,9 @@ const MapScreen = ({ route, navigation }) => {
                         key={index}
                         coordinate={marker.location.coordinates}
                         pinColor={(marker.userId === route.params.userId ? "red" : "pink")}
-                        // onPress={() => {showPopup(true); setMarkerDetails(marker)}}
-                        // onCalloutPress={() => {showPopup(true); setMarkerDetails(marker)}}
+                        // onPress={() => markerRef.current?.showCallout()}
+                        // onCalloutPress={() => { showPopup(true); setMarkerDetails(marker); markerRef.current?.hideCallout() }}
                     >
-                        {/* Test this with Sophia later to see if this fires on Android */}
                         <Callout>
                             <Pressable onPress={() => { showPopup(true); setMarkerDetails(marker);}}>
                                 <Text>{marker.title}</Text>
@@ -222,7 +224,7 @@ const MapScreen = ({ route, navigation }) => {
                         <Ionicons name='add-outline' size={45} color={"white"}></Ionicons>
                 </View>
             </Pressable>
-        </SafeAreaView>
+        </View>
     );
 }
 
@@ -244,12 +246,10 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         justifyContent: "center",
         alignItems: "center",
-        // marginBottom: 10,
-        // marginRight: 10,
         position:"absolute",
         alignSelf:"flex-end",
         right:-180,
-        bottom:-340,
+        bottom:-360,
     },
     pinPopup: {
         height: '45%',

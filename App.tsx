@@ -9,6 +9,7 @@ import ForgetLoginModal from './components/ForgetLoginModal';
 import AddContactModal from './components/AddContactModal';
 import AddPinModal from './components/AddPinModal';
 import ContactStack from './components/ContactStack';
+import EditPinModal from './components/EditPinModal';
 
 import Home from './components/Home';
 
@@ -62,6 +63,13 @@ function App(): JSX.Element {
               component={AddPinModal}
               options={{
                 title: 'Add Pin'
+              }}
+            />
+            <Stack.Screen
+              name='EditPinModal'
+              component={EditPinModal}
+              options={{
+                title: 'Edit Pin'
               }}
             />
         </Stack.Group>

@@ -18,18 +18,15 @@ const ContactStack = ({ navigation }) => {
                 component={ContactView}
                 options={{
                     title: "",
-                    headerRight: () => (
-                        <Pressable onPress={() => navigation.navigate('EditContact')}>
-                            <Text style={{ color: colors.primary, fontSize: 18 }}>Edit</Text>
-                        </Pressable>
-                    )
+                    headerShown: false,
                 }}
             />
             <Stack.Screen
                 name="EditContact"
                 component={EditContactScreen}
                 options={{
-                    title: "Edit Contact"
+                    title: "Edit Contact",
+                    headerShown: false,
                 }}
           />
         </Stack.Navigator>

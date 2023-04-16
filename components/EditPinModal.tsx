@@ -11,17 +11,16 @@ import { TextInput } from 'react-native-gesture-handler';
 import { SelectList } from 'react-native-dropdown-select-list';
 
 import buildPath from '../buildPath';
-import ErrorMessage from './ErrorMessage';
 
-const AddPinModal = ({ route, navigation }) => {
+const EditPinModal = ({ route, navigation }) => {
     const { colors } = useTheme();
 
-    const [pinTitle, setPinTitle] = React.useState('');
-    const [pinDescription, setPinDescription] = React.useState('');
+    const [pinTitle, setPinTitle] = React.useState(route.params.marker.title);
+    const [pinDescription, setPinDescription] = React.useState(route.params.marker.description);
     const [errorVisible, setErrorVisible] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState('');
 
-    const addPin = async () => {
+    const editPin = async () => {
         if (pinTitle == '')
         {
             setErrorMessage('The pin must have a type!');
@@ -30,12 +29,12 @@ const AddPinModal = ({ route, navigation }) => {
         }
         setErrorVisible(false);
 
-        var obj = { usercreatedobjectid: route.params.userId, Address: route.params.userLocation.street, zip: route.params.userLocation.zipCode, State: route.params.userLocation.state, Country: route.params.userLocation.country, Description: pinDescription, Resolved: 0, latitude: (route.params.userLocation.latitude || 0), longitude: (route.params.userLocation.longitude || 0), title: pinTitle };
+        var obj = { ID: route.params.marker._id, usercreatedobjectid: route.params.marker.userId, Address: route.params.marker.street, zip: route.params.location.zipCode, State: route.params.location.state, Country: route.params.location.country, Description: pinDescription, Resolved: 0, latitude: (route.params.marker.location.coordinates.latitude || 0), longitude: (route.params.marker.location.coordinates.longitude || 0), title: pinTitle };
         var js = JSON.stringify(obj);
 
         try
         {
-            const response = await fetch(buildPath('api/addPin'),
+            const response = await fetch(buildPath('api/editPin'),
             { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } });
 
             var res = JSON.parse(await response.text());
@@ -52,8 +51,6 @@ const AddPinModal = ({ route, navigation }) => {
             Alert.alert(e.toString());
             throw e;
         }
-
-        navigation.goBack();
     }
 
     const data = [
@@ -70,16 +67,18 @@ const AddPinModal = ({ route, navigation }) => {
                 setSelected={(val: string) => setPinTitle(val)}
                 data={data}
                 save="value"
-                placeholder='Pin Type'
+                placeholder={route.params.marker.title}
                 inputStyles={{ color: colors.text }}
                 dropdownTextStyles={{ color: colors.text }}
                 search={false}
                 boxStyles={{ width: 220, }}
             />
-            <TextInput style={styles.input} autoCorrect={false} autoCapitalize='none' onChangeText={text => setPinDescription(text)} placeholder='Description' placeholderTextColor={"#6b6b6b"}></TextInput>
-            <Button onPress={() => { addPin()}} title="Done"></Button>
+            <TextInput style={styles.input} autoCorrect={false} autoCapitalize='none' onChangeText={text => setPinDescription(text)} placeholder={route.params.marker.description} placeholderTextColor={"#6b6b6b"}></TextInput>
+            <Button onPress={() => { editPin()}} title="Done"></Button>
             { errorVisible ?
-                <ErrorMessage errorMessage={errorMessage}></ErrorMessage>
+                <View style={{ height: 30, width: 200, backgroundColor: colors.notification, alignItems: "center", justifyContent: "center" }}>
+                    <Text style={{ color: "white" }}>{errorMessage}</Text>
+                </View>
             : null}
         </View>
     );
@@ -95,7 +94,7 @@ const styles = StyleSheet.create({
         margin: 15,
         backgroundColor: "white",
         color: "black",
-    },
+    }
 })
 
-export default AddPinModal;
+export default EditPinModal;

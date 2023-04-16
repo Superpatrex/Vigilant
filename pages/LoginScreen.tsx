@@ -10,11 +10,14 @@ import {
   } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import buildPath from '../buildPath';
+import ErrorMessage from '../components/ErrorMessage';
 
 function LoginScreen({ navigation }) {
     const { colors } = useTheme();
     const [username, setUsername] = React.useState('err');
     const [password, setPassword] = React.useState('err');
+    const [errorVisible, setErrorVisible] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState('');
     
     const doLogin = async () => {
         // Waka waka
@@ -36,7 +39,9 @@ function LoginScreen({ navigation }) {
             }
             else
             {
-                Alert.alert('Username or Password incorrect');
+                // Alert.alert('Username or Password incorrect');
+                setErrorMessage('Username or Password incorrect');
+                setErrorVisible(true);
             }
 
         }
@@ -50,7 +55,10 @@ function LoginScreen({ navigation }) {
     return (
         <View style={styles.centered}>
             <View style={{ height: '30%', justifyContent: "center", alignItems: "center" }}>
-                <Text style={{ color: colors.text, fontSize: 25 }}>Welcome Back</Text>
+                <Text style={{ color: colors.text, fontSize: 25, marginBottom: 10 }}>Welcome Back</Text>
+                { errorVisible ?
+                    <ErrorMessage errorMessage={errorMessage}></ErrorMessage>
+                : null}
             </View>
             <View style={[styles.loginBox, { backgroundColor: colors.card }]}>
                 <Text style={{
