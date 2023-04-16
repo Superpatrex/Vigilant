@@ -854,7 +854,6 @@ app.post('/api/addPin', async (request, response, next) =>
         type: PIN_LOCATION_TYPE,
         coordinates : [longitude, latitude],
         },
-      Title:title,
       description:Description,
       numResolved:Resolved, 
       userCreatedObjectId:new ObjectId(usercreatedobjectid),
@@ -897,7 +896,6 @@ app.post('/api/editPin', async (request, response, next) =>
           type: PIN_LOCATION_TYPE,
           coordinates : [longitude, latitude],
         },
-        Title:title,
         description:Description,
         numResolved:Resolved,
         dateCreated:new Date()
