@@ -11,14 +11,25 @@ import { TextInput } from 'react-native-gesture-handler';
 import { SelectList } from 'react-native-dropdown-select-list';
 
 import buildPath from '../buildPath';
+import ErrorMessage from './ErrorMessage';
 
 const AddPinModal = ({ route, navigation }) => {
     const { colors } = useTheme();
 
     const [pinTitle, setPinTitle] = React.useState('');
     const [pinDescription, setPinDescription] = React.useState('');
+    const [errorVisible, setErrorVisible] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState('');
 
     const addPin = async () => {
+        if (pinTitle == '')
+        {
+            setErrorMessage('The pin must have a type!');
+            setErrorVisible(true);
+            return;
+        }
+        setErrorVisible(false);
+
         var obj = { usercreatedobjectid: route.params.userId, Address: route.params.userLocation.street, zip: route.params.userLocation.zipCode, State: route.params.userLocation.state, Country: route.params.userLocation.country, Description: pinDescription, Resolved: 0, latitude: (route.params.userLocation.latitude || 0), longitude: (route.params.userLocation.longitude || 0), title: pinTitle };
         var js = JSON.stringify(obj);
 
@@ -31,11 +42,9 @@ const AddPinModal = ({ route, navigation }) => {
 
             if (!res.success)
             {
-                Alert.alert(res.error);
-            }
-            else
-            {
-                console.log('Pin added');
+                // Alert.alert(res.error);
+                setErrorMessage(res.error);
+                setErrorVisible(true);
             }
         }
         catch (e: any)
@@ -43,6 +52,8 @@ const AddPinModal = ({ route, navigation }) => {
             Alert.alert(e.toString());
             throw e;
         }
+
+        navigation.goBack();
     }
 
     const data = [
@@ -55,7 +66,6 @@ const AddPinModal = ({ route, navigation }) => {
     return (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
             <Text style={{ fontSize: 18, color: colors.text, marginBottom: 10, }}>Pin Information:</Text>
-            {/* <TextInput style={styles.input} autoCorrect={false} autoCapitalize='none' onChangeText={text => setPinTitle(text)} placeholder='Pin title' placeholderTextColor={"#6b6b6b"}></TextInput> */}
             <SelectList
                 setSelected={(val: string) => setPinTitle(val)}
                 data={data}
@@ -64,9 +74,13 @@ const AddPinModal = ({ route, navigation }) => {
                 inputStyles={{ color: colors.text }}
                 dropdownTextStyles={{ color: colors.text }}
                 search={false}
+                boxStyles={{ width: 220, }}
             />
             <TextInput style={styles.input} autoCorrect={false} autoCapitalize='none' onChangeText={text => setPinDescription(text)} placeholder='Description' placeholderTextColor={"#6b6b6b"}></TextInput>
-            <Button onPress={() => { addPin(); navigation.goBack() }} title="Done"></Button>
+            <Button onPress={() => { addPin()}} title="Done"></Button>
+            { errorVisible ?
+                <ErrorMessage errorMessage={errorMessage}></ErrorMessage>
+            : null}
         </View>
     );
 }
@@ -81,7 +95,7 @@ const styles = StyleSheet.create({
         margin: 15,
         backgroundColor: "white",
         color: "black",
-    }
+    },
 })
 
 export default AddPinModal;
