@@ -283,6 +283,49 @@ input{
     background-color: #595959;
 }
 
+#forgotBox{
+    padding-top:7%;
+    padding-bottom:5%;
+    padding:10px;
+    position:relative;
+    font-size:0.9em;
+}
+
+#forgotButton{
+    --padding-y:7px;
+    --padding-x:30px;
+    font-size: 1.2em;
+    border-radius: 10px;
+    border:none;
+    min-width:50px;
+    min-height:20px;
+    background-color: #494949;
+    color: white;
+    margin: 5px;
+    /*padding: 14px 40px;*/
+    padding-top:var(--padding-y);
+    padding-bottom:var(--padding-y);
+    padding-left:var(--padding-x);
+    padding-right:var(--padding-x);
+    text-align: center;
+    text-decoration: none;
+    display: inline-block; 
+}
+
+#closeForgot{
+    text-decoration: none;
+    position:absolute;
+    font-stretch: wider;
+    top:0px;
+    right:0px;
+    margin:0px;
+}
+
+#forgotForm{
+    width:100%;
+    padding-top:5%;
+}
+
 @media screen and (max-width: 1500px) {
     .formHolder{
         margin-top:5%;

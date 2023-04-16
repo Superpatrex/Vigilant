@@ -29,9 +29,9 @@ function MapView()
     
       return (
         // Important! Always set the container height explicitly
-        <div style={{ height: '500px', width: '500px', backgroundColor:'#f00' }}>
+        <div style={{ height: '100vh', width: '100vw', backgroundColor:'#f00' }}>
           <GoogleMapReact
-            bootstrapURLKeys={{ key: "AIzaSyCivx73GpFHnziVqBrL481EFhBJOW3-tdA" }}
+            bootstrapURLKeys={{ key: "" }}
             defaultCenter={defaultProps.center}
             //defaultZoom={defaultProps.zoom}
           >

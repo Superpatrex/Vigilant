@@ -24,9 +24,12 @@ function Login()
   var registerUserName;
   var registerPassword;
   var confirmPassword;
+  var forgotInput;
 
   const [message, setMessage] = useState('');
   const [registerMessage, setRegisterMessage] = useState('');
+  const [showForgot, toggleShow] = useState(false);
+  const [forgotContent, setContent] = useState('');
 
   const doLogin = async event => 
   {
@@ -103,7 +106,52 @@ function Login()
         return;
      }
   };
-  
+
+  const doForgot = async event =>
+  {
+    // It's very late, and I'm not sure what the email endpoint looks like.
+    // I set this up as best I could
+    event.preventDefault();
+    setContent('An email has been sent to reset your password.\nHave a wonderful day.');
+    alert("Your API Endpoint here\n Email Address: "+forgotInput.value);
+    
+    var obj = {email:forgotInput.value};
+    var js = JSON.stringify(obj);
+
+    //  try
+    //  {
+    //     const response = await fetch(buildPath('api/signup'),
+    //     {method: 'POST', body: js, headers: {'Content-Type': 'application/json'}});
+
+    //     var res = JSON.parse(await response.text());
+
+    //     if (res.error === 'User Created')
+    //     {
+    //         setRegisterMessage('User Created');
+    //         document.getElementById("registerResult").style.setProperty("opacity", 1);
+    //     }
+    //     else
+    //     {
+    //         setRegisterMessage(res.error);
+    //         document.getElementById("registerResult").style.setProperty("opacity", 1);
+    //     }
+    //  }
+    //  catch (e)
+    //  {
+    //     alert(e.toString());
+    //     return;
+    //  }
+  };
+
+  function showForgotForm(ev){
+    ev.preventDefault(); 
+    toggleShow(!showForgot);
+    {setContent(<div>
+        Please enter email address for<br/>forgotten account<br/>
+        <input type="text" id="forgotInput" placeholder="Email Address" ref={ (c) => forgotInput = c} />
+        <button type="submit" id="forgotButton" value="Forgot Password" onClick={doForgot}>Submit</button>
+        </div>)}
+  }
 
   return(
     <div>
@@ -126,11 +174,21 @@ function Login()
                 <span id="inner-title">Login</span><br/><br/>
                 <input type="text" id="loginName" class="loginInput" placeholder="Username" ref={ (c) => loginName = c} /><br />
                 <input type="password" id="loginPassword" class="loginInput" placeholder="Password" ref={ (c) => loginPassword = c} /><br />
-                <a href="#">Forgot your username or password?</a>
+                <a href="#" onClick={showForgotForm}>Forgot your username or password?</a>
                 {/* <input type="submit" id="loginButton" class="buttons" value = "Login" onClick={doLogin} /> */}
                 <button type="submit" id="loginButton" value="Login" onClick={doLogin}>Login</button>
                 </form>
                 <span id="loginResult">{message}</span>
+                {showForgot?
+                    
+                    <div id="forgotBox">
+                        <a href="#" id="closeForgot" onClick={showForgotForm}>X</a>
+
+                        {forgotContent}
+                    </div>
+                :
+                    null
+                }
             </div>
             <div id="overlayHolder">
                 <div id="overlay">
