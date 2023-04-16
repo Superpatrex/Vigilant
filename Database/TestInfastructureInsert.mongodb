@@ -135,7 +135,7 @@ db.Pins.insertOne({
     _id:ObjectId(editObjectId),
     title:'Fist Fight',
     address:'Edit Street', 
-    zipCode:67890, 
+    zipCode:67890,
     state:'Edit State', 
     country:'Edit Country',
     location: {
