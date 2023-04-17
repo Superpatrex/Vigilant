@@ -17,6 +17,7 @@ const EditPinModal = ({ route, navigation }) => {
 
     const [pinTitle, setPinTitle] = React.useState(route.params.marker.title);
     const [pinDescription, setPinDescription] = React.useState(route.params.marker.description);
+    const [pinAddress, setPinAddress] = React.useState(route.params.marker.street);
     const [errorVisible, setErrorVisible] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState('');
 
@@ -29,7 +30,7 @@ const EditPinModal = ({ route, navigation }) => {
         }
         setErrorVisible(false);
 
-        var obj = { ID: route.params.marker._id, usercreatedobjectid: route.params.marker.userId, Address: route.params.marker.street, zip: route.params.location.zipCode, State: route.params.location.state, Country: route.params.location.country, Description: pinDescription, Resolved: 0, latitude: (route.params.marker.location.coordinates.latitude || 0), longitude: (route.params.marker.location.coordinates.longitude || 0), title: pinTitle };
+        var obj = { ID: route.params.marker._id, usercreatedobjectid: route.params.marker.userId, Address: pinAddress, zip: route.params.location.zipCode, State: route.params.location.state, Country: route.params.location.country, Description: pinDescription, Resolved: 0, latitude: (route.params.marker.location.coordinates.latitude || 0), longitude: (route.params.marker.location.coordinates.longitude || 0), title: pinTitle };
         var js = JSON.stringify(obj);
 
         try
@@ -73,6 +74,7 @@ const EditPinModal = ({ route, navigation }) => {
                 search={false}
                 boxStyles={{ width: 220, }}
             />
+            <TextInput style={[styles.input, { marginBottom: 5 }]} autoCorrect={false} onChangeText={text => setPinAddress(text)} placeholder={route.params.marker.street} placeholderTextColor={"#6b6b6b"}></TextInput>
             <TextInput style={styles.input} autoCorrect={false} autoCapitalize='none' onChangeText={text => setPinDescription(text)} placeholder={route.params.marker.description} placeholderTextColor={"#6b6b6b"}></TextInput>
             <Button onPress={() => { editPin()}} title="Done"></Button>
             { errorVisible ?
