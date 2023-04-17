@@ -28,6 +28,7 @@ async function searchPins(latitude, longitude)
         method: 'POST', body: js, headers: { 'Content-Type': 'application/json' }});
 
         var res = JSON.parse(await response.text());
+        console.log(res);
 
         if (res.success)
         {
@@ -53,7 +54,13 @@ function convertToPins(res)
 
     for (i in res.pins)
     {
-        pins = pins.concat({lng:res.pins[i].location.coordinates[0], lat:res.pins[i].location.coordinates[1], id:idinc++});
+        pins = pins.concat({
+          lng:res.pins[i].location.coordinates[0], 
+          lat:res.pins[i].location.coordinates[1],
+          title:res.pins[i].title, 
+          address:res.pins[i].address, 
+          description:res.pins[i].description,
+          id:idinc++});
     }
 
     return pins;
@@ -98,7 +105,14 @@ class Map extends Component
             >
                 {
                     this.state.pins.map((pin) => (
-                        <Pin key={pin.id} lat={pin.lat} lng={pin.lng}/>
+                        <Pin 
+                            key={pin.id} 
+                            lat={pin.lat} 
+                            lng={pin.lng} 
+                            title={pin.title} 
+                            address={pin.address} 
+                            description = {pin.description}
+                        />
                     ))
                 }
             </GoogleMapReact>
