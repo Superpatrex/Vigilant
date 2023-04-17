@@ -1,11 +1,11 @@
 package com.vigilantmobile;
 
+import android.content.Intent;
+import com.tkporter.sendsms.SendSMSPackage;   
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
-import android.content.Intent;
-import com.tkporter.sendsms.SendSMSPackage;
 
 public class MainActivity extends ReactActivity {
 
