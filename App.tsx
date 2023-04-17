@@ -2,6 +2,7 @@ import React from 'react';
 import { NavigationContainer, DefaultTheme, DarkTheme, useTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useColorScheme, Pressable, Text } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import LoginScreen from './pages/LoginScreen';
 import RegisterScreen from './pages/RegisterScreen';
@@ -10,13 +11,13 @@ import AddContactModal from './components/AddContactModal';
 import AddPinModal from './components/AddPinModal';
 import ContactStack from './components/ContactStack';
 import EditPinModal from './components/EditPinModal';
-import TextContactsModal from './components/TextContactsModal';
 
 import Home from './components/Home';
 
 const Stack = createNativeStackNavigator();
 
 function App(): JSX.Element {
+  const { colors } = useTheme();
   return (
     <NavigationContainer theme={useColorScheme() === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack.Navigator>
@@ -28,6 +29,13 @@ function App(): JSX.Element {
           <Stack.Screen
             name="Register"
             component={RegisterScreen}
+            options={({ navigation }) => ({
+              headerRight: () => (
+                <Pressable onPress={() => navigation.navigate('PasswordReqModal')}>
+                  <Ionicons name='information-circle-outline' size={32} color={colors.primary}></Ionicons>
+                </Pressable>
+              )
+            })}
           />
           <Stack.Screen
             name="Home"
@@ -71,6 +79,13 @@ function App(): JSX.Element {
               component={EditPinModal}
               options={{
                 title: 'Edit Pin'
+              }}
+            />
+            <Stack.Screen
+              name='PasswordReqModal'
+              component={PasswordReqModal}
+              options={{
+                title: 'Password Requirements'
               }}
             />
             <Stack.Screen
