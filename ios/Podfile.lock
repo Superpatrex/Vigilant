@@ -357,6 +357,8 @@ PODS:
     - glog
   - react-native-geolocation (3.0.6):
     - React-Core
+  - react-native-geolocation-service (5.3.1):
+    - React
   - react-native-google-maps (1.4.0):
     - Google-Maps-iOS-Utils (= 4.1.0)
     - GoogleMaps (= 7.3.0)
@@ -369,6 +371,8 @@ PODS:
     - RCTTypeSafety
     - React-Core
     - ReactCommon/turbomodule/core
+  - react-native-sms (1.11.0):
+    - React
   - React-perflogger (0.71.4)
   - React-RCTActionSheet (0.71.4):
     - React-Core/RCTActionSheetHeaders (= 0.71.4)
@@ -514,9 +518,11 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
+  - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-sms (from `../node_modules/react-native-sms`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -602,12 +608,16 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-geolocation:
     :path: "../node_modules/@react-native-community/geolocation"
+  react-native-geolocation-service:
+    :path: "../node_modules/react-native-geolocation-service"
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-sms:
+    :path: "../node_modules/react-native-sms"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -686,9 +696,11 @@ SPEC CHECKSUMS:
   React-jsinspector: 1f51e775819199d3fe9410e69ee8d4c4161c7b06
   React-logger: 0d58569ec51d30d1792c5e86a8e3b78d24b582c6
   react-native-geolocation: 0f7fe8a4c2de477e278b0365cce27d089a8c5903
+  react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
   react-native-google-maps: f4cf51c3c6360eb4f945adc12dc89575ec3d944a
   react-native-maps: 7135a33610202745d08fdf151ce6b0d01952a99c
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
+  react-native-sms: 31fbb9d6ebb565ad32e409eaf9dc70329936a129
   React-perflogger: 0bb0522a12e058f6eb69d888bc16f40c16c4b907
   React-RCTActionSheet: bfd675a10f06a18728ea15d82082d48f228a213a
   React-RCTAnimation: 2fa220b2052ec75b733112aca39143d34546a941
