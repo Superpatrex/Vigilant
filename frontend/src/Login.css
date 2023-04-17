@@ -86,7 +86,7 @@ input{
     padding:10px;
     padding-bottom:12px;}
 
-#loginButton {
+.formButton{
     --padding-y:7px;
     --padding-x:52px;
     font-size: 1.5em;
@@ -97,7 +97,6 @@ input{
     background-color: #494949;
     color: white;
     margin: 30px;
-    /*padding: 14px 40px;*/
     padding-top:var(--padding-y);
     padding-bottom:var(--padding-y);
     padding-left:var(--padding-x);
@@ -107,25 +106,9 @@ input{
     display: inline-block;
 }
 
-#registerButton {
-    --padding-y:7px;
-    --padding-x:52px;
-    font-size: 1.5em;
-    border-radius: 10px;
-    border:none;
-    min-width:100px;
-    min-height:31px;
-    background-color: #494949;
-    color: white;
-    margin: 30px;
-    /*padding: 14px 40px;*/
-    padding-top:var(--padding-y);
-    padding-bottom:var(--padding-y);
-    padding-left:var(--padding-x);
-    padding-right:var(--padding-x);
-    text-align: center;
-    text-decoration: none;
-    display: inline-block; 
+.toggleButton{
+    background-color: #393939;
+    font-size: 1.2em;
 }
 
 #registerFName{
@@ -136,11 +119,11 @@ input{
 #registerLName{
     width: 37.5%;
 }
-#loginButton:hover {
+.formButton:hover {
     background-color: #393939;
 }
 
-#loginButton:active {
+.formButton:active {
     background-color: #595959;
 }
 
@@ -256,31 +239,6 @@ input{
 
 .formHolder.right-panel-active .overlayRight {
 	transform: translateX(20%);
-}
-
-.toggler{
-    width:100px;;
-    height:100px;
-    border-radius:100%;
-    position: absolute;
-    bottom: 20px;
-    font-size: 1.5em;
-    border:none;
-}
-#switch1{
-    right:130px;
-}
-
-#switch2{
-    right:20px;
-}
-.toggler:hover {
-    background-color: #393939;
-    color:#fff;
-}
-
-.toggler:active {
-    background-color: #595959;
 }
 
 #forgotBox{
