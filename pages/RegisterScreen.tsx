@@ -23,6 +23,11 @@ const RegisterScreen = ({ navigation }) => {
     const [errorVisible, setErrorVisible] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState('');
 
+    const validatePassword = (password: string) => {
+        let passwordRestrictions = /(?=.*\d)(?=.*[A-Za-z])(?=.*[?!@#$%^&*]).{8,32}$/;
+
+        return passwordRestrictions.test(password);
+    }
 
     const doRegister = async (fName: string, lName: string, email: string, username: string, password: string) => {
 
@@ -30,6 +35,13 @@ const RegisterScreen = ({ navigation }) => {
         {
             // Alert.alert("Passwords do not match");
             setErrorMessage('Passwords do not match');
+            setErrorVisible(true);
+            return;
+        }
+
+        if (!validatePassword(password))
+        {
+            setErrorMessage('Password does not meet requirements');
             setErrorVisible(true);
             return;
         }
