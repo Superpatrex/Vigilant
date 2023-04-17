@@ -10,6 +10,7 @@ import AddContactModal from './components/AddContactModal';
 import AddPinModal from './components/AddPinModal';
 import ContactStack from './components/ContactStack';
 import EditPinModal from './components/EditPinModal';
+import TextContactsModal from './components/TextContactsModal';
 
 import Home from './components/Home';
 
@@ -70,6 +71,13 @@ function App(): JSX.Element {
               component={EditPinModal}
               options={{
                 title: 'Edit Pin'
+              }}
+            />
+            <Stack.Screen
+              name='TextContactsModal'
+              component={TextContactsModal}
+              options={{
+                title:'Text Contacts'
               }}
             />
         </Stack.Group>

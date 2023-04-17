@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Pressable } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '@react-navigation/native';
@@ -33,10 +33,15 @@ const Home = ({ route, navigation }) => {
         })} >
             <Tab.Screen name="Settings" component={SettingsScreen} initialParams={{ userId: route.params.userId }} />
             <Tab.Screen name="Map" component={MapScreen} initialParams={{ userId: route.params.userId }} options={{ headerShown: false }} />
-            <Tab.Screen name="Contacts" component={ContactsScreen}  initialParams={{ userId: route.params.userId }} options={{
+            <Tab.Screen name="Contacts" component={ContactsScreen}  initialParams={{ userId: route.params.userId }} options={{ 
                 headerRight: () => (
-                    <Pressable onPress={() => navigation.navigate('AddContactModal', { userId: route.params.userId })}>
-                        <Ionicons name='add-outline' size={35} color={colors.primary}></Ionicons>
+                        <Pressable onPress={() => navigation.navigate('AddContactModal', { userId: route.params.userId })}>
+                            <Ionicons name='add-outline' size={35} color={colors.primary}></Ionicons>
+                        </Pressable>
+                ),
+                headerLeft: () => (
+                    <Pressable onPress={() => navigation.navigate('TextContactsModal', { userId: route.params.userId })}>
+                        <Ionicons name='chatbubble-ellipses-outline' size={35} color={colors.primary}></Ionicons>
                     </Pressable>
                 )
             }} />
