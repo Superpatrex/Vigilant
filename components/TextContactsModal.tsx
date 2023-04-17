@@ -23,7 +23,7 @@ type Contact = {
 
 const TextContactsModal = ({ route, navigation }) => {
     const { colors } = useTheme();
-    const [data, setData] = React.useState<Contact[]>([]);
+    const [phoneNumbers, setPhoneNumbers] = React.useState<string[]>([])
     const [message, setMessage] = React.useState('Example text');
     const [location, setLocation] = React.useState<GeolocationResponse>();
 
@@ -41,7 +41,10 @@ const TextContactsModal = ({ route, navigation }) => {
 
             if (res.error === '')
             {
-                setData(res.results);
+                for (let contact in res.results)
+                {
+                    phoneNumbers.push(res.results[contact].phoneNumber.toString());
+                }
             }
             else if (res.error === 'User has empty contact')
             {
@@ -94,13 +97,12 @@ const TextContactsModal = ({ route, navigation }) => {
             <TextInput style={styles.input} autoCorrect={false} autoCapitalize='none' onChangeText={text => setMessage(text)} placeholder='I need help at (location)' placeholderTextColor={"#6b6b6b"}></TextInput>
             <Button onPress={() => SendSMS.send({
                 body: message,
-                recipients: ['5155160624'],
-                // route.params.data.phoneNumber
+                recipients: phoneNumbers,
                 successTypes: ['sent', 'queued'],
                 allowAndroidSendWithoutReadPermission: true
             }, (completed, cancelled, error) => {
 
-                console.log('SMS Callback: completed: ' + completed + ' cancelled: ' + cancelled + 'error: ' + error);
+                console.log('SMS Callback: completed: ' + completed + ', cancelled: ' + cancelled + ', error: ' + error);
 
         })} title="Send"></Button>
         </View>
