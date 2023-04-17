@@ -11,6 +11,8 @@ import AddContactModal from './components/AddContactModal';
 import AddPinModal from './components/AddPinModal';
 import ContactStack from './components/ContactStack';
 import EditPinModal from './components/EditPinModal';
+import PasswordReqModal from './components/PasswordReqModal';
+import TextContactsModal from './components/TextContactsModal';
 
 import Home from './components/Home';
 
