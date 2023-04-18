@@ -17,14 +17,14 @@ function buildPath(route)
 function ForgotPassword()
 {
  
-  const [newPassword, setNewPassword] = React.useState('');
+  const [newUserPassword, setNewPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
 
   const [message, setMessage] = useState('example message');
-  const [login, setLogin] = useState('');
+  const [userName, setUserName] = useState('');
   
 
-  const [email, setEmail] = useState('');
+  const [userEmail, setUserEmail] = useState('');
 
   const getUserInfo = async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -41,8 +41,8 @@ function ForgotPassword()
 
       if (res.success)
       {
-        setLogin(res.login);
-        setEmail(res.email);
+        setUserName(res.login);
+        setUserEmail(res.email);
       }
     }
     catch(e) {
@@ -53,7 +53,7 @@ function ForgotPassword()
   const doNewPass = async () =>{
     const urlParams = new URLSearchParams(window.location.search);
     const verifTok = urlParams.get('token');
-    var obj = { login: this.login, email: this.email, token: verifTok, newPassword: this.newPassword };
+    var obj = { login: userName, email: userEmail, token: verifTok, newPassword: newUserPassword };
     var js = JSON.stringify(obj);
     console.log(obj);
 
