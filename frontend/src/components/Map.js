@@ -68,16 +68,19 @@ function convertToPins(res)
     var i;
     var pins = [];
 
-    for (i in res.pins)
+    console.log('yo');
+    for (i = 0; i < res.results.length; i++)
     {
+        console.log(pins[i]);
         pins = pins.concat({
-          lng:res.pins[i].location.coordinates[0], 
-          lat:res.pins[i].location.coordinates[1],
-          title:res.pins[i].title, 
-          address:res.pins[i].address, 
-          description:res.pins[i].description,
-          id:idinc++});
+            lng:res.results[i].location.coordinates[0], 
+            lat:res.results[i].location.coordinates[1],
+             title:res.results[i].title, 
+             address:res.results[i].address, 
+             description:res.results[i].description,
+             id:idinc++});
     }
+    console.log('yo');
 
     return pins;
 };
@@ -94,15 +97,17 @@ class Map extends Component
             },
             zoom: 15
         };
-        this.state = {pins: [{id:69, lat: 28.60232543238688, lng: -81.20021127139536}], styles:Theme(0)};
+        this.state = {pins: [], styles:Theme(0)};
         this.initialize();
         map = this;
     }
 
     async initialize()
     {
+        console.log("yeet");
         var p = await searchPins(this.defaultProps.center.lat, this.defaultProps.center.lng);
         this.setState({pins:p});
+        console.log(p);
         console.log("done");
     }
     

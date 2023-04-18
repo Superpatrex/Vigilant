@@ -2,6 +2,15 @@ import React, {Component} from 'react';
 import LogoutImage from '../logout.png';
 import Map, {changeMapTheme} from '../components/Map';
 
+const divStyle = {
+    width: '50px',
+    height: '50px',
+    display: 'inline-block',
+    marginLeft:'2%',
+    marginRight:'2%',
+    marginBottom:20
+}
+
 class ThemeButton extends Component
 {
     constructor(props)
@@ -10,25 +19,23 @@ class ThemeButton extends Component
         this.index = props.index;
         this.image = props.image;
         this.ButtonStyle = {
-            position: 'absolute',
-            width: '40px',
-            height: '40px',
-            left: -20 + props.x,
-            top: -20 + props.y,
-            opacity: 0.5,
-            transition: 'opacity 200ms, width 200ms, height 200ms, left 200ms, top 200ms'
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            margin: '5px',
+            opacity: 1,
+            filter: "drop-shadow(1px 1px 1px rgba(0,0,0, 0.8))",
+            transition: 'opacity 200ms, width 200ms, height 200ms, margin 200ms'
         };
         this.ButtonSelectStyle = {
-            position: 'absolute',
-            width: '50px',
-            height: '50px',
-            left: -25 + props.x,
-            top: -25 + props.y,
-            opacity: 1,
-            transition: 'opacity 200ms, width 200ms, height 200ms, left 200ms, top 200ms'
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            margin: '5px',
+            opacity: 0.5,
+            transition: 'opacity 200ms, width 200ms, height 200ms, margin 200ms'
         };
         this.state = {style:this.ButtonStyle};
-        console.log("---->" + this.state);
     }
 
     render()
@@ -37,11 +44,11 @@ class ThemeButton extends Component
         var select = this.ButtonSelectStyle;
         var index = this.index;
         return (
-            <div>
-                <img src={this.image} style={this.state.style} 
+            <div style={divStyle} onClick={(e) => {e.preventDefault(); changeMapTheme(index)}}>
+                <img src={this.props.image} style={this.state.style} 
                     onMouseEnter={() => {this.setState({style:select})}} 
                     onMouseLeave={() => {this.setState({style:style})}}
-                    onClick={(e) => {e.preventDefault(); changeMapTheme(index)}} />
+                     />
             </div>
         )
     }

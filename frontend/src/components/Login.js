@@ -51,7 +51,7 @@ function Login()
   {
       event.preventDefault();
 
-      var obj = {userName:loginName.value,password:loginPassword.value};
+      var obj = {login:loginName.value,pass:loginPassword.value};
       var js = JSON.stringify(obj);
 
       console.log(js);
@@ -70,7 +70,8 @@ function Login()
           }
           else
           {
-              var user = {firstName:res.firstName,lastName:res.lastName,id:res.id}
+              console.log(res);
+              var user = {firstName:res.firstName,lastName:res.lastName,id:res._id}
               localStorage.setItem('user_data', JSON.stringify(user));
 
               setMessage('');
@@ -163,7 +164,7 @@ function Login()
     ev.preventDefault(); 
     toggleShow(!showForgot);
     {setContent(<div>
-        Please enter email address for<br/>forgotten account<br/>
+        Please enter email address for forgotten account<br/>
         <input type="text" id="forgotInput" placeholder="Email Address" ref={ (c) => forgotInput = c} />
         <button type="submit" id="forgotButton" value="Forgot Password" onClick={doForgot}>Submit</button>
         </div>)}
