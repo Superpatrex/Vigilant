@@ -108,7 +108,8 @@ const HoverBodyStyle = {
 const PinImageStyle={
     width:'7vh',
     bottom:10 ,
-    position:'absolute' 
+    position:'absolute',
+    left:0 
 }
 
 class Pin extends Component

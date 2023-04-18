@@ -6,8 +6,8 @@ const ButtonStyle = {
     position: 'absolute',
     width: '40px',
     height: '40px',
-    left: 15,
-    top: 300,
+    left: -20,
+    top: -20,
     opacity: 0.5,
     transition: 'opacity 200ms, width 200ms, height 200ms, left 200ms, top 200ms'
 };
@@ -16,8 +16,8 @@ const ButtonSelectStyle = {
     position: 'absolute',
     width: '50px',
     height: '50px',
-    left: 10,
-    top: 295,
+    left: -25,
+    top: -25,
     opacity: 1,
     transition: 'opacity 200ms, width 200ms, height 200ms, left 200ms, top 200ms'
 };
