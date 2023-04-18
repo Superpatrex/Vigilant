@@ -8,6 +8,7 @@ import Blue from '../BlueTheme.png';
 import Green from '../GreenTheme.png';
 import Orange from '../OrangeTheme.png';
 import Red from '../RedTheme.png';
+import Pegasus from '../UCF Pegasus Crest.png'
 
 import ThemeButton from '../components/ThemeButton'
 
@@ -171,6 +172,7 @@ class Settings extends Component
                         <ThemeButton image={Orange} index={4}/>
                         <ThemeButton image={Red} index={5}/>
                         <ThemeButton image={Sponge} index={1}/>
+                        <ThemeButton image={Pegasus} index={8}/>
 
                     </div>
                 </div>
