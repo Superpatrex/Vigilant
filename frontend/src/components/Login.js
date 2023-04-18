@@ -130,34 +130,27 @@ function Login()
     // I set this up as best I could
     event.preventDefault();
     setContent('An email has been sent to reset your password.\nHave a wonderful day.');
-    alert("Your API Endpoint here\n Email Address: "+forgotInput.value);
+    // alert("Your API Endpoint here\n Email Address: "+forgotInput.value);
     
     var obj = {email:forgotInput.value};
     var js = JSON.stringify(obj);
 
-    //  try
-    //  {
-    //     const response = await fetch(buildPath('api/signup'),
-    //     {method: 'POST', body: js, headers: {'Content-Type': 'application/json'}});
+    try
+    {
+        var response = await fetch(buildPath('api/resetPassword'),
+        { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } });
 
-    //     var res = JSON.parse(await response.text());
+        var res = JSON.parse(await response.text());
 
-    //     if (res.error === 'User Created')
-    //     {
-    //         setRegisterMessage('User Created');
-    //         document.getElementById("registerResult").style.setProperty("opacity", 1);
-    //     }
-    //     else
-    //     {
-    //         setRegisterMessage(res.error);
-    //         document.getElementById("registerResult").style.setProperty("opacity", 1);
-    //     }
-    //  }
-    //  catch (e)
-    //  {
-    //     alert(e.toString());
-    //     return;
-    //  }
+        if (res.success)
+        {
+            console.log('sent ya an email to '+forgotInput.value);
+        }
+    }
+    catch (e)
+    {
+        alert(e.toString());
+    }
   };
 
   function showForgotForm(ev){

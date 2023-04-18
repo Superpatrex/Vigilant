@@ -22,6 +22,8 @@ function ForgotPassword()
 
   const [message, setMessage] = useState('');
   const [login, setLogin] = useState('');
+  
+
   const [email, setEmail] = useState('');
   const [verificationToken, setVerificationToken] = useState('');
   
@@ -38,57 +40,41 @@ function ForgotPassword()
 
       if (res.success)
       {
-        setVerificationToken(res.results.verificationToken);
-        setLogin(res.results.userName);
-        setEmail(res.results.email);
+        setLogin(res.login);
+        setVerificationToken(res.token);
+        setEmail(res.email);
       }
     }
-    catch (e)
-    {
+    catch(e){
       console.log(e);
     }
   }
 
-  const doNewPass = async event =>
-  {
-    // It's still very late, and I don't know what changing the password endpoint looks like
-    // I set this up as best I could once more.
-    event.preventDefault();
+  const doNewPass = async event =>{
+    var obj = {login:login, email:email, token:verificationToken, newPassword: newPassword}
+    var js = JSON.stringify(obj)
 
-    if (confirmPassword != newPassword)
-    {
-      setMessage('Passwords do not match');
-      document.getElementById("registerResult").style.setProperty("opacity", 1);
-    }
-
-    var obj = {login: login, email: email, token: verificationToken, newPassword: newPassword}
-    var js = JSON.stringify(obj);
-
-    try
-    {
+    try{
       const response = await fetch(buildPath('api/changePassword'),
-      {method: 'POST', body: js, headers: {'Content-Type': 'application/json'}});
-
+      { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }); 
+      
       var res = JSON.parse(await response.text());
-
-      if (res.error === 'Password Changed Successfully')
-      {
-          setMessage(res.error);
-          document.getElementById("registerResult").style.setProperty("opacity", 1);
+      
+      if(res.error=='Password Changed successfully'){
+        setMessage(res.error);
+        document.getElementById('registerResult').style.opacity=1;
       }
-      else
-      {
-          setMessage(res.error);
-          document.getElementById("registerResult").style.setProperty("opacity", 1);
-      }
-     }
-     catch (e)
-     {
-        alert(e.toString());
-        return;
-     }
-  };
 
+      else{
+        setMessage(res.error);
+        document.getElementById('registerResult').style.opacity=1;      
+      }
+    }
+    catch(e){
+      console.log(e);
+    }
+  }
+    
   return(
     <div>
         <div class="formHolder" id="loginHolder">

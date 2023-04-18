@@ -288,6 +288,8 @@ app.post('/api/resetPassword', async (request, response, next) => {
     expirationTime: new Date(Date.now() + (60 * 60 * 1000)) // Token expires in 1 hour
   };
 
+  const results = await db.collection('Users').find({email:email}).toArray();
+
   const timestamp = new Date();
   const updated = await db.collection('Users').updateOne({email:email},
     {
@@ -299,14 +301,17 @@ app.post('/api/resetPassword', async (request, response, next) => {
       }
     })
 
+    var login = "";
+    var password = "";
+    var token = tokenInfo.token;
+
     if (updated.modifiedCount === 0)
     {
       response.status(200).json({success:false, error:'Email not found'});
       return;
     }
 
-    // change the resetUrl to the right one
-    const resetUrl = `https://vigilantsometihng.com/reset-password?token=${tokenInfo.token}`; // fronted currently creating it
+    const resetUrl = `https://cop4331-vigilant.herokuapp.com/forgotPassword/?token=${tokenInfo.token}`;
     const mailOptions = {
       from: 'Vigilant12023@gmail.com',
       to: email,
@@ -314,18 +319,24 @@ app.post('/api/resetPassword', async (request, response, next) => {
       html: `<p>Your have requested to reset your password Please <a href="${resetUrl}">click here</a> to change your password.</p>`
     };
 
+    if (results.length > 0)
+    {
+      login = results[0].userName;
+      password = results[0].password;
+    }
+
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log(error);
         response.status(500).json({ error: 'Failed to send password reset email' });
       } else {
         console.log('Password reset email sent: ' + info.response);
-        response.status(200).json({ message: 'Password reset email sent' });
+        response.status(200).json({ success:true, login:login, password:password, email:email, token:token });
       }
     });
 });
 
-// chekcs if the token is in the database and changes the pasword
+// checks if the token is in the database and changes the pasword
 app.post('/api/changePassword', async (request, response, next) => 
 {
   // incoming: login, newPassword
@@ -467,7 +478,7 @@ app.post('/api/signup', async (request, response, next) =>
         from: 'vigilant12023@gmail.com',
         to: email,
         subject: 'Verify your email',
-        html: `<p>Thank you for signing up! Please <a href="http://localhost:4091/verify?email=${email}&token=${verificationToken}">click here</a> to verify your email.</p>`
+        html: `<p>Thank you for signing up! Please <a href="https://cop4331-vigilant.herokuapp.com/verify?email=${email}&token=${verificationToken}">click here</a> to verify your email.</p>`
       };
   
       transporter.sendMail(mailOptions, (error, info) => {
@@ -477,6 +488,15 @@ app.post('/api/signup', async (request, response, next) =>
           console.log('Email sent: ' + info.response);
         }
     });
+
+    const ret = await db.collection('Users').find({email:email}).toArray();
+    var id = "";
+
+    if (ret.length > 0)
+    {
+      id = ret[0]._id;
+      console.log(id);
+    }
   
     
   } catch (error) {
@@ -484,7 +504,7 @@ app.post('/api/signup', async (request, response, next) =>
     return response.status(500).json({ success: false, error: 'Server error' });
   }
 
-  return response.status(200).json({ success: true, error: '' });
+  response.status(200).json({ success:true, error: '', id:id });
 }
 
 });
@@ -505,7 +525,7 @@ app.get('/verify', async (request, response) => {
       return response.status(400).json({ error: 'Invalid verification token' });
     }
 
-    return response.status(200).json({ message: 'Email verified successfully' });
+    return response.redirect('https://cop4331-vigilant.herokuapp.com/home');
 
   } catch (error) {
     console.error(error);

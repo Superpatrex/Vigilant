@@ -137,7 +137,8 @@ class Pin extends Component
                     {this.props.title}
                 </p>
                 <p style={bodyStyle}>
-                    {this.props.address + ": " + this.props.description}
+                    Address: {this.props.address}<br/>
+                    Description: {this.props.description}
                 </p>
             </div>
                 <img src={this.props.title == "Disaster" ? DisasterIcon: this.props.title == "Crime" ? CrimeIcon: this.props.title == "Fire" ? FireIcon:this.props.title == "Accident" ? AccidentIcon:this.props.title == "Gas Leak" ? GasLeakIcon:MiscIcon} style={pinStyle}/>

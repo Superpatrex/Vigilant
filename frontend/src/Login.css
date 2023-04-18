@@ -96,9 +96,9 @@ input{
 #registerResult {
     opacity:0;
     background-color: #a25454;
-    padding:10px;
-    padding-bottom:12px;}
-
+    font-size:0.9em;
+    padding:7px;
+}
 .formButton{
     --padding-y:7px;
     --padding-x:52px;
@@ -182,6 +182,10 @@ input{
 #registerHolder{
     z-index:2;
     opacity:1;
+}
+
+#registerButton{
+    margin-top:15px;
 }
 
 .formHolder.right-panel-active #loginBox {
