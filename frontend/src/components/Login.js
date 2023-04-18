@@ -174,7 +174,7 @@ function Login()
     toggleShow(!showForgot);
     {setContent(<div>
         Please enter email address for forgotten account<br/>
-        <input type="text" id="forgotInput" placeholder="Email Address" value={forgotInput} onChange={(e) => setForInput(e.target.value)} />
+        <input type="text" id="forgotInput" placeholder="Email Address" value={forgotInput} onChange={(e) => setForgotInput(e.target.value)} />
         <button type="submit" id="forgotButton" value="Forgot Password" onClick={doForgot}>Submit</button>
         </div>)}
   }
