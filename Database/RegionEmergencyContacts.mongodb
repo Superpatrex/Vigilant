@@ -1,0 +1,22 @@
+// Enters into LargeProject
+use("LargeProject")
+
+// Create a new Region Emergency Contact
+db.RegionEmergencyContacts.insert({
+    _id: ObjectId(),
+    name: "UCF Police",
+    phoneNumber: "407-823-3088",
+    description: null,
+    address : "4000 Central Florida Blvd",
+    zipCode : 32816,
+    state : "Florida",
+    country : "United States",
+    countryCode: 1,
+    regionCode: 1
+})
+
+// Find all of the Regional Emergency Contacts within the Collection
+db.RegionEmergencyContacts.find()
+
+// Find all of the Regional Emergency Contacts with the name "UCF Police"
+db.RegionEmergencyContacts.find({ name: "UCF Police" })

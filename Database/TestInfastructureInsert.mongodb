@@ -1,0 +1,183 @@
+// Enters into LargeProject
+use("LargeProject")
+
+let testObjectId = "123456789012345678901234"
+let secondaryTestObjectId = "123456789012345678901237"
+let deleteObjectId = "123456789012345678901235"
+let editObjectId = "123456789012345678901236"
+
+db.Users.insertOne({
+    _id: ObjectId(testObjectId), 
+    theme: 1,
+    lightDarkMode: true,
+    searchRadius:1000,
+    firstName: "TestMe",
+    lastName: "User", 
+    userName: "asdf", 
+    password: "asdf", 
+    email: "test@me.com",
+    dateCreated: ISODate(),
+    countryCode: 1,
+    regionCode: 1
+})
+
+db.Users.insertOne({
+    _id: ObjectId(secondaryTestObjectId), 
+    theme: 2,
+    lightDarkMode: false,
+    searchRadius:1000,
+    firstName: "TestMe2",
+    lastName: "User2", 
+    userName: "IAmATestUser2", 
+    password: "testytesty1232", 
+    email: "test@me2.com",
+    dateCreated: ISODate(),
+    countryCode: 1,
+    regionCode: 1
+})
+
+db.RegionEmergencyContacts.insertOne({
+    _id: ObjectId(testObjectId),
+    name: "Test Local Police",
+    phoneNumber: "123-456-7890",
+    description: null,
+    address : "123 Street Street",
+    zipCode : 12345,
+    state : "Florida",
+    country : "United States",
+    countryCode: 256,
+    regionCode: 256
+})
+
+db.RegionEmergencyContacts.insertOne({
+    _id: ObjectId(secondaryTestObjectId),
+    name: "Test Local Police 2",
+    phoneNumber: "123-456-7891",
+    description: "More Police",
+    address : "345 Street Street",
+    zipCode : 67890,
+    state : "Ohio",
+    country : "United States",
+    countryCode: 256,
+    regionCode: 256
+})
+
+db.MainEmergencyContacts.insertOne({
+    _id: ObjectId(testObjectId),
+    name: "United States Police",
+    phoneNumber: "911",
+    description: null,
+    countryCode: 1000
+})
+
+db.MainEmergencyContacts.insertOne({
+    _id: ObjectId(secondaryTestObjectId),
+    name: "United States Police 2",
+    phoneNumber: "912",
+    description: "They be doing things",
+    countryCode: 1000
+})
+
+db.UserEmergencyContacts.insertOne({
+    _id: ObjectId(),
+    firstName: "Jack",
+    lastName: "Andrews",
+    phoneNumber: "123-456-7890",
+    description: null,
+    userCreatedObjectId: ObjectId(testObjectId)
+})
+
+db.UserEmergencyContacts.insertOne({
+    _id: ObjectId(),
+    firstName: "Abhi",
+    lastName: "Kotta",
+    phoneNumber: "098-765-4321",
+    description: null,
+    userCreatedObjectId: ObjectId(testObjectId)
+})
+
+db.UserEmergencyContacts.insertOne({
+    _id: ObjectId(deleteObjectId),
+    firstName: "Delete",
+    lastName: "Me",
+    phoneNumber: "098-765-4321",
+    description: 'Poggers',
+    userCreatedObjectId: ObjectId(testObjectId)
+})
+
+db.UserEmergencyContacts.insertOne({
+    _id: ObjectId(editObjectId),
+    firstName: "Edit",
+    lastName: "Me",
+    phoneNumber: "132-314-2345",
+    description: 'Edit me baby',
+    userCreatedObjectId: ObjectId(testObjectId)
+})
+
+db.Pins.insertOne({
+    _id:ObjectId(deleteObjectId),
+    title:'Gas Leak',
+    address:'Delete Street', 
+    zipCode:12345, 
+    state:'Delete State', 
+    country:'Delete Country',
+    location: {
+      type: "Point",
+      coordinates : [12, 12],
+      },
+    description:'None',
+    numResolved:0, 
+    userCreatedObjectId:ObjectId(secondaryTestObjectId),
+    dateCreated:ISODate()
+})
+
+db.Pins.insertOne({
+    _id:ObjectId(editObjectId),
+    title:'Fist Fight',
+    address:'Edit Street', 
+    zipCode:67890,
+    state:'Edit State', 
+    country:'Edit Country',
+    location: {
+      type: "Point",
+      coordinates : [13, 13],
+      },
+    description:'None',
+    numResolved:0, 
+    userCreatedObjectId:ObjectId(secondaryTestObjectId),
+    dateCreated:ISODate()
+})
+
+db.Pins.insertOne({
+    _id:ObjectId(),
+    title:'Assault',
+    address:'Street Street', 
+    zipCode:45678, 
+    state:'State State', 
+    country:'Country Country',
+    location: {
+      type: "Point",
+      coordinates : [17, 17],
+      },
+    description:'None',
+    numResolved:0, 
+    userCreatedObjectId:ObjectId(testObjectId),
+    dateCreated:ISODate()
+})
+
+db.Pins.insertOne({
+    _id:ObjectId(),
+    title:'Gang Activity',
+    address:'Street Street 2', 
+    zipCode:12345, 
+    state:'State State 2', 
+    country:'Country Country 2',
+    location: {
+      type: "Point",
+      coordinates : [17, 17],
+      },
+    description:null,
+    numResolved:3, 
+    userCreatedObjectId:ObjectId(testObjectId),
+    dateCreated:ISODate()
+})
