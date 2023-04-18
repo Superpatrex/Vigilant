@@ -22,10 +22,10 @@ function ForgotPassword()
   const [confirmPassword, setConfirmPassword] = React.useState('');
 
   const [message, setMessage] = useState('example message');
-  const [userName, setUserName] = useState('');
-  
-
-  const [userEmail, setUserEmail] = useState('');
+  // const [userName, setUserName] = useState('');
+  // const [userEmail, setUserEmail] = useState('');
+  var userName;
+  var userEmail;
 
   const getUserInfo = async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -43,8 +43,10 @@ function ForgotPassword()
 
       if (res.success)
       {
-        setUserName(res.results.userName);
-        setUserEmail(res.results.email);
+        // setUserName(res.results.userName);
+        // setUserEmail(res.results.email);
+        userName = res.results.userName;
+        userEmail = res.results.email;
       }
     }
     catch(e) {
