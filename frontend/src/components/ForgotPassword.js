@@ -43,10 +43,11 @@ function ForgotPassword()
 
       if (res.success)
       {
-        setUserName(res.results.userName);
-        setUserEmail(res.results.email);
+        // setUserName(res.results.userName);
+        // setUserEmail(res.results.email);
         // userName = res.results.userName;
         // userEmail = res.results.email;
+        doNewPass(res.results.userName, res.results.email);
       }
     }
     catch(e) {
@@ -55,12 +56,12 @@ function ForgotPassword()
     }
   }
 
-  const doNewPass = async () =>{
+  const doNewPass = async (userName, userEmail) =>{
     const urlParams = new URLSearchParams(window.location.search);
     const verifTok = urlParams.get('token');
-    alert('userName is ' + userName);
-    alert('email is ' + userEmail);
-    var obj = { login: "Hamon", email: "vevimot202@hrisland.com", token: verifTok, newPassword: newUserPassword.value };
+    // alert('userName is ' + userName);
+    // alert('email is ' + userEmail);
+    var obj = { login: this.userName, email: this.userEmail, token: verifTok, newPassword: newUserPassword.value };
     var js = JSON.stringify(obj);
 
     try {
@@ -94,7 +95,7 @@ function ForgotPassword()
                         <button type="submit" id="registerButton" value="Register" onClick={ async (e) => {
                           e.preventDefault(); 
                           getUserInfo();
-                          doNewPass();
+                          // doNewPass();
                           // setTimeout(() => {
                           //   doNewPass();
                           // }, 500);
