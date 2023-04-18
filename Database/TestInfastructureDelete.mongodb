@@ -6,6 +6,8 @@ let testObjectId = "123456789012345678901234"
 let secondaryTestObjectId = "123456789012345678901237"
 let deleteObjectId = "123456789012345678901235"
 let editObjectId = "123456789012345678901236"
+let emptyUserObjectId = "333456789012345678901236"
+
 
 db.Users.deleteMany({
     _id: ObjectId(testObjectId)
@@ -13,6 +15,10 @@ db.Users.deleteMany({
 
 db.Users.deleteMany({
     _id: ObjectId(secondaryTestObjectId)
+})
+
+db.Users.deleteMany({
+    _id: ObjectId(emptyUserObjectId)
 })
 
 db.RegionEmergencyContacts.deleteMany({
@@ -37,6 +43,10 @@ db.UserEmergencyContacts.deleteMany({
 
 db.UserEmergencyContacts.deleteMany({
     _id: ObjectId(testObjectId)
+})
+
+db.UserEmergencyContacts.deleteMany({
+    userCreatedObjectId: ObjectId(secondaryTestObjectId)
 })
 
 db.Pins.deleteMany({
