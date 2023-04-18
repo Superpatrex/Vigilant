@@ -22,8 +22,8 @@ function ForgotPassword()
   const [confirmPassword, setConfirmPassword] = React.useState('');
 
   const [message, setMessage] = useState('example message');
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
+  // const [userName, setUserName] = useState('');
+  // const [userEmail, setUserEmail] = useState('');
   // var userName;
   // var userEmail;
 
@@ -61,7 +61,7 @@ function ForgotPassword()
     const verifTok = urlParams.get('token');
     // alert('userName is ' + userName);
     // alert('email is ' + userEmail);
-    var obj = { login: this.userName, email: this.userEmail, token: verifTok, newPassword: newUserPassword.value };
+    var obj = { login: userName, email: userEmail, token: verifTok, newPassword: newUserPassword.value };
     var js = JSON.stringify(obj);
 
     try {
