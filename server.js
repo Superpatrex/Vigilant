@@ -303,7 +303,15 @@ app.post('/api/resetPassword', async (request, response, next) => {
 
     var login = "";
     var password = "";
+    var id = "";
     var token = tokenInfo.token;
+
+    if (results.length > 0)
+    {
+      id = results[0]._id;
+      login = results[0].userName;
+      password = results[0].password;
+    }
 
     if (updated.modifiedCount === 0)
     {
@@ -311,7 +319,7 @@ app.post('/api/resetPassword', async (request, response, next) => {
       return;
     }
 
-    const resetUrl = `https://cop4331-vigilant.herokuapp.com/forgotPassword?token=${tokenInfo.token}`;
+    const resetUrl = `https://cop4331-vigilant.herokuapp.com/forgotPassword?token=${tokenInfo.token}&id=${id}`;
     const mailOptions = {
       from: 'Vigilant12023@gmail.com',
       to: email,
@@ -319,19 +327,13 @@ app.post('/api/resetPassword', async (request, response, next) => {
       html: `<p>Your have requested to reset your password Please <a href="${resetUrl}">click here</a> to change your password.</p>`
     };
 
-    if (results.length > 0)
-    {
-      login = results[0].userName;
-      password = results[0].password;
-    }
-
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log(error);
         response.status(500).json({ error: 'Failed to send password reset email' });
       } else {
         console.log('Password reset email sent: ' + info.response);
-        response.status(200).json({ success:true, login:login, password:password, email:email, token:token });
+        response.status(200).json({ success:true, login:login, password:password, email:email, token:token, id:id });
       }
     });
 });
