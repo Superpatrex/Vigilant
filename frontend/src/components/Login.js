@@ -85,6 +85,12 @@ function Login()
       }    
   };
   
+    const validatePassword = (password) => {
+        let passwordRestrictions = /(?=.*\d)(?=.*[A-Za-z])(?=.*[?!@#$%^&*]).{8,32}$/;
+
+        return passwordRestrictions.test(password);
+    }
+
   const doRegister = async event =>
   {
     // Waka waka
@@ -95,6 +101,8 @@ function Login()
     //      setMessage('Passwords do not match');
     //      document.getElementById("registerResult").style.setProperty("opacity", 1);
     // }
+
+    // let hash = md5(registerPassword.value);
 
      var obj = {firstname: registerFName.value, lastname: registerLName.value, login: registerUserName.value, pass: registerPassword.value, email: registerEmail.value, regioncode: 5, countrycode: 5}
      var js = JSON.stringify(obj);
