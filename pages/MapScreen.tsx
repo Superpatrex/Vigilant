@@ -19,11 +19,11 @@ import { useGlobalStore } from 'react-native-global-store';
 import Geolocation, { GeolocationError, GeolocationResponse } from '@react-native-community/geolocation';
 import { ImageSource } from 'react-native-vector-icons/Icon';
 import AccidentImage from '../img/AccidentIconTiny.png';
-import CrimeIcon from '../img/CrimeIconSmall.png';
-import DisasterIcon from '../img/DisasterIconSmall.png';
-import FireIcon from '../img/FireIconSmall.png';
+import CrimeIcon from '../img/CrimeIconTiny.png';
+import DisasterIcon from '../img/DisasterIconTiny.png';
+import FireIcon from '../img/FireIconTiny.png';
 import GasLeakIcon from '../img/GasLeakIconTiny.png';
-import MiscIcon from '../img/MiscIconSmall.png';
+import MiscIcon from '../img/MiscIconTiny.png';
 
 const ACCIDENT_IMAGE = Image.resolveAssetSource(AccidentImage).uri;
 const CRIME_IMAGE = Image.resolveAssetSource(CrimeIcon).uri;
