@@ -73,12 +73,12 @@ function ForgotPassword()
 
       if (res.error === 'Password Changed Successfully')
       {
-          setRegisterMessage(res.error);
+          setMessage(res.error);
           document.getElementById("registerResult").style.setProperty("opacity", 1);
       }
       else
       {
-          setRegisterMessage(res.error);
+          setMessage(res.error);
           document.getElementById("registerResult").style.setProperty("opacity", 1);
       }
      }
