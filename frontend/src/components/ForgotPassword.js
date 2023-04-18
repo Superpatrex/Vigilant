@@ -94,10 +94,10 @@ function ForgotPassword()
                         <button type="submit" id="registerButton" value="Register" onClick={ async (e) => {
                           e.preventDefault(); 
                           getUserInfo();
-                          // doNewPass();
-                          setTimeout(() => {
-                            doNewPass();
-                          }, 500);
+                          doNewPass();
+                          // setTimeout(() => {
+                          //   doNewPass();
+                          // }, 500);
                         }}>Create</button><br/>
                         <span id="registerResult">{message}</span>
                         </form>
