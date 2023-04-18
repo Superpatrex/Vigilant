@@ -155,6 +155,10 @@ function Login()
         {
             console.log('sent ya an email to '+forgotInput.value);
         }
+        else
+        {
+            console.log(res.error);
+        }
     }
     catch (e)
     {
