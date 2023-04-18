@@ -60,7 +60,7 @@ function ForgotPassword()
     const verifTok = urlParams.get('token');
     alert('userName is ' + userName);
     alert('email is ' + userEmail);
-    var obj = { login: userName, email: userEmail, token: verifTok, newPassword: newUserPassword.value };
+    var obj = { login: "Hamon", email: "vevimot202@hrisland.com", token: verifTok, newPassword: newUserPassword.value };
     var js = JSON.stringify(obj);
 
     try {
