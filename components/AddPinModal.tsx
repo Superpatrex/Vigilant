@@ -61,6 +61,7 @@ const AddPinModal = ({ route, navigation }) => {
         { key: 2, value: 'Disaster' },
         { key: 3, value: 'Accident' },
         { key: 4, value: 'Fire' },
+        { key: 5, value: 'Gas Leak' },
     ]
 
     return (
