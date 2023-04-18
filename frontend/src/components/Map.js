@@ -5,7 +5,6 @@ import Theme, {ThemeCount} from './Themes'
 
 const app_name = 'cop4331-vigilant'
 var idinc = 0;
-var theme = 0;
 var map;
 
 const MapStyle = {
@@ -17,11 +16,9 @@ const MapStyle = {
     backgroundColor: 'black'
 };
 
-function changeMapTheme()
+function changeMapTheme(newMap)
 {
-    theme++;
-    theme%=ThemeCount;
-    map.setState({styles:Theme(theme)});
+    map.setState({styles:Theme(newMap)});
 }
 
 function buildPath(route)
@@ -121,7 +118,7 @@ class Map extends Component
                 defaultCenter={this.defaultProps.center}
                 defaultZoom={this.defaultProps.zoom}
                 options={{styles:this.state.styles}}
-                hoverDistance={HoverPinRadius}
+                hoverDistance={50 }
             >
                 {
                     this.state.pins.map((pin) => (

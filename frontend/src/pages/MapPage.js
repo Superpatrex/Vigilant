@@ -5,7 +5,6 @@ import PageTitle from '../components/PageTitle';
 import LogOut from '../components/LogOut';
 import Map from '../components/Map';
 import Settings from '../components/Settings';
-import ThemeButton from '../components/ThemeButtons'
 
 const MapPage = () =>
 {
@@ -15,7 +14,6 @@ const MapPage = () =>
             <Settings />
             <PageTitle />
             <LogOut />
-            <ThemeButton />
         </div>
     );
 }

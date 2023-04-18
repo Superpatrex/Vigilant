@@ -1,5 +1,10 @@
 import React, {Component} from 'react';
 import CrimeIcon from '../CrimeIcon.png';
+import MiscIcon from '../MiscIcon.png';
+import AccidentIcon from '../AccidentIcon.png';
+import DisasterIcon from '../DisasterIcon.png';
+import GasLeakIcon from '../GasLeakIcon.png';
+import FireIcon from '../FireIcon.png';
 
 
 const PinRadius = 20;
@@ -11,12 +16,11 @@ const padding = 4;
 const PinStyle = {
     position: 'absolute',
     width: PinRadius * 2,
-    height: PinRadius * 2,
+    height: PinRadius * 3,
     left: enclosingWidth/2 - PinRadius - padding,
-    top: HoverPinRadius - PinRadius,
+    top: HoverPinRadius - PinRadius*3,
 
     borderRadius: PinRadius * 2,
-    backgroundColor: '#f00',
     textAlign: 'center',
     color: '#3f51b5',
     fontSize: 16,
@@ -27,11 +31,11 @@ const PinStyle = {
 };
 
 const HoverPinStyle = {
-    position: 'absolute',
+    position: 'absolute', 
     width: HoverPinRadius * 2,
-    height: HoverPinRadius * 2,
+    height: HoverPinRadius * 3,
     left: enclosingWidth/2 - HoverPinRadius - padding,
-    top: 0,
+    top: HoverPinRadius - PinRadius*3,
 
     borderRadius: HoverPinRadius * 2,
     backgroundColor: 'black',
@@ -109,7 +113,7 @@ const PinImageStyle={
     width:'7vh',
     bottom:10 ,
     position:'absolute',
-    left:0 
+    left:5
 }
 
 class Pin extends Component
@@ -136,9 +140,7 @@ class Pin extends Component
                     {this.props.address + ": " + this.props.description}
                 </p>
             </div>
-            <div style={pinStyle}>
-                <img src={CrimeIcon} style={PinImageStyle}/>
-            </div>
+                <img src={this.props.title == "Disaster" ? DisasterIcon: this.props.title == "Crime" ? CrimeIcon: this.props.title == "Fire" ? FireIcon:this.props.title == "Accident" ? AccidentIcon:this.props.title == "Gas Leak" ? GasLeakIcon:MiscIcon} style={pinStyle}/>
         </div>
         );
     }
