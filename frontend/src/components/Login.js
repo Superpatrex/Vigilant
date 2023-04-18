@@ -102,7 +102,7 @@ function Login()
     //      setMessage('Passwords do not match');
     //      document.getElementById("registerResult").style.setProperty("opacity", 1);
     // }
-    if (!validatePassword.test(password))
+    if (!validatePassword.test(registerPassword.value))
     {
         setRegisterMessage('Password does not meet requirements');
         document.getElementById("registerResult").style.setProperty("opacity", 1);
