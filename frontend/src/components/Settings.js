@@ -1,5 +1,14 @@
 import React, {Component} from 'react';
 import SettingsImage from '../gear_icon.png';
+import Sponge from '../SpongebobTheme.png';
+import Dark from '../DarkTheme.png';
+import Light from '../LightTheme.png';
+import Purple from '../PurpleTheme.png';
+import Blue from '../BlueTheme.png';
+import Green from '../GreenTheme.png';
+import Orange from '../OrangeTheme.png';
+import Red from '../RedTheme.png';
+
 import ThemeButton from '../components/ThemeButton'
 
 const app_name = 'cop4331-vigilant'
@@ -32,13 +41,18 @@ const ButtonSelectStyle = {
 
 const pageOnStyle = {
     position: 'absolute',
-    width: '40vw',
+    width: '27vw',
     height: '100vh',
     left: 0,
     bottom: 0,
+    display:'inline-block',
     backgroundColor: '#393939',
     opacity: '1',
-    transition: 'opacity 200ms, width 200ms'
+    transition: 'opacity 200ms, width 200ms',
+    display:'block',
+    alignItems:'center',
+    justifyContent:'center',
+    paddingLeft:"1%",
 };
 
 const pageOffStyle = {
@@ -49,7 +63,8 @@ const pageOffStyle = {
     bottom: 0,
     backgroundColor: '#393939',
     opacity: '0',
-    transition: 'opacity 200ms, width 200ms'
+    transition: 'opacity 200ms, width 200ms',
+    display:'block',
 };
 
 function buildPath(route)
@@ -95,9 +110,10 @@ async function getUserInformation(id)
 
 async function updatePassword(password)
 {
-    console.log(JSON.parse(localStorage.getItem("user_data")));
+    console.log(password);
     var id = (JSON.parse(localStorage.getItem("user_data"))).id;
-    var data = getUserInformation(id);
+    var data = await getUserInformation(id);
+    console.log(data);
     var obj = {login:data.userName, pass:password, email:data.email};
     var js = JSON.stringify(obj);
 
@@ -131,25 +147,32 @@ class Settings extends Component
     {
         super(props);
         this.state = {buttonStyle:ButtonStyle, pageStyle:pageOffStyle};
-        this.password = "";
+        this.password = document.getElementById("password");
     }
     
     render()
     {
+        this.password = document.getElementById("password");
         return (
             <div>
                 <div style={this.state.pageStyle}>
-                    <ThemeButton x={50} y={100} image={SettingsImage} index={7}/>
-                    <ThemeButton x={100} y={100} image={SettingsImage} index={0}/>
-                    <ThemeButton x={50} y={150} image={SettingsImage} index={6}/>
-                    <ThemeButton x={100} y={150} image={SettingsImage} index={3}/>
-                    <ThemeButton x={50} y={200} image={SettingsImage} index={2}/>
-                    <ThemeButton x={100} y={200} image={SettingsImage} index={4}/>
-                    <ThemeButton x={50} y={250} image={SettingsImage} index={5}/>
-                    <ThemeButton x={100} y={250} image={SettingsImage} index={1}/>
+                    <div style={{width:'100%', height:75}}></div>
+                    <h2>Change Password</h2>
+                    <input type="text" id="password" placeholder="Password"/>
+                    <button type="submit" id="updateButton" class="formButton" value="Update Password" onClick={() => {updatePassword(this.password.value)}}>Update Password</button>
                     <br /><br />
-                    <input type="text" id="password" placeholder="Password" ref={ (c) => this.password = c}/>
-                    <button type="submit" id="updateButton" class="formButton" value="Update Password" onClick={() => {updatePassword(this.password)}}>Update Password</button>
+                    <h2>Themes</h2>
+                    <div style={{margin:'auto'}}>
+                        <ThemeButton image={Dark} index={7}/>
+                        <ThemeButton image={Light} index={0}/>
+                        <ThemeButton image={Purple} index={6}/>
+                        <ThemeButton image={Blue} index={3}/>
+                        <ThemeButton image={Green} index={2}/>
+                        <ThemeButton image={Orange} index={4}/>
+                        <ThemeButton image={Red} index={5}/>
+                        <ThemeButton image={Sponge} index={1}/>
+
+                    </div>
                 </div>
                 <div style={ButtonBackgroundStyle}>
                     <img src={SettingsImage} style={this.state.buttonStyle} 

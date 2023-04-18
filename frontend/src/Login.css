@@ -30,8 +30,8 @@ input{
     width:80%;
     height: 30px;
     font-size:1.35em;
-    margin-bottom:15px;
-    margin-top:15px;
+    margin-bottom:8px;
+    margin-top:px;
 }
 
 .registerInput{
@@ -77,15 +77,20 @@ input{
 }
 
 #loginPassword {
-    margin: 15px;
-    margin-bottom: 30px;
+    margin: 10px;
+    margin-bottom: 10px;
 }
 
 #loginResult {
     opacity:0;
     background-color: #a25454;
     padding:10px;
-    padding-bottom:12px;
+    font-size:0.9em;
+    margin-bottom:10px !important;
+}
+
+#loginButton{
+    margin-top:15px;
 }
 
 #registerResult {
@@ -112,6 +117,12 @@ input{
     text-align: center;
     text-decoration: none;
     display: inline-block;
+}
+
+#updateButton{
+    margin:auto;
+    font-size:1.3em;
+    margin-left:7%;
 }
 
 .toggleButton{
@@ -256,9 +267,16 @@ input{
 #forgotBox{
     padding-top:7%;
     padding-bottom:5%;
+    margin-top:10px;
     padding:10px;
     position:relative;
     font-size:0.9em;
+}
+
+#forgotInput{
+    margin-top:3px;
+    height:20px;
+    font-size:1.2em;
 }
 
 #forgotButton{
