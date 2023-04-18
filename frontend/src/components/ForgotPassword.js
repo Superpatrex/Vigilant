@@ -80,7 +80,7 @@ function ForgotPassword()
   return(
     <div>
         <div class="formHolder" id="loginHolder">
-            <form id="forgotForm" onSubmit={doNewPass}>
+            <form id="forgotForm" onSubmit={() => {getUserInfo(); doNewPass();}}>
                         <span id="inner-title">Create New Password</span><br/><br/>
                         <input type="password" id="newPassword" class="registerInput" placeholder="New Password" ref={ (c) => setNewPassword(c)} /><br />
                         <input type="password" id="confirmPassword" class="registerInput" placeholder="Confirm New Password" ref={ (c) => setConfirmPassword(c)} /><br />
