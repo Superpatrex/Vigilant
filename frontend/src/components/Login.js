@@ -135,29 +135,14 @@ function Login()
     var obj = {email:forgotInput.value};
     var js = JSON.stringify(obj);
 
-    //  try
-    //  {
-    //     const response = await fetch(buildPath('api/signup'),
-    //     {method: 'POST', body: js, headers: {'Content-Type': 'application/json'}});
+    try
+    {
+        
+    }
+    catch (e)
+    {
 
-    //     var res = JSON.parse(await response.text());
-
-    //     if (res.error === 'User Created')
-    //     {
-    //         setRegisterMessage('User Created');
-    //         document.getElementById("registerResult").style.setProperty("opacity", 1);
-    //     }
-    //     else
-    //     {
-    //         setRegisterMessage(res.error);
-    //         document.getElementById("registerResult").style.setProperty("opacity", 1);
-    //     }
-    //  }
-    //  catch (e)
-    //  {
-    //     alert(e.toString());
-    //     return;
-    //  }
+    }
   };
 
   function showForgotForm(ev){
