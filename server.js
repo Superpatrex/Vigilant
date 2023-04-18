@@ -288,6 +288,8 @@ app.post('/api/resetPassword', async (request, response, next) => {
     expirationTime: new Date(Date.now() + (60 * 60 * 1000)) // Token expires in 1 hour
   };
 
+  const results = await db.collection('Users').find({email:email}).toArray();
+
   const timestamp = new Date();
   const updated = await db.collection('Users').updateOne({email:email},
     {
@@ -299,14 +301,17 @@ app.post('/api/resetPassword', async (request, response, next) => {
       }
     })
 
+    var login = "";
+    var password = "";
+    var token = tokenInfo.token;
+
     if (updated.modifiedCount === 0)
     {
       response.status(200).json({success:false, error:'Email not found'});
       return;
     }
 
-    // change the resetUrl to the right one
-    const resetUrl = `https://vigilantsometihng.com/reset-password?token=${tokenInfo.token}`; // fronted currently creating it
+    const resetUrl = `http://172.29.8.210:3000/forgotPassword/?token=${tokenInfo.token}`;
     const mailOptions = {
       from: 'Vigilant12023@gmail.com',
       to: email,
@@ -314,18 +319,24 @@ app.post('/api/resetPassword', async (request, response, next) => {
       html: `<p>Your have requested to reset your password Please <a href="${resetUrl}">click here</a> to change your password.</p>`
     };
 
+    if (results.length > 0)
+    {
+      login = results[0].userName;
+      password = results[0].password;
+    }
+
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.log(error);
         response.status(500).json({ error: 'Failed to send password reset email' });
       } else {
         console.log('Password reset email sent: ' + info.response);
-        response.status(200).json({ message: 'Password reset email sent' });
+        response.status(200).json({ success:true, login:login, password:password, email:email, token:token });
       }
     });
 });
 
-// chekcs if the token is in the database and changes the pasword
+// checks if the token is in the database and changes the pasword
 app.post('/api/changePassword', async (request, response, next) => 
 {
   // incoming: login, newPassword
