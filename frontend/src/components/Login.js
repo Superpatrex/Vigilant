@@ -141,7 +141,7 @@ function Login()
     setContent('An email has been sent to reset your password.\nHave a wonderful day.');
     // alert("Your API Endpoint here\n Email Address: "+forgotInput.value);
 
-    var obj = { email: forgotInput };
+    var obj = { email: forgotInput.value };
     var js = JSON.stringify(obj);
 
     try
@@ -153,7 +153,7 @@ function Login()
 
         if (res.success)
         {
-            console.log('sent ya an email to ' + forgotInput);
+            console.log('sent ya an email to ' + forgotInput.value);
         }
         else
         {
