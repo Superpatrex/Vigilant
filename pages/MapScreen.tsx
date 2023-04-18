@@ -18,11 +18,11 @@ import { useGlobalStore } from 'react-native-global-store';
 
 import Geolocation, { GeolocationError, GeolocationResponse } from '@react-native-community/geolocation';
 import { ImageSource } from 'react-native-vector-icons/Icon';
-import AccidentImage from '../img/AccidentIconSmall.png';
+import AccidentImage from '../img/AccidentIconTiny.png';
 import CrimeIcon from '../img/CrimeIconSmall.png';
 import DisasterIcon from '../img/DisasterIconSmall.png';
 import FireIcon from '../img/FireIconSmall.png';
-import GasLeakIcon from '../img/GasLeakIconSmall.png';
+import GasLeakIcon from '../img/GasLeakIconTiny.png';
 import MiscIcon from '../img/MiscIconSmall.png';
 
 const ACCIDENT_IMAGE = Image.resolveAssetSource(AccidentImage).uri;
@@ -227,9 +227,9 @@ const MapScreen = ({ route, navigation }) => {
                 initialRegion={initialRegion}
                 onRegionChangeComplete={(region) => {
                     searchPins(region.latitude, region.longitude);
-                    mapRef.current?.addressForCoordinate({ latitude: region.latitude, longitude: region.longitude })
-                        .then((value) => setAddress(value))
-                    setLocationData({ latitude: region.latitude, longitude: region.longitude, state: (address?.administrativeArea || "FL"), country: (address?.country || "United States"), zipCode: (address?.postalCode || "32816"), street: (address?.thoroughfare || "University Blvd") })
+                    // mapRef.current?.addressForCoordinate({ latitude: region.latitude, longitude: region.longitude })
+                    //     .then((value) => setAddress(value))
+                    // setLocationData({ latitude: region.latitude, longitude: region.longitude, state: (address?.administrativeArea || "FL"), country: (address?.country || "United States"), zipCode: (address?.postalCode || "32816"), street: (address?.thoroughfare || "University Blvd") })
                 }}
                 showsUserLocation={true}
                 onUserLocationChange={() => { 
