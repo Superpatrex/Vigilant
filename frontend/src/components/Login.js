@@ -24,8 +24,8 @@ function Login()
   var registerUserName;
   var registerPassword;
   var confirmPassword;
-//   var forgotInput;
-  const [ forgotInput, setForgotInput ] = useState('');
+  var forgotInput;
+//   const [ forgotInput, setForgotInput ] = useState('');
 
   const [message, setMessage] = useState('');
   const [registerMessage, setRegisterMessage] = useState('');
@@ -140,7 +140,7 @@ function Login()
     event.preventDefault();
     setContent('An email has been sent to reset your password.\nHave a wonderful day.');
     // alert("Your API Endpoint here\n Email Address: "+forgotInput.value);
-    console.log(forgotInput);
+    console.log(forgotInput.value);
     return;
 
     var obj = { email: forgotInput };
@@ -174,7 +174,7 @@ function Login()
     toggleShow(!showForgot);
     {setContent(<div>
         Please enter email address for forgotten account<br/>
-        <input type="text" id="forgotInput" placeholder="Email Address" value={forgotInput} onChange={(e) => setForgotInput(e.target.value)} />
+        <input type="text" id="forgotInput" placeholder="Email Address" ref={(c) => forgotInput = c} />
         <button type="submit" id="forgotButton" value="Forgot Password" onClick={doForgot}>Submit</button>
         </div>)}
   }
