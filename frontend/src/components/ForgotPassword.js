@@ -16,8 +16,9 @@ function buildPath(route)
 
 function ForgotPassword()
 {
- 
-  const [newUserPassword, setNewPassword] = React.useState('');
+
+  var newUserPassword;
+  // const [newUserPassword, setNewPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
 
   const [message, setMessage] = useState('example message');
@@ -86,7 +87,7 @@ function ForgotPassword()
         <div class="formHolder" id="loginHolder">
             <form id="forgotForm" onSubmit={() => {getUserInfo(); doNewPass();}}>
                         <span id="inner-title">Create New Password</span><br/><br/>
-                        <input type="password" id="newPassword" class="registerInput" placeholder="New Password" ref={ (c) => setNewPassword(c)} /><br />
+                        <input type="password" id="newPassword" class="registerInput" placeholder="New Password" ref={ (c) => newUserPassword = c} /><br />
                         <input type="password" id="confirmPassword" class="registerInput" placeholder="Confirm New Password" ref={ (c) => setConfirmPassword(c)} /><br />
                         <button type="submit" id="registerButton" value="Register" onClick={(e) => {
                           e.preventDefault(); 
