@@ -311,7 +311,7 @@ app.post('/api/resetPassword', async (request, response, next) => {
       return;
     }
 
-    const resetUrl = `http://172.29.8.210:3000/forgotPassword/?token=${tokenInfo.token}`;
+    const resetUrl = `https://cop4331-vigilant.herokuapp.com/forgotPassword/?token=${tokenInfo.token}`;
     const mailOptions = {
       from: 'Vigilant12023@gmail.com',
       to: email,
@@ -478,7 +478,7 @@ app.post('/api/signup', async (request, response, next) =>
         from: 'vigilant12023@gmail.com',
         to: email,
         subject: 'Verify your email',
-        html: `<p>Thank you for signing up! Please <a href="http://localhost:4091/verify?email=${email}&token=${verificationToken}">click here</a> to verify your email.</p>`
+        html: `<p>Thank you for signing up! Please <a href="https://cop4331-vigilant.herokuapp.com/verify?email=${email}&token=${verificationToken}">click here</a> to verify your email.</p>`
       };
   
       transporter.sendMail(mailOptions, (error, info) => {
@@ -516,7 +516,7 @@ app.get('/verify', async (request, response) => {
       return response.status(400).json({ error: 'Invalid verification token' });
     }
 
-    return response.status(200).json({ message: 'Email verified successfully' });
+    return response.redirect('https://cop4331-vigilant.herokuapp.com/home');
 
   } catch (error) {
     console.error(error);
