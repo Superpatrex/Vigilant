@@ -86,8 +86,8 @@ function ForgotPassword()
                         <input type="password" id="confirmPassword" class="registerInput" placeholder="Confirm New Password" ref={ (c) => setConfirmPassword(c)} /><br />
                         <button type="submit" id="registerButton" value="Register" onClick={(e) => {
                           e.preventDefault(); 
-                          getUserInfo();
-                          doNewPass();
+                          getUserInfo;
+                          doNewPass;
                         }}>Create</button><br/>
                         <span id="registerResult">{message}</span>
                         </form>
