@@ -91,11 +91,10 @@ function ForgotPassword()
                         <span id="inner-title">Create New Password</span><br/><br/>
                         <input type="password" id="newPassword" class="registerInput" placeholder="New Password" ref={ (c) => newUserPassword = c} /><br />
                         <input type="password" id="confirmPassword" class="registerInput" placeholder="Confirm New Password" ref={ (c) => setConfirmPassword(c)} /><br />
-                        <button type="submit" id="registerButton" value="Register" onClick={(e) => {
+                        <button type="submit" id="registerButton" value="Register" onClick={ async (e) => {
                           e.preventDefault(); 
-                          getUserInfo()
-                            .then(() => doNewPass())
-                          // doNewPass();
+                          await getUserInfo();
+                          doNewPass();
                         }}>Create</button><br/>
                         <span id="registerResult">{message}</span>
                         </form>
