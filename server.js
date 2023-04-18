@@ -90,9 +90,10 @@ app.post('/api/getAllUserInformation', async(request, response, next) =>
       var email = results[0].email;
       var countryCode = results[0].countryCode;
       var regionCode = results[0].regionCode;
+      var verificationToken = results[0].verificationToken;
 
       retVal = {firstName:firstName, theme:theme, lightDarkMode:lightDarkMode, searchRadius:searchRadius,
-        firstName:firstName, lastName:lastName, userName:userName, email:email, countryCode:countryCode, regionCode:regionCode};
+        firstName:firstName, lastName:lastName, userName:userName, email:email, countryCode:countryCode, regionCode:regionCode, verificationToken: verificationToken};
 
       ret = {success:true, results:retVal, error:''}
       response.status(200).json(ret);
