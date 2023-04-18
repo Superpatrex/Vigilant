@@ -7,6 +7,7 @@ import {
     Alert,
     Pressable,
     Button,
+    ScrollView,
   } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import buildPath from '../buildPath';
@@ -76,7 +77,7 @@ function LoginScreen({ navigation }) {
                     justifyContent: 'space-between',
                     height: '35%'
                 }}>
-                    <Button onPress={ () => navigation.navigate('ForgetLoginModal') } title='Forget Login?' ></Button>
+                    <Button onPress={ () => navigation.navigate('ForgetLoginModal', { name: 'Forget Login?' }) } title='Forget Login?' ></Button>
                     <Button onPress={ () => navigation.navigate("Register") } title="New here? Sign Up" ></Button>
                 </View>
             </View>
