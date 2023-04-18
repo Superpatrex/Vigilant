@@ -20,7 +20,7 @@ function ForgotPassword()
   const [newPassword, setNewPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
 
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState('example message');
   const [login, setLogin] = useState('');
   
 
@@ -28,6 +28,7 @@ function ForgotPassword()
   const [verificationToken, setVerificationToken] = useState('');
   
   const getUserInfo = async event => {
+    console.log(localStorage.getItem('user_data').id);
     var obj = { objectId: localStorage.getItem('user_data').id };
     var js = JSON.stringify(obj)
 
@@ -51,22 +52,23 @@ function ForgotPassword()
   }
 
   const doNewPass = async event =>{
-    var obj = {login:login, email:email, token:verificationToken, newPassword: newPassword}
-    var js = JSON.stringify(obj)
-
+    const urlParams = new URLSearchParams(window.location.search);
+    const verifTok = urlParams.get('token');
+    var obj = {login:login, email:email, token:String(verifTok), newPassword: newPassword};
+    var js = JSON.stringify(obj);
+    console.log(obj);
     try{
       const response = await fetch(buildPath('api/changePassword'),
       { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }); 
       
       var res = JSON.parse(await response.text());
-      
       if(res.error=='Password Changed successfully'){
-        setMessage(res.error);
+        console.log(res.error);
         document.getElementById('registerResult').style.opacity=1;
       }
 
       else{
-        setMessage(res.error);
+        console.log(res.error);
         document.getElementById('registerResult').style.opacity=1;      
       }
     }
@@ -82,7 +84,7 @@ function ForgotPassword()
                         <span id="inner-title">Create New Password</span><br/><br/>
                         <input type="password" id="newPassword" class="registerInput" placeholder="New Password" ref={ (c) => setNewPassword(c)} /><br />
                         <input type="password" id="confirmPassword" class="registerInput" placeholder="Confirm New Password" ref={ (c) => setConfirmPassword(c)} /><br />
-                        <button type="submit" id="registerButton" value="Register" onClick={() => {
+                        <button type="submit" id="registerButton" value="Register" onClick={(e) => {e.preventDefault(); 
                           getUserInfo();
                           doNewPass();
                         }}>Create</button><br/>
