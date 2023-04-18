@@ -488,6 +488,15 @@ app.post('/api/signup', async (request, response, next) =>
           console.log('Email sent: ' + info.response);
         }
     });
+
+    const ret = await db.collection('Users').find({email:email}).toArray();
+    var id = "";
+
+    if (ret.length > 0)
+    {
+      id = ret[0]._id;
+      console.log(id);
+    }
   
     
   } catch (error) {
@@ -495,7 +504,7 @@ app.post('/api/signup', async (request, response, next) =>
     return response.status(500).json({ success: false, error: 'Server error' });
   }
 
-  return response.status(200).json({ success: true, error: '' });
+  response.status(200).json({ success:true, error: '', id:id });
 }
 
 });
