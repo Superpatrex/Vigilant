@@ -311,7 +311,7 @@ app.post('/api/resetPassword', async (request, response, next) => {
       return;
     }
 
-    const resetUrl = `https://cop4331-vigilant.herokuapp.com/forgotPassword/?token=${tokenInfo.token}`;
+    const resetUrl = `https://cop4331-vigilant.herokuapp.com/forgotPassword?token=${tokenInfo.token}`;
     const mailOptions = {
       from: 'Vigilant12023@gmail.com',
       to: email,
