@@ -68,6 +68,8 @@ function Login()
           {
               setMessage('Username or Password Incorrect');
               document.getElementById("loginResult").style.setProperty("opacity",1);
+              document.getElementById("loginResult").style.setProperty("background-color", "#a25454");
+
           }
           else
           {
@@ -75,7 +77,10 @@ function Login()
               var user = {firstName:res.firstName,lastName:res.lastName,id:res._id}
               localStorage.setItem('user_data', JSON.stringify(user));
 
-              setMessage('');
+              setMessage('Logging in');
+              document.getElementById("loginResult").style.setProperty("opacity",1);
+              document.getElementById("loginResult").style.setProperty("background-color", "#67b578");
+
               window.location.href = '/home';
           }
       }
@@ -120,20 +125,22 @@ function Login()
 
         var res = JSON.parse(await response.text());
 
-        if (res.error === 'User Created')
+        if (res.success)
         {
-            setRegisterMessage('User Created');
+            setRegisterMessage('Verification Email Sent');
+            document.getElementById("registerResult").style.setProperty("background-color", "#67b578");
             document.getElementById("registerResult").style.setProperty("opacity", 1);
         }
         else
         {
             setRegisterMessage(res.error);
+            document.getElementById("registerResult").style.setProperty("background-color", "#a25454");
             document.getElementById("registerResult").style.setProperty("opacity", 1);
         }
      }
      catch (e)
      {
-        alert(e.toString());
+        //alert(e.toString());
         return;
      }
   };

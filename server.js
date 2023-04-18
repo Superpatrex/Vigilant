@@ -480,7 +480,7 @@ app.post('/api/signup', async (request, response, next) =>
         from: 'vigilant12023@gmail.com',
         to: email,
         subject: 'Verify your email',
-        html: `<p>Thank you for signing up! Please <a href="https://cop4331-vigilant.herokuapp.com/verify?email=${email}&token=${verificationToken}">click here</a> to verify your email.</p>`
+        html: `<p>Thank you for signing up! Please <a href="https://cop4331-vigilant.herokuapp.com/emailVerify?email=${email}&token=${verificationToken}">click here</a> to verify your email.</p>`
       };
   
       transporter.sendMail(mailOptions, (error, info) => {
