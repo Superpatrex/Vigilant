@@ -140,8 +140,6 @@ function Login()
     event.preventDefault();
     setContent('An email has been sent to reset your password.\nHave a wonderful day.');
     // alert("Your API Endpoint here\n Email Address: "+forgotInput.value);
-    console.log(forgotInput.value);
-    return;
 
     var obj = { email: forgotInput };
     var js = JSON.stringify(obj);
