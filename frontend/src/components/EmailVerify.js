@@ -17,51 +17,77 @@ function buildPath(route)
 function EmailVerify()
 {
  
-  var newPassword;
-  var confirmPassword;
+  const [newPassword, setNewPassword] = React.useState('');
+  const [confirmPassword, setConfirmPassword] = React.useState('');
 
 
   const [message, setMessage] = useState('');
+  const [login, setLogin] = useState('');
+  const [email, setEmail] = useState('');
+  const [verificationToken, setVerificationToken] = useState('');
   
+  const getUserInfo = async event => {
+    var obj = { objectId: localStorage.getItem('user_data').id };
+    var js = JSON.stringify(obj)
+
+    try
+    {
+      const response = await fetch(buildPath('api/getAllUserInformation'),
+      { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } });
+
+      var res = JSON.parse(await response.text());
+
+      if (res.success)
+      {
+        setVerificationToken(res.results.verificationToken);
+        setLogin(res.results.userName);
+        setEmail(res.results.email);
+      }
+    }
+    catch (e)
+    {
+      console.log(e);
+    }
+  }
+
   const doNewPass = async event =>
   {
     // It's still very late, and I don't know what changing the password endpoint looks like
     // I set this up as best I could once more.
     event.preventDefault();
 
-     if (confirmPassword.value != newPassword.value)
-     {
-         setMessage('Passwords do not match');
-         document.getElementById("registerResult").style.setProperty("opacity", 1);
+    if (confirmPassword != newPassword)
+    {
+      setMessage('Passwords do not match');
+      document.getElementById("registerResult").style.setProperty("opacity", 1);
     }
 
-    //
-     var obj = {pass: newPassword.value}
-     var js = JSON.stringify(obj);
+    var obj = {login: login, email: email, token: verificationToken, newPassword: newPassword}
+    var js = JSON.stringify(obj);
 
-    //  try
-    //  {
-    //     const response = await fetch(buildPath('api/signup'),
-    //     {method: 'POST', body: js, headers: {'Content-Type': 'application/json'}});
+    try
+    {
+      const response = await fetch(buildPath('api/changePassword'),
+      {method: 'POST', body: js, headers: {'Content-Type': 'application/json'}});
 
-    //     var res = JSON.parse(await response.text());
+      var res = JSON.parse(await response.text());
 
-    //     if (res.error === 'User Created')
-    //     {
-    //         setRegisterMessage('User Created');
-    //         document.getElementById("registerResult").style.setProperty("opacity", 1);
-    //     }
-    //     else
-    //     {
-    //         setRegisterMessage(res.error);
-    //         document.getElementById("registerResult").style.setProperty("opacity", 1);
-    //     }
-    //  }
-    //  catch (e)
-    //  {
-    //     alert(e.toString());
-    //     return;
-    //  }
+      if (res.error === 'Password Changed Successfully')
+      {
+          setRegisterMessage(res.error);
+          document.getElementById("registerResult").style.setProperty("opacity", 1);
+      }
+      else
+      {
+          setRegisterMessage(res.error);
+          document.getElementById("registerResult").style.setProperty("opacity", 1);
+      }
+     }
+     catch (e)
+     {
+        alert(e.toString());
+        return;
+     }
   };
 
   return(
