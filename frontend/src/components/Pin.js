@@ -80,7 +80,8 @@ const HoverInfoBoxStyle = {
     backgroundColor: 'black',
     opacity: 1,
     transition: 'opacity 300ms, height 450ms, top 450ms',
-    textAlign: 'center'
+    textAlign: 'center',
+    zIndex:100,
 }
 
 const TitleStyle = {
