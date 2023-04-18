@@ -2,18 +2,18 @@ import React from 'react';
 import '../Card.css'
 
 import PageTitle from '../components/PageTitle';
-import LoggedInName from '../components/LoggedInName';
-import CardUI from '../components/CardUI';
+import LogOut from '../components/LogOut';
 import Map from '../components/Map';
-import Pin, {HoverPinRadius, PinRadius} from "../components/Pin";
+import Settings from '../components/Settings';
 
 const CardPage = () =>
 {
     return(
-        <div>
-            <PageTitle />
+        <div width={"100vw"}>
             <Map />
-            <LoggedInName />
+            <Settings />
+            <PageTitle />
+            <LogOut />
         </div>
     );
 }

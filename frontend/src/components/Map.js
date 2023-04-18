@@ -5,6 +5,15 @@ import Pin, {HoverPinRadius, PinRadius} from "./Pin";
 const app_name = 'cop4331-vigilant'
 var idinc = 0;
 
+const MapStyle = {
+    position: 'absolute',
+    width: '100%',
+    height: '100vh',
+    left: 0,
+    top: 0,
+    backgroundColor: 'black'
+};
+
 function buildPath(route)
 {
     if (process.env.NODE_ENV === 'production') 
@@ -94,7 +103,7 @@ class Map extends Component
         console.log(this.state.pins);
         console.log("rendering");
         return (
-        <div style={{ height: '100vh', width: '100%'}}>
+        <div style={MapStyle}>
             <GoogleMapReact
                 bootstrapURLKeys={{ key: "AIzaSyCivx73GpFHnziVqBrL481EFhBJOW3-tdA" , language: 'en'}}
                 center = {this.defaultProps.center}
