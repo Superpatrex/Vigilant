@@ -113,9 +113,9 @@ function Login()
         document.getElementById("registerResult").style.setProperty("opacity", 1);
     }
 
-    // let hash = md5(registerPassword.value);
+    let hash = md5(registerPassword.value);
 
-     var obj = {firstname: registerFName.value, lastname: registerLName.value, login: registerUserName.value, pass: registerPassword.value, email: registerEmail.value, regioncode: 5, countrycode: 5}
+     var obj = {firstname: registerFName.value, lastname: registerLName.value, login: registerUserName.value, pass: hash, email: registerEmail.value, regioncode: 5, countrycode: 5}
      var js = JSON.stringify(obj);
 
      try

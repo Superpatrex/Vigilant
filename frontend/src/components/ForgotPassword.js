@@ -61,7 +61,8 @@ function ForgotPassword()
     const verifTok = urlParams.get('token');
     // alert('userName is ' + userName);
     // alert('email is ' + userEmail);
-    var obj = { login: userName, email: userEmail, token: verifTok, newPassword: newUserPassword.value };
+    let hash = md5(newUserPassword.value);
+    var obj = { login: userName, email: userEmail, token: verifTok, newPassword: hash };
     var js = JSON.stringify(obj);
 
     try {
