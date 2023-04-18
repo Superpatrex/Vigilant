@@ -140,7 +140,9 @@ function Login()
     event.preventDefault();
     setContent('An email has been sent to reset your password.\nHave a wonderful day.');
     // alert("Your API Endpoint here\n Email Address: "+forgotInput.value);
-    
+    console.log(forgotInput);
+    return;
+
     var obj = { email: forgotInput };
     var js = JSON.stringify(obj);
 
@@ -172,7 +174,7 @@ function Login()
     toggleShow(!showForgot);
     {setContent(<div>
         Please enter email address for forgotten account<br/>
-        <input type="text" id="forgotInput" placeholder="Email Address" ref={ (c) => setForgotInput(c) } />
+        <input type="text" id="forgotInput" placeholder="Email Address" value={forgotInput} onChange={(e) => setForInput(e.target.value)} />
         <button type="submit" id="forgotButton" value="Forgot Password" onClick={doForgot}>Submit</button>
         </div>)}
   }
