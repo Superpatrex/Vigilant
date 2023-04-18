@@ -58,7 +58,7 @@ function ForgotPassword()
     console.log(userEmail);
     console.log(verifTok);
     console.log(newUserPassword);
-    var obj = { login: userName, email: userEmail, token: verifTok, newPassword: newUserPassword };
+    var obj = { login: userName, email: userEmail, token: verifTok, newPassword: newUserPassword.value };
     var js = JSON.stringify(obj);
     console.log(obj);
 
