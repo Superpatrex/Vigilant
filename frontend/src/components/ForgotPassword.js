@@ -25,11 +25,11 @@ function ForgotPassword()
   
 
   const [email, setEmail] = useState('');
-  const [verificationToken, setVerificationToken] = useState('');
-  
+
   const getUserInfo = async event => {
-    console.log(localStorage.getItem('user_data').id);
-    var obj = { objectId: localStorage.getItem('user_data').id };
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get('id');
+    var obj = { objectId: userId };
     var js = JSON.stringify(obj)
 
     try
@@ -42,7 +42,6 @@ function ForgotPassword()
       if (res.success)
       {
         setLogin(res.login);
-        setVerificationToken(res.token);
         setEmail(res.email);
       }
     }
@@ -54,7 +53,7 @@ function ForgotPassword()
   const doNewPass = async event =>{
     const urlParams = new URLSearchParams(window.location.search);
     const verifTok = urlParams.get('token');
-    var obj = {login:login, email:email, token:String(verifTok), newPassword: newPassword};
+    var obj = { login: login, email: email, token: verifTok, newPassword: newPassword };
     var js = JSON.stringify(obj);
     console.log(obj);
     try{
