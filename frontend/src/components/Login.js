@@ -142,6 +142,7 @@ function Login()
     // alert("Your API Endpoint here\n Email Address: "+forgotInput.value);
 
     var obj = { email: forgotInput.value };
+    console.log(obj);
     var js = JSON.stringify(obj);
 
     try
