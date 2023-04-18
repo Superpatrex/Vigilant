@@ -225,11 +225,11 @@ const MapScreen = ({ route, navigation }) => {
                     setLocationData({ latitude: (location?.coords.latitude || 28.6024), longitude: (location?.coords.longitude || -81.2001), state: (address?.administrativeArea || "FL"), country: (address?.country || "United States"), zipCode: (address?.postalCode || "32816"), street: (address?.thoroughfare || "University Blvd") })
                 }}
                 initialRegion={initialRegion}
-                onRegionChange={(region) => {
+                onRegionChangeComplete={(region) => {
                     searchPins(region.latitude, region.longitude);
-                    // mapRef.current?.addressForCoordinate({ latitude: region.latitude, longitude: region.longitude })
-                    //     .then((value) => setAddress(value))
-                    // setLocationData({ latitude: region.latitude, longitude: region.longitude, state: (address?.administrativeArea || "FL"), country: (address?.country || "United States"), zipCode: (address?.postalCode || "32816"), street: (address?.thoroughfare || "University Blvd") })
+                    mapRef.current?.addressForCoordinate({ latitude: region.latitude, longitude: region.longitude })
+                        .then((value) => setAddress(value))
+                    setLocationData({ latitude: region.latitude, longitude: region.longitude, state: (address?.administrativeArea || "FL"), country: (address?.country || "United States"), zipCode: (address?.postalCode || "32816"), street: (address?.thoroughfare || "University Blvd") })
                 }}
                 showsUserLocation={true}
                 onUserLocationChange={() => { 
@@ -239,10 +239,10 @@ const MapScreen = ({ route, navigation }) => {
                     setLocationData({ latitude: (location?.coords.latitude || 28.6024), longitude: (location?.coords.longitude || -81.2001), state: (address?.administrativeArea || "FL"), country: (address?.country || "United States"), zipCode: (address?.postalCode || "32816"), street: (address?.thoroughfare || "University Blvd") })
                 }}
                 >
-                {markers.map((marker, index) => (
+                {markers.map((marker) => (
                     <Marker
                         ref={markerRef}
-                        key={index}
+                        key={marker._id}
                         coordinate={marker.location.coordinates}
                         // pinColor={(marker.userId === route.params.userId ? "red" : "pink")}
                         image={marker.icon}
