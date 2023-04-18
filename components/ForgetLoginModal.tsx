@@ -8,16 +8,18 @@ import {
 import { useTheme } from '@react-navigation/native';
 import { TextInput } from 'react-native-gesture-handler';
 import buildPath from '../buildPath';
+import ErrorMessage from './ErrorMessage';
 
 const ForgetLoginModal = ({ navigation }) => {
     const { colors } = useTheme();
     const [email, setEmail] = React.useState('');
+    const [errorVisible, setErrorVisible] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState('');
 
-    const Reset = async (email: string) => {
-        var js = JSON.stringify(email);
-        const [errorVisible, setErrorVisible] = React.useState(false);
-        const [errorMessage, setErrorMessage] = React.useState('');
-        
+    const Reset = async () => {
+        var obj = { email: email };
+        var js = JSON.stringify(obj);
+
         try
         {
             const response = await fetch(buildPath('api/resetPassword'),
@@ -50,7 +52,8 @@ const ForgetLoginModal = ({ navigation }) => {
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
             <Text style={{ fontSize: 18, color: colors.text }}>Enter your email and we'll send you a link</Text>
             <TextInput style={styles.input} autoCorrect={false} autoCapitalize='none' autoComplete='email' onChangeText={text => setEmail(text)} placeholder='Enter your email here' placeholderTextColor={"#6b6b6b"}></TextInput>
-            <Button onPress={() => Reset(email)} title="Send"></Button>
+            <Button onPress={() => Reset()} title="Send"></Button>
+            { errorVisible ? <ErrorMessage errorMessage={errorMessage}></ErrorMessage> : null}
         </View>
     );
 }
