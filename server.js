@@ -8,6 +8,14 @@ const DEFAULT_PIN_SEARCH_RADIUS = 1000;
 const DEFAULT_LIGHT_DARK_MODE = true;
 const DEFAULT_THEME = 1;
 
+const cors = require('cors');;
+const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
+const PIN_LOCATION_TYPE = 'Point';
+const DEFAULT_PIN_SEARCH_RADIUS = 1000;
+const DEFAULT_LIGHT_DARK_MODE = true;
+const DEFAULT_THEME = 1;
+
 
 require('dotenv').config()
 const url = process.env.MONGODB_URI;
@@ -16,6 +24,7 @@ const client = new MongoClient(url);
 client.connect(console.log('mongodb connected'));
 
 const path = require('path');
+const { ObjectId } = require('mongodb');
 const { ObjectId } = require('mongodb');
 const PORT = process.env.PORT || 4091;
 
@@ -54,6 +63,8 @@ if (process.env.NODE_ENV == 'production')
   })
 }
 
+// Users
+//////////////////////////////////////////////////////////////////////
 // Users
 //////////////////////////////////////////////////////////////////////
 
@@ -118,6 +129,9 @@ app.post('/api/getSettings', async(request, response, next) =>
   var ret;
 
   const { objectId } = request.body;
+  var ret;
+
+  const { objectId } = request.body;
 
   if (objectId === null)
   {
@@ -126,7 +140,31 @@ app.post('/api/getSettings', async(request, response, next) =>
     return;
   }
   else 
+  else 
   {
+    const db = client.db("LargeProject");
+    const results = await db.collection('Users').find({_id:new ObjectId(objectId)}).toArray();
+
+    var theme = '';
+    var lightDarkMode = null;
+    var searchRadius = 0;
+
+    if (results.length > 0)
+    {
+      theme = results[0].theme;
+      lightDarkMode = results[0].lightDarkMode;
+      searchRadius = results[0].searchRadius;
+
+      ret = {success:true, theme:theme, lightDarkMode:lightDarkMode, searchRadius:searchRadius, error:''};
+      response.status(200).json(ret);
+      return;
+    }
+    else
+    {
+      ret = {success:false, error:'User Settings does not exist'};
+      response.status(500).json(ret);
+      return;
+    }
     const db = client.db("LargeProject");
     const results = await db.collection('Users').find({_id:new ObjectId(objectId)}).toArray();
 
@@ -207,14 +245,208 @@ app.post('/api/setSettings', async(request, response, next) =>
       return;
     }
   }
+});
+
+app.post('/api/setSettings', async(request, response, next) =>
+{
+  // incoming: objectId, theme, lightDarkMode, searchRadius
+  // outcoming: success, error
+
+  var error = '';
+  var ret;
+
+  const { objectId, theme, lightDarkMode, searchRadius } = request.body;
+
+  if (objectId === null)
+  {
+    ret = {success:false, error:'objectId cannot be null'};
+    response.status(500).json(ret);
+    return;
+  }
+  else if (theme === null || theme < 0)
+  {
+    ret = {success:false, error:'theme cannot be null'};
+    response.status(500).json(ret);
+    return;
+  }
+  else if (lightDarkMode === null)
+  {
+    ret = {success:false, error:'lightDarkMode cannot be null'};
+    response.status(500).json(ret);
+    return;
+  }
+  else if (searchRadius === null || searchRadius < 0)
+  {
+    ret = {success:false, error:'searchRadius cannot be null'};
+    response.status(500).json(ret);
+    return;
+  }
+  else 
+  {
+    const db = client.db("LargeProject");
+    const results = await db.collection('Users').updateOne(
+      {_id:new ObjectId(objectId)}, {$set:{theme:theme, lightDarkMode:lightDarkMode, searchRadius:searchRadius}});
+
+    if (results.modifiedCount > 0)
+    {
+      ret = {success:true, error:''};
+      response.status(200).json(ret);
+      return;
+    }
+    else
+    {
+      ret = {success:false, error:'User Settings cannot be edited or user does not exist'};
+      response.status(500).json(ret);
+      return;
+    }
+  }
 
 });
 
 app.post('/api/login', async (request, response, next) => 
+app.post('/api/login', async (request, response, next) => 
 {
   // incoming: login, password
   // outgoing: id, firstName, lastName, username, regionCode, countryCode, error
+  // outgoing: id, firstName, lastName, username, regionCode, countryCode, error
 	
+  var error = '';
+  var ret;
+
+  const { login, pass } = request.body;
+
+  if (isNotValidString(login))
+  {
+    ret = {success:false, error:'login/username cannot be empty or null'};
+    response.status(500).json(ret);
+    return;
+
+  }
+  else if (isNotValidString(pass))
+  {
+    ret = {success:false, error:'password cannot be empty or null'};
+    response.status(500).json(ret);
+    return;
+  }
+  else
+  {
+    const db = client.db("LargeProject");
+    const results = await db.collection('Users').find({userName:login,password:pass}).toArray();
+  
+    var id = -1;
+    var firstName = '';
+    var lastName = '';
+    var userName = '';
+    var regionCode = -1;
+    var countryCode = -1;
+  
+    if( results.length > 0 )
+    {
+      id = results[0]._id;
+      firstName = results[0].firstName;
+      lastName = results[0].lastName;
+      userName = results[0].userName;
+      regionCode = results[0].regionCode;
+      countryCode = results[0].countryCode;
+      ret = {success:true, _id:id, userName:userName, firstName:firstName, lastName:lastName, regionCode:regionCode, countryCode:countryCode, error:''};
+
+      response.status(200).json(ret);
+      return;
+    }
+    else
+    {
+      ret = {success:false, error:'User is not found'};
+      response.status(500).json(ret);
+      return;
+    }
+  }
+
+});
+
+const transporter = nodemailer.createTransport({
+  service: "Gmail",
+  auth: {
+    user: 'Vigilant12023@gmail.com',
+    pass: 'mnsqssobuemcjfzr'
+  }
+});
+
+// call this API first, then change Password API
+// generated token and stores in the Users collection
+app.post('/api/resetPassword', async (request, response, next) => {
+  // incoming: email
+  // outgoing: error
+
+  const {email} = request.body;
+  const db = client.db("LargeProject");
+  const tokenInfo = {
+    token: Math.random().toString(36).slice(2),
+    expirationTime: new Date(Date.now() + (60 * 60 * 1000)) // Token expires in 1 hour
+  };
+
+  const results = await db.collection('Users').find({email:email}).toArray();
+
+  const timestamp = new Date();
+  const updated = await db.collection('Users').updateOne({email:email},
+    {
+      $set: {
+        resetToken: {
+          tokenInfo,
+          timestamp
+        }
+      }
+    })
+
+    var login = "";
+    var password = "";
+    var token = tokenInfo.token;
+
+    if (updated.modifiedCount === 0)
+    {
+      response.status(200).json({success:false, error:'Email not found'});
+      return;
+    }
+
+    const resetUrl = `https://cop4331-vigilant.herokuapp.com/forgotPassword/?token=${tokenInfo.token}`;
+    const mailOptions = {
+      from: 'Vigilant12023@gmail.com',
+      to: email,
+      subject: 'Password Reset Request',
+      html: `<p>Your have requested to reset your password Please <a href="${resetUrl}">click here</a> to change your password.</p>`
+    };
+
+    if (results.length > 0)
+    {
+      login = results[0].userName;
+      password = results[0].password;
+    }
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+        response.status(500).json({ error: 'Failed to send password reset email' });
+      } else {
+        console.log('Password reset email sent: ' + info.response);
+        response.status(200).json({ success:true, login:login, password:password, email:email, token:token });
+      }
+    });
+});
+
+// checks if the token is in the database and changes the pasword
+app.post('/api/changePassword', async (request, response, next) => 
+{
+  // incoming: login, newPassword
+  // outgoing: error
+	
+  var error = '';
+  var ret;
+
+  const { login, email, newPassword, token} = request.body;
+
+  if (isNotValidString(login))
+  {
+    ret = {error:'login/username cannot be empty or null'};
+  }
   var error = '';
   var ret;
 
@@ -384,15 +616,49 @@ app.post('/api/changePassword', async (request, response, next) =>
     ret = { error: 'Password Changed successfully'};
   }
   else
+  const user = await db.collection('Users').findOne({userName: login, email: email});
+  if (user.modifiedCount === 0)
   {
+    response.status(400).json({ error: 'Invalid login or email' });
+    return;
+  }
+  if (user.resetToken.tokenInfo.token !== token)
+  {
+    console.log(user.resetToken.token);
+    response.status(400).json({ error: 'Invalid or expired token' });
+    return;
+  }
+
+  const results = await db.collection('Users').updateOne({
+      userName:login,
+      email:email
+    },
+    {
+      $set: {
+        password: newPassword,
+        resetToken: null
+      }
+    })
+  
+  
+  if( results.modifiedCount > 0 )
+  {
+    ret = { error: 'Password Changed successfully'};
+  }
+  else
+  {
+    ret = { error: 'Invalid login or email'};
     ret = { error: 'Invalid login or email'};
   }
 
+  response.status(200).json(ret);
   response.status(200).json(ret);
 });
 
 app.post('/api/signup', async (request, response, next) => 
 {
+  // incoming: firstname, lastname, username, password, email, regioncode, countrycode
+  // outgoing: error
   // incoming: firstname, lastname, username, password, email, regioncode, countrycode
   // outgoing: error
 	
@@ -401,7 +667,94 @@ app.post('/api/signup', async (request, response, next) =>
 
   const { firstname, lastname, login, pass, email, regioncode, countrycode } = request.body;
   const verificationToken = Math.random().toString(36).substr(2, 8); 
+  const verificationToken = Math.random().toString(36).substr(2, 8); 
 
+  if (isNotValidString(firstname))
+  {
+    response.status(500).json({ success:false, error:'First name is not valid (empty or null)' });
+    return;
+  }
+  else if (isNotValidString(lastname))
+  {
+    response.status(500).json({ success:false, error:'Last name is not valid (empty or null)' });
+    return;
+  }
+  else if (isNotValidString(login))
+  {
+    response.status(500).json({ success:false, error:'Login is not valid (empty or null)' });
+    return;
+  }
+  else if (isNotValidString(pass))
+  {
+    response.status(500).json({ success:false, error:'Password is not valid (empty or null)' });
+    return;
+  }
+  else if (isNotValidString(email))
+  {
+    response.status(500).json({ success:false, error:'Email is not valid (empty or null)' });
+    return;
+  }
+  else if (regioncode === null || regioncode < 0)
+  {
+    response.status(500).json({ success:false, error:'Region code is not valid (negative number or null)' });
+    return;
+  }
+  else if (countrycode === null || countrycode < 0)
+  {
+    response.status(500).json({ success:false, error:'Country code is not valid (negative number or null)' });
+    return;
+  }
+  else
+  {
+    try
+    {
+      const db = client.db("LargeProject");
+  
+      var resultsBool = (await db.collection('Users').countDocuments({"userName":login}) > 0);
+  
+      if (resultsBool)
+      {
+        response.status(200).json({ success:false, error:'Username is taken' });
+        return;
+      }
+  
+      resultsBool = (await db.collection('Users').countDocuments({"email":email}) > 0);
+  
+      if (resultsBool)
+      {
+        response.status(200).json({ success:false, error:'Email is in use' });
+        return;
+      }
+  
+      results = await db.collection('Users').insertOne({
+        firstName: firstname,
+        lastName: lastname, 
+        userName: login, 
+        password: pass, 
+        email: email,
+        dateCreated: new Date(),
+        countryCode: countrycode,
+        regionCode: regioncode,
+        verified:false,
+        verificationToken: verificationToken,
+        theme:DEFAULT_THEME,
+        lightDarkMode:DEFAULT_LIGHT_DARK_MODE,
+        searchRadius:DEFAULT_PIN_SEARCH_RADIUS
+      });
+  
+      const mailOptions = {
+        from: 'vigilant12023@gmail.com',
+        to: email,
+        subject: 'Verify your email',
+        html: `<p>Thank you for signing up! Please <a href="https://cop4331-vigilant.herokuapp.com/verify?email=${email}&token=${verificationToken}">click here</a> to verify your email.</p>`
+      };
+  
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
   if (isNotValidString(firstname))
   {
     response.status(500).json({ success:false, error:'First name is not valid (empty or null)' });

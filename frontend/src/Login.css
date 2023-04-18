@@ -30,18 +30,26 @@ input{
     width:80%;
     height: 30px;
     font-size:1.35em;
-    margin-bottom:15px;
-    margin-top:15px;
+    margin-bottom:8px;
+    margin-top:px;
+}
+
+.registerInput{
+    height:25px;
+    font-size:1.3em;
+    margin-bottom:10px;
+    margin-top:10px;
+
 }
 
 .formHolder {
     margin: auto;
-    margin-top:5%;
+    margin-top:5vh !important;
     display: flex;
     background-color: #202020;
-    width: 50%;
-    max-height:800px; 
-    min-height:550px;
+    width: 60% !important;
+    max-height:80vh; 
+    min-height:80vh;
     text-align: center;
     border-radius:10px;
     filter: drop-shadow(0px 5px 6px rgba(0,0,0, 0.8));
@@ -69,24 +77,29 @@ input{
 }
 
 #loginPassword {
-    margin: 15px;
-    margin-bottom: 30px;
+    margin: 10px;
+    margin-bottom: 10px;
 }
 
 #loginResult {
     opacity:0;
     background-color: #a25454;
     padding:10px;
-    padding-bottom:12px;
+    font-size:0.9em;
+    margin-bottom:10px !important;
+}
+
+#loginButton{
+    margin-top:15px;
 }
 
 #registerResult {
     opacity:0;
     background-color: #a25454;
-    padding:10px;
-    padding-bottom:12px;}
-
-#loginButton {
+    font-size:0.9em;
+    padding:7px;
+}
+.formButton{
     --padding-y:7px;
     --padding-x:52px;
     font-size: 1.5em;
@@ -97,7 +110,6 @@ input{
     background-color: #494949;
     color: white;
     margin: 30px;
-    /*padding: 14px 40px;*/
     padding-top:var(--padding-y);
     padding-bottom:var(--padding-y);
     padding-left:var(--padding-x);
@@ -107,25 +119,16 @@ input{
     display: inline-block;
 }
 
-#registerButton {
-    --padding-y:7px;
-    --padding-x:52px;
-    font-size: 1.5em;
-    border-radius: 10px;
-    border:none;
-    min-width:100px;
-    min-height:31px;
-    background-color: #494949;
-    color: white;
-    margin: 30px;
-    /*padding: 14px 40px;*/
-    padding-top:var(--padding-y);
-    padding-bottom:var(--padding-y);
-    padding-left:var(--padding-x);
-    padding-right:var(--padding-x);
-    text-align: center;
-    text-decoration: none;
-    display: inline-block; 
+#updateButton{
+    margin:auto;
+    font-size:1.3em;
+    margin-left:7%;
+}
+
+.toggleButton{
+    background-color: #393939;
+    font-size: 1.2em;
+    margin-top:10px;
 }
 
 #registerFName{
@@ -136,11 +139,11 @@ input{
 #registerLName{
     width: 37.5%;
 }
-#loginButton:hover {
+.formButton:hover {
     background-color: #393939;
 }
 
-#loginButton:active {
+.formButton:active {
     background-color: #595959;
 }
 
@@ -155,9 +158,12 @@ input{
 }
 #welcomeBox > h2 {
     text-align:center;
+    margin-bottom:0px;
+    margin-top:0px;
 }
 
- #registerBox{
+
+#registerBox{
     left: 0;
 	width: 50%;
 	opacity: 0;
@@ -176,6 +182,10 @@ input{
 #registerHolder{
     z-index:2;
     opacity:1;
+}
+
+#registerButton{
+    margin-top:15px;
 }
 
 .formHolder.right-panel-active #loginBox {
@@ -258,29 +268,54 @@ input{
 	transform: translateX(20%);
 }
 
-.toggler{
-    width:100px;;
-    height:100px;
-    border-radius:100%;
-    position: absolute;
-    bottom: 20px;
-    font-size: 1.5em;
+#forgotBox{
+    padding-top:7%;
+    padding-bottom:5%;
+    margin-top:10px;
+    padding:10px;
+    position:relative;
+    font-size:0.9em;
+}
+
+#forgotInput{
+    margin-top:3px;
+    height:20px;
+    font-size:1.2em;
+}
+
+#forgotButton{
+    --padding-y:7px;
+    --padding-x:30px;
+    font-size: 1.2em;
+    border-radius: 10px;
     border:none;
-}
-#switch1{
-    right:130px;
+    min-width:50px;
+    min-height:20px;
+    background-color: #494949;
+    color: white;
+    margin: 5px;
+    /*padding: 14px 40px;*/
+    padding-top:var(--padding-y);
+    padding-bottom:var(--padding-y);
+    padding-left:var(--padding-x);
+    padding-right:var(--padding-x);
+    text-align: center;
+    text-decoration: none;
+    display: inline-block; 
 }
 
-#switch2{
-    right:20px;
-}
-.toggler:hover {
-    background-color: #393939;
-    color:#fff;
+#closeForgot{
+    text-decoration: none;
+    position:absolute;
+    font-stretch: wider;
+    top:0px;
+    right:0px;
+    margin:0px;
 }
 
-.toggler:active {
-    background-color: #595959;
+#forgotForm{
+    width:100%;
+    padding-top:5%;
 }
 
 @media screen and (max-width: 1500px) {

@@ -2,9 +2,9 @@ import React from 'react';
 import '../Login.css';
 
 import PageTitle from '../components/PageTitle';
-import Login from '../components/Login';
+import EmailVerify from '../components/EmailVerify';
 
-const LoginPage = () =>
+const VerifyPage = () =>
 {
     const el= document.body;
     var toggle = 1;
@@ -12,14 +12,15 @@ const LoginPage = () =>
       el.style.setProperty('--x', -e.clientX/10 + "px");
       el.style.setProperty('--y', -e.clientY/20 + "px");
     }, true);
-
+    
+    
     return(
       <div>
         <div id="background"></div>
         <PageTitle />
-        <Login />
+        <EmailVerify />
       </div>
     );
 };
 
-export default LoginPage;
+export default VerifyPage;
