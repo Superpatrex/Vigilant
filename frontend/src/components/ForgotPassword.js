@@ -53,7 +53,11 @@ function ForgotPassword()
   const doNewPass = async () =>{
     const urlParams = new URLSearchParams(window.location.search);
     const verifTok = urlParams.get('token');
-    var obj = { login: userName, email: userEmail, token: 'stringy', newPassword: newUserPassword };
+    console.log(userName);
+    console.log(userEmail);
+    console.log(verifTok);
+    console.log(newUserPassword);
+    var obj = { login: userName, email: userEmail, token: verifTok, newPassword: newUserPassword };
     var js = JSON.stringify(obj);
     console.log(obj);
 
