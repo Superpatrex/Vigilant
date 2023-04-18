@@ -39,13 +39,14 @@ function ForgotPassword()
       { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } });
 
       var res = JSON.parse(await response.text());
+      console.log(res);
 
       if (res.success)
       {
-        alert(res.login);
-        alert(res.email);
-        setUserName(res.login);
-        setUserEmail(res.email);
+        alert(res.results.userName);
+        alert(res.results.email);
+        setUserName(res.results.userName);
+        setUserEmail(res.results.email);
       }
     }
     catch(e) {
@@ -56,13 +57,8 @@ function ForgotPassword()
   const doNewPass = async () =>{
     const urlParams = new URLSearchParams(window.location.search);
     const verifTok = urlParams.get('token');
-    console.log(userName);
-    console.log(userEmail);
-    console.log(verifTok);
-    console.log(newUserPassword);
     var obj = { login: userName, email: userEmail, token: verifTok, newPassword: newUserPassword.value };
     var js = JSON.stringify(obj);
-    console.log(obj);
 
     try {
       const response = await fetch(buildPath('api/changePassword'),
