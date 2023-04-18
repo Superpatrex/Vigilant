@@ -8,6 +8,7 @@ import {
     Pressable,
     Button,
     ScrollView,
+    ImageBackground
   } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import buildPath from '../buildPath';
@@ -56,7 +57,11 @@ function LoginScreen({ navigation }) {
     return (
         <View style={styles.centered}>
             <View style={{ height: '30%', justifyContent: "center", alignItems: "center" }}>
-                <Text style={{ color: colors.text, fontSize: 25, marginBottom: 10 }}>Welcome Back</Text>
+                <ImageBackground 
+                    source={require('../img/Rainbowmap.jpg')}
+                    style={{width: 400, height: 400}} 
+                />
+                <Text style={{ color: 'white', position: 'absolute', fontSize: 25, marginBottom: 10 }}>Welcome Back</Text>
                 { errorVisible ?
                     <ErrorMessage errorMessage={errorMessage}></ErrorMessage>
                 : null}
