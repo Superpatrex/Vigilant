@@ -42,6 +42,8 @@ function ForgotPassword()
 
       if (res.success)
       {
+        alert(res.login);
+        alert(res.email);
         setUserName(res.login);
         setUserEmail(res.email);
       }
