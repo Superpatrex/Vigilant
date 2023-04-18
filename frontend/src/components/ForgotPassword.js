@@ -50,6 +50,7 @@ function ForgotPassword()
       }
     }
     catch(e) {
+      console.log(e.toString());
       console.log('Something went wrong in getUserInfo');
     }
   }
@@ -76,6 +77,7 @@ function ForgotPassword()
       }
     }
     catch(e) {
+      console.log(e.toString());
       console.log('Something went wrong in doNewPass');
     }
   }
