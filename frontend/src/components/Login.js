@@ -163,7 +163,7 @@ function Login()
     catch (e)
     {
         alert(e.toString());
-        console.logs('The catch block is executing on line 165');
+        console.log('The catch block is executing on line 165');
     }
   };
 
