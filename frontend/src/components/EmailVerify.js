@@ -68,11 +68,7 @@ function EmailVerify()
     <div>
         <div class="formHolder" id="loginHolder">
             <form id="forgotForm" onSubmit={doNewPass}>
-                        <span id="inner-title">Create New Password</span><br/><br/>
-                        <input type="password" id="newPassword" class="registerInput" placeholder="New Password" ref={ (c) => newPassword = c} /><br />
-                        <input type="password" id="confirmPassword" class="registerInput" placeholder="Confirm New Password" ref={ (c) => confirmPassword = c} /><br />
-                        <button type="submit" id="registerButton" value="Register" onClick={doNewPass}>Create</button><br/>
-                        <span id="registerResult">{message}</span>
+                        <span id="inner-title">Your email address has been verified.<br/>Have a wonderful day.</span><br/><br/>
                         </form>
                         
         </div>
