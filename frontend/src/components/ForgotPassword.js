@@ -57,7 +57,8 @@ function ForgotPassword()
     var obj = { login: this.login, email: this.email, token: verifTok, newPassword: this.newPassword };
     var js = JSON.stringify(obj);
     console.log(obj);
-    try{
+
+    try {
       const response = await fetch(buildPath('api/changePassword'),
       { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }); 
       

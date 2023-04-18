@@ -24,7 +24,8 @@ function Login()
   var registerUserName;
   var registerPassword;
   var confirmPassword;
-  var forgotInput;
+//   var forgotInput;
+  const [ forgotInput, setForgotInput ] = useState('');
 
   const [message, setMessage] = useState('');
   const [registerMessage, setRegisterMessage] = useState('');
@@ -140,7 +141,7 @@ function Login()
     setContent('An email has been sent to reset your password.\nHave a wonderful day.');
     // alert("Your API Endpoint here\n Email Address: "+forgotInput.value);
     
-    var obj = {email:forgotInput.value};
+    var obj = { email:forgotInput.value };
     var js = JSON.stringify(obj);
 
     try
@@ -166,7 +167,7 @@ function Login()
     toggleShow(!showForgot);
     {setContent(<div>
         Please enter email address for forgotten account<br/>
-        <input type="text" id="forgotInput" placeholder="Email Address" ref={ (c) => forgotInput = c} />
+        <input type="text" id="forgotInput" placeholder="Email Address" ref={ (c) => setForgotInput(c) } />
         <button type="submit" id="forgotButton" value="Forgot Password" onClick={doForgot}>Submit</button>
         </div>)}
   }
@@ -176,16 +177,16 @@ function Login()
         <div class="formHolder" id="loginHolder">
             <div class="formBox" id="registerBox">
             <form onSubmit={doRegister}>
-                        <span id="inner-title">Register</span><br/><br/>
-                        <input type="text" id="registerFName" class="registerInput" placeholder="First Name" ref={ (c) => registerFName = c}/>
-                        <input type="text" id="registerLName" class="registerInput" placeholder="Last Name" ref={ (c) => registerLName = c}/><br />
-                        <input type="text" id="registerEmail" class="registerInput" placeholder="Email Address" ref={ (c) => registerEmail = c} /><br />
-                        <input type="text" id="registerUserName" class="registerInput" placeholder="Username" ref={ (c) => registerUserName = c} /><br />
-                        <input type="password" id="registerPassword" class="registerInput" placeholder="Password" ref={ (c) => registerPassword = c} /><br />
-                        <input type="password" id="confirmPassword" class="registerInput" placeholder="Confirm Password" ref={ (c) => confirmPassword = c} /><br />
-                        <button type="submit" id="registerButton" class="formButton" value="Register" onClick={doRegister}>Register</button>
-                        </form>
-                        <span id="registerResult">{registerMessage}</span>
+                <span id="inner-title">Register</span><br/><br/>
+                <input type="text" id="registerFName" class="registerInput" placeholder="First Name" ref={ (c) => registerFName = c}/>
+                <input type="text" id="registerLName" class="registerInput" placeholder="Last Name" ref={ (c) => registerLName = c}/><br />
+                <input type="text" id="registerEmail" class="registerInput" placeholder="Email Address" ref={ (c) => registerEmail = c} /><br />
+                <input type="text" id="registerUserName" class="registerInput" placeholder="Username" ref={ (c) => registerUserName = c} /><br />
+                <input type="password" id="registerPassword" class="registerInput" placeholder="Password" ref={ (c) => registerPassword = c} /><br />
+                <input type="password" id="confirmPassword" class="registerInput" placeholder="Confirm Password" ref={ (c) => confirmPassword = c} /><br />
+                <button type="submit" id="registerButton" class="formButton" value="Register" onClick={doRegister}>Register</button>
+            </form>
+            <span id="registerResult">{registerMessage}</span>
             </div>
             <div class="formBox" id="loginBox">
                 <form onSubmit={doLogin}>
