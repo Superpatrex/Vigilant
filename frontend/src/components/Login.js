@@ -142,8 +142,8 @@ function Login()
     // alert("Your API Endpoint here\n Email Address: "+forgotInput.value);
 
     var obj = { email: forgotInput.value };
-    console.log(obj);
     var js = JSON.stringify(obj);
+    console.log(js);
 
     try
     {
@@ -163,7 +163,7 @@ function Login()
     }
     catch (e)
     {
-        alert(e.toString());
+        console.log(e.toString());
         console.log('The catch block is executing on line 165');
     }
   };
