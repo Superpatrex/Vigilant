@@ -15,8 +15,13 @@
         "cors": "^2.8.5",
         "dotenv": "^16.0.3",
         "express": "^4.18.2",
+<<<<<<< HEAD
         "jsonwebtoken": "^9.0.0",
         "mongodb": "^5.2.0",
+=======
+        "google-map-react": "^2.2.0",
+        "mongodb": "^5.1.0",
+>>>>>>> frontEndWeb-Testing
         "nodemailer": "^6.9.1"
     }
 }
