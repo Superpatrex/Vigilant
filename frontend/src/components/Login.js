@@ -63,7 +63,7 @@ function Login()
 
           var res = JSON.parse(await response.text());
 
-          if( res.id <= 0 )
+          if( !res.success)
           {
               setMessage('Username or Password Incorrect');
               document.getElementById("loginResult").style.setProperty("opacity",1);

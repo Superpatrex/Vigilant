@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import CrimeIcon from '../CrimeIcon.png';
+
 
 const PinRadius = 20;
 const HoverPinRadius = 24;
@@ -14,7 +16,7 @@ const PinStyle = {
     top: HoverPinRadius - PinRadius,
 
     borderRadius: PinRadius * 2,
-    backgroundColor: 'black',
+    backgroundColor: '#f00',
     textAlign: 'center',
     color: '#3f51b5',
     fontSize: 16,
@@ -103,6 +105,12 @@ const HoverBodyStyle = {
     transition: 'color 450ms'
 }
 
+const PinImageStyle={
+    width:'7vh',
+    bottom:10 ,
+    position:'absolute' 
+}
+
 class Pin extends Component
 {
     constructor(props)
@@ -127,7 +135,9 @@ class Pin extends Component
                     {this.props.address + ": " + this.props.description}
                 </p>
             </div>
-            <div style={pinStyle} />
+            <div style={pinStyle}>
+                <img src={CrimeIcon} style={PinImageStyle}/>
+            </div>
         </div>
         );
     }

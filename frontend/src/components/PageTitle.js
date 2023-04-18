@@ -1,18 +1,19 @@
 import React from 'react';
 
 const NavStyle = {
-    position: 'absolute',
+    position: 'relative',
     width: '100vw',
-    height: '60px',
+    height: '50px',
     paddingBottom: 10,
     left: 0,
     top: 0,
-    backgroundColor: 'black'
+    backgroundColor: 'black',
+    alignItems:'center',
 };
 
 const HeaderStyle = {
     paddingLeft: 20,
-    paddingTop: 12
+    paddingTop:8,
 }
 
 function PageTitle()

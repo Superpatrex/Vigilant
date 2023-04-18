@@ -2,21 +2,32 @@ import React, {Component} from 'react';
 import SettingsImage from '../gear_icon.png';
 
 const ButtonStyle = {
-    position: 'absolute',
-    width: '60px',
-    height: '60px',
-    left: 10,
-    bottom: 60,
+    position: 'relative',
+    width: '100%',
+    height: '100%',
     opacity: 0.5,
     transition: 'opacity 200ms, width 200ms, height 200ms, left 200ms, bottom 200ms'
 };
 
-const ButtonSelectStyle = {
+const ButtonBackgroundStyle = {
+    display:'flex',
     position: 'absolute',
-    width: '70px',
-    height: '70px',
-    left: 5,
-    bottom: 55,
+    width: '50px',
+    height: '50px',
+    padding:10,
+    borderRadius:100,
+    left: 10,
+    bottom: 10,
+    backgroundColor:'#393939',
+    transition: 'opacity 200ms, width 200ms, height 200ms, left 200ms, bottom 200ms'
+};
+
+const ButtonSelectStyle = {
+    // position: 'absolute',
+    // width: '70px',
+    // height: '70px',
+    // left: 5,
+    // bottom: 55,
     opacity: 1,
     transition: 'opacity 200ms, width 200ms, height 200ms, left 200ms, bottom 200ms'
 };
@@ -55,11 +66,14 @@ class Settings extends Component
     {
         return (
             <div>
-                <div style={this.state.pageStyle}></div>
-                <img src={SettingsImage} style={this.state.buttonStyle} 
-                    onMouseEnter={() => {this.setState({buttonStyle:ButtonSelectStyle})}} 
-                    onMouseLeave={() => {this.setState({buttonStyle:ButtonStyle})}}
-                    onClick={() => {this.setState({pageStyle:(this.state.pageStyle == pageOnStyle ? pageOffStyle : pageOnStyle)})}} />
+                <div style={this.state.pageStyle}>
+                </div>
+                <div style={ButtonBackgroundStyle}>
+                    <img src={SettingsImage} style={this.state.buttonStyle} 
+                        onMouseEnter={() => {this.setState({buttonStyle:ButtonSelectStyle})}} 
+                        onMouseLeave={() => {this.setState({buttonStyle:ButtonStyle})}}
+                        onClick={() => {this.setState({pageStyle:(this.state.pageStyle == pageOnStyle ? pageOffStyle : pageOnStyle)})}} />
+                </div>
             </div>
         )
     }
