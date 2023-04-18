@@ -26,7 +26,7 @@ function ForgotPassword()
 
   const [email, setEmail] = useState('');
 
-  const getUserInfo = async event => {
+  const getUserInfo = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('id');
     var obj = { objectId: userId };
@@ -50,7 +50,7 @@ function ForgotPassword()
     }
   }
 
-  const doNewPass = async event =>{
+  const doNewPass = async () =>{
     const urlParams = new URLSearchParams(window.location.search);
     const verifTok = urlParams.get('token');
     var obj = { login: this.login, email: this.email, token: verifTok, newPassword: this.newPassword };
@@ -62,17 +62,17 @@ function ForgotPassword()
       { method: 'POST', body: js, headers: { 'Content-Type': 'application/json' } }); 
       
       var res = JSON.parse(await response.text());
-      if(res.error=='Password Changed successfully'){
+
+      if (res.error=='Password Changed successfully'){
         console.log(res.error);
         document.getElementById('registerResult').style.opacity=1;
       }
-
-      else{
+      else {
         console.log(res.error);
         document.getElementById('registerResult').style.opacity=1;      
       }
     }
-    catch(e){
+    catch(e) {
       console.log('Something went wrong in doNewPass');
     }
   }
@@ -84,7 +84,8 @@ function ForgotPassword()
                         <span id="inner-title">Create New Password</span><br/><br/>
                         <input type="password" id="newPassword" class="registerInput" placeholder="New Password" ref={ (c) => setNewPassword(c)} /><br />
                         <input type="password" id="confirmPassword" class="registerInput" placeholder="Confirm New Password" ref={ (c) => setConfirmPassword(c)} /><br />
-                        <button type="submit" id="registerButton" value="Register" onClick={(e) => {e.preventDefault(); 
+                        <button type="submit" id="registerButton" value="Register" onClick={(e) => {
+                          e.preventDefault(); 
                           getUserInfo();
                           doNewPass();
                         }}>Create</button><br/>
