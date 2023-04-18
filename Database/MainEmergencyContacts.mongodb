@@ -4,10 +4,10 @@ use("LargeProject")
 // Insert a contact into the Main Emergency Contacts
 db.MainEmergencyContacts.insertOne({
     _id: ObjectId(),
-    name: "Police",
-    phoneNumber: "911",
-    description: null,
-    countryCode: 1,
+    name: "Totally the Police",
+    phoneNumber: "772-678-1522",
+    description: "Totally the Police",
+    countryCode: "US",
 })
 
 // Find all the Main Emergency Contacts within the collection

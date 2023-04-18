@@ -5,14 +5,14 @@ use("LargeProject")
 db.RegionEmergencyContacts.insert({
     _id: ObjectId(),
     name: "UCF Police",
-    phoneNumber: "407-823-3088",
+    phoneNumber: "7726781522",
     description: null,
     address : "4000 Central Florida Blvd",
     zipCode : 32816,
     state : "Florida",
     country : "United States",
-    countryCode: 1,
-    regionCode: 1
+    countryCode: "US",
+    regionCode: "FL"
 })
 
 // Find all of the Regional Emergency Contacts within the Collection
