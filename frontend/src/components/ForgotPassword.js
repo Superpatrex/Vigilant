@@ -72,10 +72,12 @@ function ForgotPassword()
 
       if (res.error=='Password Changed successfully'){
         console.log(res.error);
+        setMessage(res.error);
         document.getElementById('registerResult').style.opacity=1;
       }
       else {
         console.log(res.error);
+        setMessage(res.error);
         document.getElementById('registerResult').style.opacity=1;      
       }
     }
