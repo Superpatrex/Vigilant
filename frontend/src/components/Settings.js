@@ -159,7 +159,7 @@ class Settings extends Component
                 <div style={this.state.pageStyle}>
                     <div style={{width:'100%', height:75}}></div>
                     <h2>Change Password</h2>
-                    <input type="text" id="password" placeholder="Password"/>
+                    <input type="password" id="password" placeholder="Password"/>
                     <button type="submit" id="updateButton" class="formButton" value="Update Password" onClick={() => {updatePassword(this.password.value)}}>Update Password</button>
                     <br /><br />
                     <h2>Themes</h2>
