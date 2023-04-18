@@ -10,6 +10,7 @@ import {
 import { useTheme } from '@react-navigation/native';
 import buildPath from '../buildPath';
 import ErrorMessage from '../components/ErrorMessage';
+import md5 from '../components/md5';
 
 const RegisterScreen = ({ navigation }) => {
     const { colors } = useTheme();
@@ -47,8 +48,10 @@ const RegisterScreen = ({ navigation }) => {
         }
         setErrorVisible(false);
 
+        let hash = md5(password);
+
         // Wakka wakka
-        var obj = {firstname: fName, lastname: lName, login: username, pass: password, email: email, regioncode: 5, countrycode: 5};
+        var obj = {firstname: fName, lastname: lName, login: username, pass: hash, email: email, regioncode: 5, countrycode: 5};
         var js = JSON.stringify(obj);
         
         try
