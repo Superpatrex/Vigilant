@@ -45,8 +45,9 @@ function ForgotPassword()
         setEmail(res.email);
       }
     }
-    catch(e){
-      console.log(e);
+    catch(e) {
+      console.log(e.toString());
+      throw new e;
     }
   }
 
