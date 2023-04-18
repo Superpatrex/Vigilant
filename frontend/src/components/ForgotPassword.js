@@ -43,8 +43,6 @@ function ForgotPassword()
 
       if (res.success)
       {
-        alert(res.results.userName);
-        alert(res.results.email);
         setUserName(res.results.userName);
         setUserEmail(res.results.email);
       }
@@ -58,6 +56,8 @@ function ForgotPassword()
   const doNewPass = async () =>{
     const urlParams = new URLSearchParams(window.location.search);
     const verifTok = urlParams.get('token');
+    alert('userName is ' + userName);
+    alert('email is ' + userEmail);
     var obj = { login: userName, email: userEmail, token: verifTok, newPassword: newUserPassword.value };
     var js = JSON.stringify(obj);
 
