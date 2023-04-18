@@ -7,15 +7,30 @@ import {
     Alert,
     Pressable,
     Button,
-    SafeAreaView,
     PermissionsAndroid,
     Platform,
+    Image,
   } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import buildPath from '../buildPath';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useGlobalStore } from 'react-native-global-store';
 
 import Geolocation, { GeolocationError, GeolocationResponse } from '@react-native-community/geolocation';
+import { ImageSource } from 'react-native-vector-icons/Icon';
+import AccidentImage from '../img/AccidentIconSmall.png';
+import CrimeIcon from '../img/CrimeIconSmall.png';
+import DisasterIcon from '../img/DisasterIconSmall.png';
+import FireIcon from '../img/FireIconSmall.png';
+import GasLeakIcon from '../img/GasLeakIconSmall.png';
+import MiscIcon from '../img/MiscIconSmall.png';
+
+const ACCIDENT_IMAGE = Image.resolveAssetSource(AccidentImage).uri;
+const CRIME_IMAGE = Image.resolveAssetSource(CrimeIcon).uri;
+const DISASTER_IMAGE = Image.resolveAssetSource(DisasterIcon).uri;
+const FIRE_IMAGE = Image.resolveAssetSource(FireIcon).uri;
+const GAS_LEAK_IMAGE = Image.resolveAssetSource(GasLeakIcon).uri;
+const MISC_IMAGE = Image.resolveAssetSource(MiscIcon).uri;
 
 type Marker = {
     _id: string,
@@ -24,6 +39,7 @@ type Marker = {
     title: string,
     description: string,
     street: string,
+    icon: ImageSource,
 }
 
 type LocationData = {
@@ -47,15 +63,32 @@ const MapScreen = ({ route, navigation }) => {
     const mapRef = React.useRef<MapView>();
     const markerRef = React.useRef<MapMarker>();
     const [canDelete, setCanDelete] = React.useState(false);
+    const [globalStore, setGlobalStore] = useGlobalStore();
 
     const convertToMarker = (res: any) => {
         let i: any;
         let markers: Marker[] = [];
+        let icon: ImageSource = {};
         
         for (i in res.results)
         {
             let location: LatLng = { longitude: res.results[i].location.coordinates[0], latitude: res.results[i].location.coordinates[1] };
-            markers.push({ _id: res.results[i]._id, userId: res.results[i].userCreatedObjectId, location: { coordinates: location, type: "Point" }, title: res.results[i].Title, description: res.results[i].description, street: res.results[i].address });
+
+            if (res.results[i].title == 'Crime'){
+                icon = { uri: CRIME_IMAGE, };
+            }
+            else if (res.results[i].title == 'Disaster')
+                icon = { uri: DISASTER_IMAGE,  };
+            else if (res.results[i].title == 'Fire')
+                icon = { uri: FIRE_IMAGE, };
+            else if (res.results[i].title == 'Accident')
+                icon = { uri: ACCIDENT_IMAGE, };
+            else if (res.results[i].title == 'Gas Leak')
+                icon = { uri: GAS_LEAK_IMAGE };
+            else
+                icon = { uri: MISC_IMAGE };
+            
+            markers.push({ _id: res.results[i]._id, userId: res.results[i].userCreatedObjectId, location: { coordinates: location, type: "Point" }, title: res.results[i].title, description: res.results[i].description, street: res.results[i].address, icon: icon });
         }
 
         return markers;
@@ -94,7 +127,7 @@ const MapScreen = ({ route, navigation }) => {
     }
 
     const searchPins = async (latitude: number, longitude: number) => {
-        var obj = { latitude: latitude, longitude: longitude, maximumDist: 1000000 };
+        var obj = { latitude: latitude, longitude: longitude, maximumDist: globalStore.searchDist };
         var js = JSON.stringify(obj);
 
         try
@@ -192,7 +225,12 @@ const MapScreen = ({ route, navigation }) => {
                     setLocationData({ latitude: (location?.coords.latitude || 28.6024), longitude: (location?.coords.longitude || -81.2001), state: (address?.administrativeArea || "FL"), country: (address?.country || "United States"), zipCode: (address?.postalCode || "32816"), street: (address?.thoroughfare || "University Blvd") })
                 }}
                 initialRegion={initialRegion}
-                onRegionChange={(region) => searchPins(region.latitude, region.longitude)}
+                onRegionChange={(region) => {
+                    searchPins(region.latitude, region.longitude);
+                    // mapRef.current?.addressForCoordinate({ latitude: region.latitude, longitude: region.longitude })
+                    //     .then((value) => setAddress(value))
+                    // setLocationData({ latitude: region.latitude, longitude: region.longitude, state: (address?.administrativeArea || "FL"), country: (address?.country || "United States"), zipCode: (address?.postalCode || "32816"), street: (address?.thoroughfare || "University Blvd") })
+                }}
                 showsUserLocation={true}
                 onUserLocationChange={() => { 
                     Geolocation.getCurrentPosition((info) => {setLocation(info)});
@@ -206,7 +244,8 @@ const MapScreen = ({ route, navigation }) => {
                         ref={markerRef}
                         key={index}
                         coordinate={marker.location.coordinates}
-                        pinColor={(marker.userId === route.params.userId ? "red" : "pink")}
+                        // pinColor={(marker.userId === route.params.userId ? "red" : "pink")}
+                        image={marker.icon}
                         // onPress={() => markerRef.current?.showCallout()}
                         // onCalloutPress={() => { showPopup(true); setMarkerDetails(marker); markerRef.current?.hideCallout() }}
                     >
