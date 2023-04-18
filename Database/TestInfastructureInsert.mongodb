@@ -1,10 +1,10 @@
-// Enters into LargeProject
 use("LargeProject")
 
 let testObjectId = "123456789012345678901234"
 let secondaryTestObjectId = "123456789012345678901237"
 let deleteObjectId = "123456789012345678901235"
 let editObjectId = "123456789012345678901236"
+let emptyUserObjectId = "333456789012345678901236"
 
 db.Users.insertOne({
     _id: ObjectId(testObjectId), 
@@ -31,6 +31,21 @@ db.Users.insertOne({
     userName: "IAmATestUser2", 
     password: "testytesty1232", 
     email: "test@me2.com",
+    dateCreated: ISODate(),
+    countryCode: 1,
+    regionCode: 1
+})
+
+db.Users.insertOne({
+    _id: ObjectId(emptyUserObjectId), 
+    theme: 2,
+    lightDarkMode: false,
+    searchRadius:1000,
+    firstName: "Empty",
+    lastName: "User", 
+    userName: "IAmAnEmptyTestUser", 
+    password: "yeetskeetwehet", 
+    email: "test@me500.com",
     dateCreated: ISODate(),
     countryCode: 1,
     regionCode: 1
@@ -76,6 +91,24 @@ db.MainEmergencyContacts.insertOne({
     phoneNumber: "912",
     description: "They be doing things",
     countryCode: 1000
+})
+
+db.UserEmergencyContacts.insertOne({
+    _id: ObjectId(),
+    firstName: "Jack",
+    lastName: "Andrews",
+    phoneNumber: "123-456-7890",
+    description: null,
+    userCreatedObjectId: ObjectId(secondaryTestObjectId)
+})
+
+db.UserEmergencyContacts.insertOne({
+    _id: ObjectId(),
+    firstName: "Abhi",
+    lastName: "Kotta",
+    phoneNumber: "123-456-7891",
+    description: "Literally a Goober",
+    userCreatedObjectId: ObjectId(secondaryTestObjectId)
 })
 
 db.UserEmergencyContacts.insertOne({

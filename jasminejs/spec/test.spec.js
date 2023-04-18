@@ -17,14 +17,13 @@ const GET_ALL_USER_INFORMATION_PIN_ENDPOINT = 'http://localhost:4091/api/getAllU
 const GET_SETTINGS_PIN_ENDPOINT = 'http://localhost:4091/api/getSettings';
 const SET_SETTINGS_PIN_ENDPOINT = 'http://localhost:4091/api/setSettings';
  
-
-
 const testObjectId = "123456789012345678901234";
 const deleteObjectId = "123456789012345678901235";
 const editObjectId = "123456789012345678901236";
 const testObjectIdDoesNotExist = "123456789012345678901230";
 let secondaryTestObjectId = "123456789012345678901237";
 let doesNotExistObjectId = '111111111111111111111111';
+let emptyUserObjectId = "333456789012345678901236";
 
 const SUCCESS_STATUS_CODE = 200;
 const NOT_MODIFIED_STATUS_CODE = 304;
@@ -179,8 +178,6 @@ describe('User Unit Tests',function()
             expect(response.body.error).toEqual(errorMessage);
             done();
         });
-
-        //TODO Add null checks for signup
     });
 
     it('signup Empty/Null firstName',function(done)
@@ -593,12 +590,43 @@ describe('User Emergency Contacts', function()
 {
     it('getContacts Pass',function(done)
     {
-        request.post(GET_CONTACTS_ENDPOINT, {json: true, body: {objectId:new ObjectId(testObjectId)}}, function (error, response) {
+        let success = true;
+        let errorMessage = '';
+        let numContacts = 2;
+        let firstContactFirstName = 'Jack';
+        let firstContactLastName = 'Andrews';
+        let firstContactPhoneNumber = '123-456-7890';
+        let firstContactDescription = null;
+
+        let secondContactFirstName = 'Abhi';
+        let secondContactLastName = 'Kotta';
+        let secondContactPhoneNumber = '123-456-7891';
+        let secondContactDescription = 'Literally a Goober';
+
+        request.post(GET_CONTACTS_ENDPOINT, {json: true, body: {objectId:new ObjectId(secondaryTestObjectId)}}, function (error, response) {
             expect(response.statusCode).toEqual(SUCCESS_STATUS_CODE);
+            expect(response.body.success).toEqual(success);
+            expect(response.body.error).toEqual(errorMessage);
+            expect(response.body.results.length).toEqual(numContacts);
+
+            for (i = 0; i < numContacts; i++)
+            {
+                if (response.body.results[i].firstName === firstContactFirstName)
+                {
+                    expect(response.body.results[i].lastName).toEqual(firstContactLastName);
+                    expect(response.body.results[i].phoneNumber).toEqual(firstContactPhoneNumber);
+                    expect(response.body.results[i].description).toEqual(firstContactDescription);
+
+                }
+                else if (response.body.results[i].firstName == secondContactFirstName)
+                {
+                    expect(response.body.results[i].lastName).toEqual(secondContactLastName);
+                    expect(response.body.results[i].phoneNumber).toEqual(secondContactPhoneNumber);
+                    expect(response.body.results[i].description).toEqual(secondContactDescription);
+                }
+            }
             done();
         });
-
-        // TODO FIX
     });
 
     it('getContacts No User',function(done)
@@ -620,7 +648,7 @@ describe('User Emergency Contacts', function()
     it('getContacts No Contacts',function(done)
     {
         let errorMessage = 'User has empty contact';
-        let objectId = new ObjectId(secondaryTestObjectId);
+        let objectId = new ObjectId(emptyUserObjectId);
         let success = false;
         let results = null;
 
