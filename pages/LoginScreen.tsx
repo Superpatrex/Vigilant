@@ -13,6 +13,7 @@ import {
 import { useTheme } from '@react-navigation/native';
 import buildPath from '../buildPath';
 import ErrorMessage from '../components/ErrorMessage';
+import md5 from '../components/md5';
 
 function LoginScreen({ navigation }) {
     const { colors } = useTheme();
@@ -23,7 +24,8 @@ function LoginScreen({ navigation }) {
     
     const doLogin = async () => {
         // Waka waka
-        var obj = {login: username, pass: password};
+        let hash = md5(password);
+        var obj = {login: username, pass: hash};
         var js = JSON.stringify(obj);
 
         try
