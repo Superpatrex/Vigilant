@@ -1,0 +1,151 @@
+import * as React from 'react';
+import {
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
+    Alert,
+    Pressable,
+    Button,
+    ScrollView,
+    ImageBackground
+  } from 'react-native';
+import { useTheme } from '@react-navigation/native';
+import buildPath from '../buildPath';
+import ErrorMessage from '../components/ErrorMessage';
+import md5 from '../components/md5';
+
+function LoginScreen({ navigation }) {
+    const { colors } = useTheme();
+    const [username, setUsername] = React.useState('err');
+    const [password, setPassword] = React.useState('err');
+    const [errorVisible, setErrorVisible] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState('');
+    
+    const doLogin = async () => {
+        // Waka waka
+        let hash = md5(password);
+        var obj = {login: username, pass: hash};
+        var js = JSON.stringify(obj);
+
+        try
+        {
+            const response = await fetch(buildPath('api/login'),
+            {method: 'POST', body: js, headers: {'Content-Type': 'application/json'}});
+
+            var res = JSON.parse(await response.text());
+
+            if (res.error === '')
+            {
+                navigation.navigate('Home', {
+                    userId: res._id,
+                });
+            }
+            else
+            {
+                // Alert.alert('Username or Password incorrect');
+                setErrorMessage('Username or Password incorrect');
+                setErrorVisible(true);
+            }
+
+        }
+        catch (e: any)
+        {
+            Alert.alert(e.toString());
+            throw e;
+        }
+    }
+
+    return (
+        <View style={styles.centered}>
+            <View style={{ height: '30%', justifyContent: "center", alignItems: "center" }}>
+                <ImageBackground 
+                    source={require('../img/Rainbowmap.jpg')}
+                    style={{width: 400, height: 400}} 
+                />
+                <Text style={{ color: 'white', position: 'absolute', fontSize: 25, marginBottom: 10 }}>Welcome Back</Text>
+                { errorVisible ?
+                    <ErrorMessage errorMessage={errorMessage}></ErrorMessage>
+                : null}
+            </View>
+            <View style={[styles.loginBox, { backgroundColor: colors.card }]}>
+                <Text style={{
+                    color: colors.card,
+                    fontSize: 50,
+                    marginTop: 5
+                }}>Login</Text>
+                <TextInput style={styles.input} autoCorrect={false} autoCapitalize='none' autoComplete='username' textContentType='username' onChangeText={text => setUsername(text)} placeholder="Username" placeholderTextColor={"#6b6b6b"}/>
+                <TextInput style={styles.input} autoCorrect={false} autoComplete='password' textContentType='password' secureTextEntry={true} onChangeText={text => setPassword(text)} placeholder="Password" placeholderTextColor={"#6b6b6b"}/>
+                <Pressable style={({pressed}) => [{ backgroundColor: pressed ? colors.primary : colors.primary }, styles.buttonStyle]} onPress={() => doLogin()}>
+                    <Text style={styles.buttonText}>{"Login"}</Text>
+                </Pressable>
+                <View style={{
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    height: '35%'
+                }}>
+                    <Button onPress={ () => navigation.navigate('ForgetLoginModal', { name: 'Forget Login?' }) } title='Forget Login?' ></Button>
+                    <Button onPress={ () => navigation.navigate("Register") } title="New here? Sign Up" ></Button>
+                </View>
+            </View>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    centered: {
+        flex: 1,
+        justifyContent: "space-between",
+        alignItems: "center",
+        flexDirection: "column"
+    },
+    loginBox: {
+        backgroundColor: "#202020",
+        // height: 390,
+        height: '70%',
+        // width: 347,
+        width: '100%',
+        // borderRadius: 35,
+        borderTopLeftRadius: 35,
+        borderTopRightRadius: 35,
+        // flex: 1,
+        // justifyContent: "center",
+        alignItems: "center",
+    },
+    input: {
+        height: 45,
+        width: 300,
+        borderWidth: 1,
+        padding: 10,
+        borderRadius: 5,
+        margin: 15,
+        backgroundColor: "white",
+        color: "black",
+    },
+    buttonStyle:{
+        // backgroundColor:"#494949",
+        padding:7,
+        margin:15,
+        height: 38,
+        width: 230,
+        borderRadius: 7.5,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    smallerButtonStyle: {
+        // backgroundColor:"#494949",
+        padding:7,
+        margin:10,
+        height: 32,
+        width: 137,
+        borderRadius: 7.5,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    buttonText:{
+        color:"white",
+        fontSize: 20,
+    },
+  });
+
+export default LoginScreen;
